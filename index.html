@@ -78,6 +78,7 @@
             margin-top: 25px;
         }
         .btn-enviar:hover { background-color: #27ae60; }
+        .btn-enviar:disabled { background-color: #95a5a6; cursor: not-allowed; }
 
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -116,16 +117,15 @@
 
     if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
-        recognition.continuous = true; // Para que siga escuchando aunque hagas pausas
+        recognition.continuous = true; 
         recognition.interimResults = false;
-        recognition.lang = 'es-MX'; // Idioma español
+        recognition.lang = 'es-MX'; 
 
         recognition.onresult = function(event) {
             let transcripcion = '';
             for (let i = event.resultIndex; i < event.results.length; i++) {
                 transcripcion += event.results[i][0].transcript;
             }
-            // Agrega el texto dictado al final de lo que ya esté escrito
             txtPendientes.value += transcripcion + ". "; 
         };
 
@@ -154,22 +154,47 @@
         alert("Tu navegador no soporta el dictado por voz. Por favor usa Google Chrome.");
     }
 
+    // --- FUNCIÓN PARA ENVIAR A GOOGLE SHEETS ---
     function enviarReporte() {
         const cama = document.getElementById('cama').value;
         const notas = document.getElementById('pendientes').value;
+        const btnEnviar = document.getElementById('btn-enviar');
         
         if(!cama || !notas) {
             alert("Por favor llena la habitación y los pendientes antes de guardar.");
             return;
         }
 
-        // Aquí iría el código para enviar a una base de datos.
-        // Por ahora, solo mostraremos una alerta.
-        alert("¡Reporte guardado con éxito!\n\nHabitación: " + cama + "\nPendientes: " + notas);
-        
-        // Limpiar el formulario para el siguiente paciente
-        document.getElementById('cama').value = '';
-        document.getElementById('pendientes').value = '';
+        // Cambiamos el botón para que sepas que está cargando
+        btnEnviar.innerHTML = "⏳ Guardando reporte...";
+        btnEnviar.disabled = true;
+
+        // TU URL DE GOOGLE ESTÁ AQUÍ:
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxHg3o72v1ol3E1WObJfqWn-GUkcW0UT-8hPiyyZ-sAh1ERdVujELF26kzi24hCiyVwNQ/exec';
+
+        const formData = new FormData();
+        formData.append('cama', cama);
+        formData.append('pendientes', notas);
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            body: formData,
+            mode: 'no-cors' // Esto evita problemas de seguridad del navegador al enviar a Google
+        })
+        .then(() => {
+            alert("¡Reporte guardado con éxito!");
+            // Limpiar formulario para el siguiente paciente
+            document.getElementById('cama').value = '';
+            document.getElementById('pendientes').value = '';
+            btnEnviar.innerHTML = "Guardar Reporte";
+            btnEnviar.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert("Hubo un error al guardar. Revisa tu conexión.");
+            btnEnviar.innerHTML = "Guardar Reporte";
+            btnEnviar.disabled = false;
+        });
     }
 </script>
 

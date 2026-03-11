@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Rondines - Hospitalización</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 0;
+        }
+        label {
+            font-weight: bold;
+            color: #34495e;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .btn-dictar {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-dictar:hover { background-color: #2980b9; }
+        .btn-dictar.grabando {
+            background-color: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+        .btn-enviar {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+        .btn-enviar:hover { background-color: #27ae60; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📋 Reporte de Rondín</h2>
+    
+    <label for="cama">Cama / Habitación:</label>
+    <input type="text" id="cama" placeholder="Ej. Habitación 302, Cama 1">
+
+    <label for="pendientes">Pendientes / Notas:</label>
+    <textarea id="pendientes" placeholder="Toca el botón de abajo y comienza a hablar..."></textarea>
+    
+    <button id="btn-dictar" class="btn-dictar">
+        🎤 Empezar a dictar
+    </button>
+
+    <button id="btn-enviar" class="btn-enviar" onclick="enviarReporte()">
+        Guardar Reporte
+    </button>
+</div>
+
+<script>
+    const btnDictar = document.getElementById('btn-dictar');
+    const txtPendientes = document.getElementById('pendientes');
+    let dictando = false;
+
+    // Verificar si el navegador soporta la API de reconocimiento de voz
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true; // Para que siga escuchando aunque hagas pausas
+        recognition.interimResults = false;
+        recognition.lang = 'es-MX'; // Idioma español
+
+        recognition.onresult = function(event) {
+            let transcripcion = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                transcripcion += event.results[i][0].transcript;
+            }
+            // Agrega el texto dictado al final de lo que ya esté escrito
+            txtPendientes.value += transcripcion + ". "; 
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Error en el dictado: ", event.error);
+            btnDictar.innerHTML = "🎤 Empezar a dictar";
+            btnDictar.classList.remove('grabando');
+            dictando = false;
+        };
+
+        btnDictar.addEventListener('click', () => {
+            if (!dictando) {
+                recognition.start();
+                btnDictar.innerHTML = "🛑 Detener grabación";
+                btnDictar.classList.add('grabando');
+                dictando = true;
+            } else {
+                recognition.stop();
+                btnDictar.innerHTML = "🎤 Empezar a dictar";
+                btnDictar.classList.remove('grabando');
+                dictando = false;
+            }
+        });
+    } else {
+        btnDictar.style.display = 'none';
+        alert("Tu navegador no soporta el dictado por voz. Por favor usa Google Chrome.");
+    }
+
+    function enviarReporte() {
+        const cama = document.getElementById('cama').value;
+        const notas = document.getElementById('pendientes').value;
+        
+        if(!cama || !notas) {
+            alert("Por favor llena la habitación y los pendientes antes de guardar.");
+            return;
+        }
+
+        // Aquí iría el código para enviar a una base de datos.
+        // Por ahora, solo mostraremos una alerta.
+        alert("¡Reporte guardado con éxito!\n\nHabitación: " + cama + "\nPendientes: " + notas);
+        
+        // Limpiar el formulario para el siguiente paciente
+        document.getElementById('cama').value = '';
+        document.getElementById('pendientes').value = '';
+    }
+</script>
+
+</body>
+</html>

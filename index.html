@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expediente Clínico Móvil</title>
+    <title>Expediente Clínico Móvil Seguro</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
-        /* Diseño general */
+        /* EL MISMO DISEÑO QUE YA TE GUSTABA */
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 15px; display: flex; justify-content: center; color: #2c3e50;}
-        
-        /* Contenedor principal que se adapta */
         .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; transition: max-width 0.3s ease; }
         
         h2 { color: #0056b3; text-align: center; margin-top: 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 8px;}
         h3 { color: #34495e; text-align: center; font-size: 18px; margin-top: 0;}
         
-        /* Layout responsivo (Magia para Compu vs Celular) */
         .main-layout { display: flex; flex-direction: column; gap: 0; }
         .form-section { width: 100%; }
         .historial-seccion { margin-top: 35px; border-top: 2px solid #ecf0f1; padding-top: 25px; width: 100%; }
 
-        /* Estilos del Formulario */
         .form-group { margin-bottom: 12px; }
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-width { grid-column: span 2; }
@@ -29,16 +26,25 @@
         input[type="text"]:focus, textarea:focus { border-color: #0056b3; background-color: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
         textarea { resize: vertical; min-height: 90px; }
         
-        .btn-dictar { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; transition: all 0.2s;}
-        .btn-dictar:active { transform: scale(0.98); }
-        .btn-dictar.grabando { background-color: #ffebeb; color: #d63031; border-color: #ffcccc; animation: pulse 1.5s infinite; }
+        .caja-medicamentos { background-color: #f8fafd; border: 1.5px dashed #b8daff; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .titulo-caja { font-size: 14px; font-weight: bold; color: #0056b3; margin-bottom: 10px; margin-top: 0;}
+        .btn-add-med { background-color: #e8f4fd; color: #0056b3; border: 1px solid #b8daff; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
+        .btn-add-med:active { transform: scale(0.98); background-color: #d0e7fa;}
         
-        .btn-enviar { background-color: #0056b3; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); transition: all 0.2s; }
+        .lista-temporal { list-style: none; padding: 0; margin: 10px 0 0 0; }
+        .item-med { background: #fff; border: 1px solid #dce4ec; padding: 8px 10px; border-radius: 6px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        .btn-quitar { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 16px; font-weight: bold; padding: 0 5px; }
+
+        .botones-accion { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+        .btn-accion { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 12px; width: 100%; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px; transition: all 0.2s;}
+        .btn-accion:active { transform: scale(0.98); }
+        .btn-accion.grabando { background-color: #ffebeb; color: #d63031; border-color: #ffcccc; animation: pulse 1.5s infinite; }
+        
+        .btn-enviar { background-color: #0056b3; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); transition: all 0.2s; }
         .btn-enviar:active { transform: scale(0.98); box-shadow: 0 2px 5px rgba(0, 86, 179, 0.2); }
         .btn-enviar:disabled { background-color: #95a5a6; box-shadow: none; cursor: not-allowed; }
 
-        /* Estilos de las Tarjetas */
-        .tarjeta-pendiente { background-color: #ffffff; border: 1px solid #e1e8ed; border-left: 5px solid #e67e22; padding: 16px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .tarjeta-pendiente { background-color: #ffffff; border: 1px solid #e1e8ed; border-left: 5px solid #e67e22; padding: 16px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .tarjeta-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; }
         .t-cama { font-size: 20px; font-weight: 800; color: #0056b3; display: flex; align-items: center; gap: 5px;}
         .t-paciente { font-size: 15px; color: #34495e; font-weight: 600; text-align: right;}
@@ -46,296 +52,360 @@
         .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
         .t-info { font-size: 13px; color: #5c6a79; background: #f8f9fa; padding: 8px; border-radius: 6px;}
         .t-info strong { color: #2c3e50; display: block; font-size: 11px; text-transform: uppercase; margin-bottom: 2px;}
-        
         .t-notas { font-size: 14px; color: #1a252f; background: #fffcf5; padding: 12px; border-radius: 8px; border-left: 3px solid #f1c40f; margin-top: 5px; line-height: 1.4;}
         
         .btn-resolver { background-color: #ffffff; color: #27ae60; border: 1.5px solid #2ecc71; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: all 0.2s; }
         .btn-resolver:hover { background-color: #2ecc71; color: #ffffff; }
-        .btn-resolver:active { transform: scale(0.98); }
-        
-        .btn-actualizar { background-color: transparent; color: #7f8c8d; border: 1px dashed #bdc3c7; padding: 10px; width: 100%; border-radius: 8px; font-size: 13px; cursor: pointer; margin-bottom: 20px; transition: all 0.2s;}
-        .btn-actualizar:active { background-color: #f4f6f7; }
         
         .info-dictado { font-size: 11px; color: #7f8c8d; text-align: center; margin-top: 5px; }
+        .aviso-guardado { font-size: 11px; color: #27ae60; text-align: center; margin-top: 8px; font-weight: bold; display: none;}
+        #foto-input { display: none; }
+        .indicador-vivo { font-size: 12px; color: #27ae60; text-align: center; margin-bottom: 15px; font-weight: bold;}
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* =========================================
-           AQUÍ EMPIEZA LA MAGIA PARA COMPUTADORAS
-           ========================================= */
         @media (min-width: 900px) {
             body { padding: 30px; }
-            .container { max-width: 1100px; padding: 30px; } /* Se hace más ancho */
-            .main-layout { 
-                flex-direction: row; /* Pone las cosas una al lado de la otra */
-                gap: 40px; 
-                align-items: flex-start;
-            }
-            .form-section { 
-                flex: 0 0 450px; /* Ancho fijo para el formulario */
-                position: sticky; /* Deja el formulario fijo mientras bajas por la lista */
-                top: 30px; 
-            }
-            .historial-seccion { 
-                flex: 1; /* La lista ocupa el resto del espacio */
-                margin-top: 0; 
-                border-top: none; 
-                border-left: 2px dashed #ecf0f1; /* Línea divisoria vertical */
-                padding-top: 0; 
-                padding-left: 40px; 
-            }
-            h3 { text-align: left; } /* Alinea el título de pendientes a la izquierda en PC */
+            .container { max-width: 1100px; padding: 30px; }
+            .main-layout { flex-direction: row; gap: 40px; align-items: flex-start; }
+            .form-section { flex: 0 0 450px; position: sticky; top: 30px; }
+            .historial-seccion { flex: 1; margin-top: 0; border-top: none; border-left: 2px dashed #ecf0f1; padding-top: 0; padding-left: 40px; }
+            h3 { text-align: left; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🏥 Expediente de Rondines</h2>
+    <h2>🏥 Expediente Seguro (Firebase)</h2>
     
     <div class="main-layout">
         
         <div class="form-section">
-            <div class="form-group full-width">
-                <button id="btn-dictar" class="btn-dictar">🎙️ Dictado Inteligente (Autocompletar)</button>
-                <div class="info-dictado">Di: "Cama...", "Paciente...", "Medicamento...", "Dosis...", "Horario...", "Pendientes..."</div>
+            <div class="botones-accion">
+                <button id="btn-dictar" class="btn-accion">🎙️ Dictar</button>
+                <button class="btn-accion" onclick="document.getElementById('foto-input').click()">📷 Escanear Foto</button>
+                <input type="file" id="foto-input" accept="image/*" capture="environment">
             </div>
+            <div class="info-dictado">Usa voz o escanea texto impreso/monitores.</div>
 
-            <div class="grid-form">
+            <div class="grid-form" style="margin-top: 15px;">
                 <div class="form-group">
                     <label>Cama / Hab.</label>
-                    <input type="text" id="cama" placeholder="Ej. 302">
+                    <input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()">
                 </div>
                 <div class="form-group">
-                    <label>Paciente</label>
-                    <input type="text" id="paciente" placeholder="Nombre">
-                </div>
-                <div class="form-group">
-                    <label>Medicamento</label>
-                    <input type="text" id="medicamento" placeholder="Ej. Ketorolaco">
-                </div>
-                <div class="form-group">
-                    <label>Dosis</label>
-                    <input type="text" id="dosis" placeholder="Ej. 30mg">
-                </div>
-                <div class="form-group full-width">
-                    <label>Horarios</label>
-                    <input type="text" id="horarios" placeholder="Ej. Cada 8 hrs (10:00, 18:00, 02:00)">
-                </div>
-                <div class="form-group full-width">
-                    <label>Notas Clínicas / Pendientes</label>
-                    <textarea id="pendientes" placeholder="Si no usas palabras clave, el dictado aparecerá aquí..."></textarea>
+                    <label>Paciente (Iniciales/Exp)</label>
+                    <input type="text" id="paciente" placeholder="Ej. J.P.M o 45091" oninput="window.guardarBorrador()">
                 </div>
             </div>
 
-            <button id="btn-enviar" class="btn-enviar" onclick="enviarReporte()">Guardar en Expediente</button>
+            <div class="caja-medicamentos">
+                <p class="titulo-caja">💊 Indicaciones / Medicamentos</p>
+                <div class="grid-form">
+                    <div class="form-group full-width">
+                        <label>Medicamento</label>
+                        <input type="text" id="medicamento" placeholder="Ej. Ketorolaco" oninput="window.guardarBorrador()">
+                    </div>
+                    <div class="form-group">
+                        <label>Dosis</label>
+                        <input type="text" id="dosis" placeholder="Ej. 30mg" oninput="window.guardarBorrador()">
+                    </div>
+                    <div class="form-group">
+                        <label>Horarios</label>
+                        <input type="text" id="horarios" placeholder="Ej. Cada 8 hrs" oninput="window.guardarBorrador()">
+                    </div>
+                </div>
+                <button type="button" class="btn-add-med" onclick="window.agregarMedicamento()">➕ Añadir a la lista</button>
+                <ul id="lista-med-temporal" class="lista-temporal"></ul>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Notas Clínicas / Pendientes</label>
+                <textarea id="pendientes" placeholder="Si escaneas o dictas sin palabras clave, aparecerá aquí..." oninput="window.guardarBorrador()"></textarea>
+            </div>
+
+            <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">💾 Guardar Seguro en Nube</button>
+            <div id="aviso-guardado" class="aviso-guardado">Borrador guardado localmente...</div>
         </div>
 
         <div class="historial-seccion">
             <h3>📋 Casos Activos en Sala</h3>
-            <button class="btn-actualizar" onclick="cargarPendientes(false)">↻ Forzar Sincronización</button>
+            <div class="indicador-vivo">🟢 Conectado en Tiempo Real</div>
             <div id="lista-pendientes">
-                <p style="text-align:center; color:#7f8c8d; font-size: 14px;">Cargando sala...</p>
+                <p style="text-align:center; color:#7f8c8d; font-size: 14px;">Conectando a la bóveda...</p>
             </div>
         </div>
 
     </div>
 </div>
 
-<script>
-    const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxHg3o72v1ol3E1WObJfqWn-GUkcW0UT-8hPiyyZ-sAh1ERdVujELF26kzi24hCiyVwNQ/exec';
+<script type="module">
+    // Importamos las herramientas de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, where, updateDoc, doc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+    // 🔴🔴🔴 PEGA TU FIREBASE CONFIG AQUÍ ABAJO 🔴🔴🔴
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_DOMINIO.firebaseapp.com",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_BUCKET.appspot.com",
+      messagingSenderId: "TU_SENDER_ID",
+      appId: "TU_APP_ID"
+    };
+    // 🔴🔴🔴 HASTA AQUÍ 🔴🔴🔴
+
+    // Inicializamos Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const pacientesRef = collection(db, "pacientes");
+
+    // --- MAGIA DEL TIEMPO REAL (Adiós al botón de actualizar) ---
+    // Esta función "escucha" la base de datos constántemente
+    const q = query(pacientesRef, where("estado", "==", "Activo"), orderBy("fecha", "desc"));
+    
+    onSnapshot(q, (snapshot) => {
+        const contenedor = document.getElementById('lista-pendientes');
+        
+        if (snapshot.empty) {
+            contenedor.innerHTML = '<p style="text-align:center; color:#27ae60; font-weight:600; padding: 20px; background: #e8f8f5; border-radius: 8px;">✔️ Sala al día. No hay pendientes.</p>';
+            return;
+        }
+
+        let nuevoHTML = '';
+        snapshot.forEach((documento) => {
+            const item = documento.data();
+            const id = documento.id; // El ID único de Firebase
+            const formatText = (text) => text ? text.replace(/\n/g, '<br>') : '';
+            
+            nuevoHTML += `
+                <div class="tarjeta-pendiente">
+                    <div class="tarjeta-header">
+                        <span class="t-cama">🛏️ ${item.cama}</span>
+                        <span class="t-paciente">👤 ${item.paciente}</span>
+                    </div>
+                    <div class="t-grid">
+                        ${item.medicamento ? `<div class="t-info"><strong>Medicamento(s)</strong>${formatText(item.medicamento)}</div>` : ''}
+                        ${item.dosis ? `<div class="t-info"><strong>Dosis</strong>${formatText(item.dosis)}</div>` : ''}
+                        ${item.horarios ? `<div class="t-info" style="grid-column: span 2;"><strong>Horarios</strong>${formatText(item.horarios)}</div>` : ''}
+                    </div>
+                    ${item.pendientes ? `<div class="t-notas"><strong>Pendientes:</strong><br>${formatText(item.pendientes)}</div>` : ''}
+                    
+                    <button class="btn-resolver" onclick="window.marcarResuelto('${id}', this)">✓ Marcar como paciente atendido</button>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = nuevoHTML;
+    });
+
+    // --- ENVIAR REPORTE A FIREBASE ---
+    window.enviarReporte = async function() {
+        const cama = document.getElementById('cama').value;
+        const paciente = document.getElementById('paciente').value;
+        const btnEnviar = document.getElementById('btn-enviar');
+        const notas = document.getElementById('pendientes').value;
+        
+        window.agregarMedicamento(); // Añadir si dejó uno a medias
+
+        if(!cama && !paciente && window.medicamentosArray.length === 0 && !notas) { 
+            alert("El expediente está vacío."); return; 
+        }
+
+        btnEnviar.innerHTML = "⏳ Subiendo a la nube..."; btnEnviar.disabled = true;
+
+        let medFinal = "", dosFinal = "", horFinal = "";
+        window.medicamentosArray.forEach(item => {
+            medFinal += (item.med ? "• " + item.med : "• -") + "\n";
+            dosFinal += (item.dos ? "• " + item.dos : "• -") + "\n";
+            horFinal += (item.hor ? "• " + item.hor : "• -") + "\n";
+        });
+
+        try {
+            // Guardamos en Firebase Firestore
+            await addDoc(pacientesRef, {
+                cama: cama,
+                paciente: paciente,
+                medicamento: medFinal.trim(),
+                dosis: dosFinal.trim(),
+                horarios: horFinal.trim(),
+                pendientes: notas,
+                estado: "Activo",
+                fecha: serverTimestamp() // Hora exacta del servidor de Google
+            });
+
+            // Limpieza
+            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            window.medicamentosArray = [];
+            window.renderizarListaMeds();
+            localStorage.removeItem('borradorRondines'); 
+            window.textoAcumulado = ""; 
+
+            btnEnviar.innerHTML = "💾 Guardar Seguro en Nube"; btnEnviar.disabled = false;
+        } catch (error) {
+            console.error("Error al guardar: ", error);
+            alert("Error al subir a la nube. Revisa tu conexión.");
+            btnEnviar.disabled = false;
+        }
+    };
+
+    // --- MARCAR RESUELTO EN FIREBASE ---
+    window.marcarResuelto = async function(idFirebase, boton) {
+        if(!confirm("¿Confirmas que el paciente ha sido atendido?")) return;
+        
+        boton.innerHTML = "⏳ Actualizando bóveda...";
+        boton.disabled = true;
+        boton.parentElement.style.opacity = '0.5';
+
+        try {
+            const pacienteRef = doc(db, "pacientes", idFirebase);
+            await updateDoc(pacienteRef, {
+                estado: "Resuelto",
+                fechaResolucion: serverTimestamp()
+            });
+            // No necesitamos recargar la lista, ¡onSnapshot lo hará automáticamente en milisegundos!
+        } catch (error) {
+            console.error("Error al actualizar: ", error);
+            alert("Hubo un error al actualizar el estado.");
+            boton.disabled = false; boton.parentElement.style.opacity = '1';
+        }
+    };
+
+    // =========================================================================
+    // EL RESTO DEL CÓDIGO (Tesseract, Borrador, Medicamentos, Dictado) SE MANTIENE
+    // Solo lo pasamos al objeto window para que funcione dentro de un 'module'
+    // =========================================================================
+
+    // --- ESCANEO DE IMAGEN ---
+    const fotoInput = document.getElementById('foto-input');
+    const txtPendientes = document.getElementById('pendientes');
+
+    fotoInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const btnScanner = document.querySelector('button[onclick="document.getElementById(\'foto-input\').click()"]');
+        const textoOriginalBoton = btnScanner.innerHTML;
+        btnScanner.innerHTML = "⏳ Extrayendo texto..."; btnScanner.disabled = true;
+
+        Tesseract.recognize(file, 'spa').then(({ data: { text } }) => {
+            const textoLimpio = text.trim();
+            if (textoLimpio) {
+                txtPendientes.value += (txtPendientes.value ? "\n\n" : "") + "📄 [TEXTO ESCANEADO]:\n" + textoLimpio;
+                window.guardarBorrador();
+            } else { alert("No se encontró texto claro."); }
+            btnScanner.innerHTML = textoOriginalBoton; btnScanner.disabled = false;
+        }).catch(err => {
+            alert("Error al leer la imagen."); btnScanner.innerHTML = textoOriginalBoton; btnScanner.disabled = false;
+        });
+    });
+
+    // --- BORRADOR Y MEDICAMENTOS ---
+    window.medicamentosArray = [];
+    window.onload = () => {
+        const borrador = JSON.parse(localStorage.getItem('borradorRondines'));
+        if (borrador) {
+            document.getElementById('cama').value = borrador.cama || '';
+            document.getElementById('paciente').value = borrador.paciente || '';
+            document.getElementById('medicamento').value = borrador.med_temp || '';
+            document.getElementById('dosis').value = borrador.dos_temp || '';
+            document.getElementById('horarios').value = borrador.hor_temp || '';
+            document.getElementById('pendientes').value = borrador.pendientes || '';
+            window.medicamentosArray = borrador.listaMeds || [];
+            window.renderizarListaMeds();
+        }
+    };
+
+    window.guardarBorrador = function() {
+        const borrador = {
+            cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value,
+            med_temp: document.getElementById('medicamento').value, dos_temp: document.getElementById('dosis').value,
+            hor_temp: document.getElementById('horarios').value, pendientes: document.getElementById('pendientes').value,
+            listaMeds: window.medicamentosArray
+        };
+        localStorage.setItem('borradorRondines', JSON.stringify(borrador));
+        const aviso = document.getElementById('aviso-guardado');
+        aviso.style.display = 'block'; setTimeout(() => aviso.style.display = 'none', 2000);
+    };
+
+    window.agregarMedicamento = function() {
+        const med = document.getElementById('medicamento').value.trim();
+        const dos = document.getElementById('dosis').value.trim();
+        const hor = document.getElementById('horarios').value.trim();
+        if (!med && !dos && !hor) return;
+
+        window.medicamentosArray.push({ med, dos, hor });
+        document.getElementById('medicamento').value = ''; document.getElementById('dosis').value = ''; document.getElementById('horarios').value = '';
+        window.renderizarListaMeds(); window.guardarBorrador();
+    };
+
+    window.quitarMedicamento = function(index) {
+        window.medicamentosArray.splice(index, 1);
+        window.renderizarListaMeds(); window.guardarBorrador();
+    };
+
+    window.renderizarListaMeds = function() {
+        const lista = document.getElementById('lista-med-temporal'); lista.innerHTML = '';
+        window.medicamentosArray.forEach((item, index) => {
+            let texto = `<b>${item.med || 'Sin nombre'}</b>`;
+            if(item.dos) texto += ` - ${item.dos}`; if(item.hor) texto += ` (${item.hor})`;
+            lista.innerHTML += `<li class="item-med"><span>${texto}</span><button class="btn-quitar" onclick="window.quitarMedicamento(${index})">×</button></li>`;
+        });
+    };
+
+    // --- DICTADO INTELIGENTE ---
     const btnDictar = document.getElementById('btn-dictar');
-    let dictando = false;
-    let textoAcumulado = ""; 
+    let dictando = false; window.textoAcumulado = ""; 
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
-        recognition.continuous = true; 
-        recognition.interimResults = false; 
-        recognition.lang = 'es-MX'; 
-        
-        recognition.onstart = function() { textoAcumulado = ""; };
-
+        recognition.continuous = true; recognition.interimResults = false; recognition.lang = 'es-MX'; 
+        recognition.onstart = function() { window.textoAcumulado = ""; };
         recognition.onresult = event => {
             let fraseNueva = '';
-            for (let i = event.resultIndex; i < event.results.length; i++) { 
-                fraseNueva += event.results[i][0].transcript; 
-            }
-            textoAcumulado += fraseNueva + " ";
-            distribuirTextoInteligente(textoAcumulado);
+            for (let i = event.resultIndex; i < event.results.length; i++) { fraseNueva += event.results[i][0].transcript; }
+            window.textoAcumulado += fraseNueva + " ";
+            distribuirTextoInteligente(window.textoAcumulado);
+            window.guardarBorrador(); 
         };
-        
-        recognition.onerror = () => { 
-            btnDictar.innerHTML = "🎙️ Dictado Inteligente (Autocompletar)"; 
-            btnDictar.classList.remove('grabando'); dictando = false; 
-        };
-        
+        recognition.onerror = () => { btnDictar.innerHTML = "🎙️ Dictar"; btnDictar.classList.remove('grabando'); dictando = false; };
         btnDictar.addEventListener('click', () => {
-            if (!dictando) { 
-                recognition.start(); 
-                btnDictar.innerHTML = "⏹️ Detener grabación"; 
-                btnDictar.classList.add('grabando'); 
-                dictando = true; 
-            } else { 
-                recognition.stop(); 
-                btnDictar.innerHTML = "🎙️ Dictado Inteligente (Autocompletar)"; 
-                btnDictar.classList.remove('grabando'); 
-                dictando = false; 
-            }
+            if (!dictando) { recognition.start(); btnDictar.innerHTML = "⏹️ Detener"; btnDictar.classList.add('grabando'); dictando = true; 
+            } else { recognition.stop(); btnDictar.innerHTML = "🎙️ Dictar"; btnDictar.classList.remove('grabando'); dictando = false; }
         });
-    } else { 
-        btnDictar.style.display = 'none'; 
-    }
+    } else { btnDictar.style.display = 'none'; }
 
     function distribuirTextoInteligente(textoTotal) {
         const txt = textoTotal.toLowerCase();
-        
         const diccionario = [
-            { id: 'cama', palabras: ['cama ', 'habitación ', 'habitacion '] },
-            { id: 'paciente', palabras: ['paciente '] },
-            { id: 'medicamento', palabras: ['medicamento ', 'medicamentos '] },
-            { id: 'dosis', palabras: ['dosis '] },
-            { id: 'horarios', palabras: ['horario ', 'horarios '] },
-            { id: 'pendientes', palabras: ['pendiente ', 'pendientes ', 'nota ', 'notas '] }
+            { id: 'cama', palabras: ['cama ', 'habitación ', 'habitacion '] }, { id: 'paciente', palabras: ['paciente '] },
+            { id: 'medicamento', palabras: ['medicamento ', 'medicamentos '] }, { id: 'dosis', palabras: ['dosis '] },
+            { id: 'horarios', palabras: ['horario ', 'horarios '] }, { id: 'pendientes', palabras: ['pendiente ', 'pendientes ', 'nota ', 'notas '] }
         ];
-
         let posiciones = [];
-
         diccionario.forEach(categoria => {
-            let mejorIndice = -1;
-            let longitud = 0;
-            
+            let mejorIndice = -1; let longitud = 0;
             categoria.palabras.forEach(palabra => {
                 let idx = txt.indexOf(palabra);
-                if (idx !== -1 && (mejorIndice === -1 || idx < mejorIndice)) {
-                    mejorIndice = idx;
-                    longitud = palabra.length;
-                }
+                if (idx !== -1 && (mejorIndice === -1 || idx < mejorIndice)) { mejorIndice = idx; longitud = palabra.length; }
             });
-
-            if (mejorIndice !== -1) {
-                posiciones.push({ id: categoria.id, index: mejorIndice, length: longitud });
-            }
+            if (mejorIndice !== -1) posiciones.push({ id: categoria.id, index: mejorIndice, length: longitud });
         });
-
         posiciones.sort((a, b) => a.index - b.index);
 
-        if (posiciones.length === 0) {
-            document.getElementById('pendientes').value = textoTotal;
-            return;
-        }
-
-        ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => {
-            document.getElementById(id).value = '';
-        });
+        if (posiciones.length === 0) { document.getElementById('pendientes').value = textoTotal; return; }
+        ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => { document.getElementById(id).value = ''; });
 
         for (let i = 0; i < posiciones.length; i++) {
-            let actual = posiciones[i];
-            let siguiente = posiciones[i + 1];
-            
-            let inicio = actual.index + actual.length;
-            let fin = siguiente ? siguiente.index : txt.length;
-            
+            let actual = posiciones[i]; let siguiente = posiciones[i + 1];
+            let inicio = actual.index + actual.length; let fin = siguiente ? siguiente.index : txt.length;
             let textoExtraido = textoTotal.substring(inicio, fin).trim();
-            
             if (textoExtraido) {
                 textoExtraido = textoExtraido.charAt(0).toUpperCase() + textoExtraido.slice(1);
                 document.getElementById(actual.id).value = textoExtraido;
             }
         }
     }
-
-    function enviarReporte() {
-        const cama = document.getElementById('cama').value;
-        const paciente = document.getElementById('paciente').value;
-        const medicamento = document.getElementById('medicamento').value;
-        const dosis = document.getElementById('dosis').value;
-        const horarios = document.getElementById('horarios').value;
-        const notas = document.getElementById('pendientes').value;
-        const btnEnviar = document.getElementById('btn-enviar');
-        
-        if(!cama || !paciente) { alert("Mínimo debes llenar la cama y el paciente."); return; }
-
-        btnEnviar.innerHTML = "⏳ Guardando..."; btnEnviar.disabled = true;
-
-        const formData = new FormData();
-        formData.append('action', 'create'); 
-        formData.append('cama', cama);
-        formData.append('paciente', paciente);
-        formData.append('medicamento', medicamento);
-        formData.append('dosis', dosis);
-        formData.append('horarios', horarios);
-        formData.append('pendientes', notas);
-
-        fetch(URL_GOOGLE, { method: 'POST', body: formData, mode: 'no-cors' })
-        .then(() => {
-            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-            textoAcumulado = ""; 
-            btnEnviar.innerHTML = "Guardar en Expediente"; btnEnviar.disabled = false;
-            setTimeout(() => cargarPendientes(false), 1500); 
-        }).catch(err => { alert("Error al guardar."); btnEnviar.disabled = false; });
-    }
-
-    function marcarResuelto(rowId, boton) {
-        if(!confirm("¿Confirmas que este pendiente fue atendido?")) return;
-        
-        boton.innerHTML = "⏳ Completando...";
-        boton.disabled = true;
-        boton.parentElement.style.opacity = '0.5';
-
-        const formData = new FormData();
-        formData.append('action', 'update'); 
-        formData.append('row', rowId); 
-
-        fetch(URL_GOOGLE, { method: 'POST', body: formData, mode: 'no-cors' })
-        .then(() => {
-            setTimeout(() => cargarPendientes(false), 1000); 
-        }).catch(err => { alert("Error al actualizar."); boton.disabled = false; boton.parentElement.style.opacity = '1';});
-    }
-
-    function cargarPendientes(esFondo = true) {
-        const contenedor = document.getElementById('lista-pendientes');
-        if (!esFondo) contenedor.innerHTML = '<p style="text-align:center; color:#7f8c8d; font-size: 14px;">⏳ Sincronizando sala...</p>';
-
-        fetch(URL_GOOGLE)
-        .then(response => response.json())
-        .then(data => {
-            if(data.length === 0) {
-                contenedor.innerHTML = '<p style="text-align:center; color:#27ae60; font-weight:600; padding: 20px; background: #e8f8f5; border-radius: 8px;">✔️ Sala al día. No hay pendientes.</p>';
-                return;
-            }
-
-            let nuevoHTML = '';
-            data.reverse().forEach(item => {
-                nuevoHTML += `
-                    <div class="tarjeta-pendiente">
-                        <div class="tarjeta-header">
-                            <span class="t-cama">🛏️ ${item.cama}</span>
-                            <span class="t-paciente">👤 ${item.paciente}</span>
-                        </div>
-                        <div class="t-grid">
-                            ${item.medicamento ? `<div class="t-info"><strong>Medicamento</strong>${item.medicamento}</div>` : ''}
-                            ${item.dosis ? `<div class="t-info"><strong>Dosis</strong>${item.dosis}</div>` : ''}
-                            ${item.horarios ? `<div class="t-info" style="grid-column: span 2;"><strong>Horarios</strong>${item.horarios}</div>` : ''}
-                        </div>
-                        ${item.pendientes ? `<div class="t-notas"><strong>Pendientes:</strong><br>${item.pendientes}</div>` : ''}
-                        
-                        <button class="btn-resolver" onclick="marcarResuelto(${item.row}, this)">✓ Marcar como atendido</button>
-                    </div>
-                `;
-            });
-            contenedor.innerHTML = nuevoHTML;
-        }).catch(error => {
-            if (!esFondo) contenedor.innerHTML = '<p style="text-align:center; color:#e74c3c;">❌ Error de conexión.</p>';
-        });
-    }
-
-    window.onload = () => {
-        cargarPendientes(false);
-        setInterval(() => cargarPendientes(true), 15000);
-    };
 </script>
 
 </body>

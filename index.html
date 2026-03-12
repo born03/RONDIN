@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expediente Clínico Móvil</title>
     <style>
-        /* Mismo diseño que te gustó */
+        /* Diseño general */
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 15px; display: flex; justify-content: center; color: #2c3e50;}
-        .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; }
+        
+        /* Contenedor principal que se adapta */
+        .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; transition: max-width 0.3s ease; }
         
         h2 { color: #0056b3; text-align: center; margin-top: 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 8px;}
         h3 { color: #34495e; text-align: center; font-size: 18px; margin-top: 0;}
         
+        /* Layout responsivo (Magia para Compu vs Celular) */
+        .main-layout { display: flex; flex-direction: column; gap: 0; }
+        .form-section { width: 100%; }
+        .historial-seccion { margin-top: 35px; border-top: 2px solid #ecf0f1; padding-top: 25px; width: 100%; }
+
+        /* Estilos del Formulario */
         .form-group { margin-bottom: 12px; }
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-width { grid-column: span 2; }
@@ -21,7 +29,7 @@
         input[type="text"]:focus, textarea:focus { border-color: #0056b3; background-color: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
         textarea { resize: vertical; min-height: 90px; }
         
-        .btn-dictar { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 12px; width: 100%; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; transition: all 0.2s;}
+        .btn-dictar { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; transition: all 0.2s;}
         .btn-dictar:active { transform: scale(0.98); }
         .btn-dictar.grabando { background-color: #ffebeb; color: #d63031; border-color: #ffcccc; animation: pulse 1.5s infinite; }
         
@@ -29,7 +37,7 @@
         .btn-enviar:active { transform: scale(0.98); box-shadow: 0 2px 5px rgba(0, 86, 179, 0.2); }
         .btn-enviar:disabled { background-color: #95a5a6; box-shadow: none; cursor: not-allowed; }
 
-        .historial-seccion { margin-top: 35px; border-top: 2px solid #ecf0f1; padding-top: 25px; }
+        /* Estilos de las Tarjetas */
         .tarjeta-pendiente { background-color: #ffffff; border: 1px solid #e1e8ed; border-left: 5px solid #e67e22; padding: 16px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: opacity 0.3s ease, transform 0.3s ease; }
         .tarjeta-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; }
         .t-cama { font-size: 20px; font-weight: 800; color: #0056b3; display: flex; align-items: center; gap: 5px;}
@@ -51,53 +59,86 @@
         .info-dictado { font-size: 11px; color: #7f8c8d; text-align: center; margin-top: 5px; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* =========================================
+           AQUÍ EMPIEZA LA MAGIA PARA COMPUTADORAS
+           ========================================= */
+        @media (min-width: 900px) {
+            body { padding: 30px; }
+            .container { max-width: 1100px; padding: 30px; } /* Se hace más ancho */
+            .main-layout { 
+                flex-direction: row; /* Pone las cosas una al lado de la otra */
+                gap: 40px; 
+                align-items: flex-start;
+            }
+            .form-section { 
+                flex: 0 0 450px; /* Ancho fijo para el formulario */
+                position: sticky; /* Deja el formulario fijo mientras bajas por la lista */
+                top: 30px; 
+            }
+            .historial-seccion { 
+                flex: 1; /* La lista ocupa el resto del espacio */
+                margin-top: 0; 
+                border-top: none; 
+                border-left: 2px dashed #ecf0f1; /* Línea divisoria vertical */
+                padding-top: 0; 
+                padding-left: 40px; 
+            }
+            h3 { text-align: left; } /* Alinea el título de pendientes a la izquierda en PC */
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>🏥 Nuevo Registro</h2>
+    <h2>🏥 Expediente de Rondines</h2>
     
-    <div class="form-group full-width">
-        <button id="btn-dictar" class="btn-dictar">🎙️ Dictado Inteligente (Autocompletar)</button>
-        <div class="info-dictado">Di: "Cama...", "Paciente...", "Medicamento...", "Dosis...", "Horario...", "Pendientes..."</div>
-    </div>
+    <div class="main-layout">
+        
+        <div class="form-section">
+            <div class="form-group full-width">
+                <button id="btn-dictar" class="btn-dictar">🎙️ Dictado Inteligente (Autocompletar)</button>
+                <div class="info-dictado">Di: "Cama...", "Paciente...", "Medicamento...", "Dosis...", "Horario...", "Pendientes..."</div>
+            </div>
 
-    <div class="grid-form">
-        <div class="form-group">
-            <label>Cama / Hab.</label>
-            <input type="text" id="cama" placeholder="Ej. 302">
-        </div>
-        <div class="form-group">
-            <label>Paciente</label>
-            <input type="text" id="paciente" placeholder="Nombre">
-        </div>
-        <div class="form-group">
-            <label>Medicamento</label>
-            <input type="text" id="medicamento" placeholder="Ej. Ketorolaco">
-        </div>
-        <div class="form-group">
-            <label>Dosis</label>
-            <input type="text" id="dosis" placeholder="Ej. 30mg">
-        </div>
-        <div class="form-group full-width">
-            <label>Horarios</label>
-            <input type="text" id="horarios" placeholder="Ej. Cada 8 hrs (10:00, 18:00, 02:00)">
-        </div>
-        <div class="form-group full-width">
-            <label>Notas Clínicas / Pendientes</label>
-            <textarea id="pendientes" placeholder="Si no usas palabras clave, el dictado aparecerá aquí..."></textarea>
-        </div>
-    </div>
+            <div class="grid-form">
+                <div class="form-group">
+                    <label>Cama / Hab.</label>
+                    <input type="text" id="cama" placeholder="Ej. 302">
+                </div>
+                <div class="form-group">
+                    <label>Paciente</label>
+                    <input type="text" id="paciente" placeholder="Nombre">
+                </div>
+                <div class="form-group">
+                    <label>Medicamento</label>
+                    <input type="text" id="medicamento" placeholder="Ej. Ketorolaco">
+                </div>
+                <div class="form-group">
+                    <label>Dosis</label>
+                    <input type="text" id="dosis" placeholder="Ej. 30mg">
+                </div>
+                <div class="form-group full-width">
+                    <label>Horarios</label>
+                    <input type="text" id="horarios" placeholder="Ej. Cada 8 hrs (10:00, 18:00, 02:00)">
+                </div>
+                <div class="form-group full-width">
+                    <label>Notas Clínicas / Pendientes</label>
+                    <textarea id="pendientes" placeholder="Si no usas palabras clave, el dictado aparecerá aquí..."></textarea>
+                </div>
+            </div>
 
-    <button id="btn-enviar" class="btn-enviar" onclick="enviarReporte()">Guardar en Expediente</button>
-
-    <div class="historial-seccion">
-        <h3>📋 Pendientes en Sala</h3>
-        <button class="btn-actualizar" onclick="cargarPendientes(false)">↻ Sincronizar datos ahora</button>
-        <div id="lista-pendientes">
-            <p style="text-align:center; color:#7f8c8d; font-size: 14px;">Cargando sala...</p>
+            <button id="btn-enviar" class="btn-enviar" onclick="enviarReporte()">Guardar en Expediente</button>
         </div>
+
+        <div class="historial-seccion">
+            <h3>📋 Casos Activos en Sala</h3>
+            <button class="btn-actualizar" onclick="cargarPendientes(false)">↻ Forzar Sincronización</button>
+            <div id="lista-pendientes">
+                <p style="text-align:center; color:#7f8c8d; font-size: 14px;">Cargando sala...</p>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -106,7 +147,7 @@
 
     const btnDictar = document.getElementById('btn-dictar');
     let dictando = false;
-    let textoAcumulado = ""; // Aquí guardaremos todo lo que hables
+    let textoAcumulado = ""; 
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
@@ -115,9 +156,7 @@
         recognition.interimResults = false; 
         recognition.lang = 'es-MX'; 
         
-        recognition.onstart = function() {
-            textoAcumulado = ""; // Limpia el texto anterior al empezar
-        };
+        recognition.onstart = function() { textoAcumulado = ""; };
 
         recognition.onresult = event => {
             let fraseNueva = '';
@@ -125,7 +164,6 @@
                 fraseNueva += event.results[i][0].transcript; 
             }
             textoAcumulado += fraseNueva + " ";
-            // Cada vez que terminas una frase, la procesa y acomoda
             distribuirTextoInteligente(textoAcumulado);
         };
         
@@ -151,11 +189,9 @@
         btnDictar.style.display = 'none'; 
     }
 
-    // --- MAGIA: FUNCIÓN QUE REPARTE EL TEXTO ---
     function distribuirTextoInteligente(textoTotal) {
         const txt = textoTotal.toLowerCase();
         
-        // Diccionario de palabras que el sistema va a buscar
         const diccionario = [
             { id: 'cama', palabras: ['cama ', 'habitación ', 'habitacion '] },
             { id: 'paciente', palabras: ['paciente '] },
@@ -167,7 +203,6 @@
 
         let posiciones = [];
 
-        // Buscar en dónde dijiste cada palabra
         diccionario.forEach(categoria => {
             let mejorIndice = -1;
             let longitud = 0;
@@ -185,21 +220,17 @@
             }
         });
 
-        // Ordenar las palabras en el orden en que las hablaste
         posiciones.sort((a, b) => a.index - b.index);
 
-        // Si no dijiste ninguna palabra clave, manda todo a la caja de pendientes normal
         if (posiciones.length === 0) {
             document.getElementById('pendientes').value = textoTotal;
             return;
         }
 
-        // Limpiar las cajas
         ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => {
             document.getElementById(id).value = '';
         });
 
-        // Cortar y repartir a cada cajita
         for (let i = 0; i < posiciones.length; i++) {
             let actual = posiciones[i];
             let siguiente = posiciones[i + 1];
@@ -210,14 +241,12 @@
             let textoExtraido = textoTotal.substring(inicio, fin).trim();
             
             if (textoExtraido) {
-                // Poner mayúscula al principio
                 textoExtraido = textoExtraido.charAt(0).toUpperCase() + textoExtraido.slice(1);
                 document.getElementById(actual.id).value = textoExtraido;
             }
         }
     }
 
-    // --- FUNCIONES QUE YA TENÍAS ---
     function enviarReporte() {
         const cama = document.getElementById('cama').value;
         const paciente = document.getElementById('paciente').value;
@@ -243,7 +272,7 @@
         fetch(URL_GOOGLE, { method: 'POST', body: formData, mode: 'no-cors' })
         .then(() => {
             document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-            textoAcumulado = ""; // Limpia la memoria del dictado
+            textoAcumulado = ""; 
             btnEnviar.innerHTML = "Guardar en Expediente"; btnEnviar.disabled = false;
             setTimeout(() => cargarPendientes(false), 1500); 
         }).catch(err => { alert("Error al guardar."); btnEnviar.disabled = false; });

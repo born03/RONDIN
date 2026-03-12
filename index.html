@@ -5,73 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expediente Clínico Móvil</title>
     <style>
-        /* Diseño general más limpio y fluido */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: #eef2f5; 
-            margin: 0; 
-            padding: 15px; 
-            display: flex; 
-            justify-content: center; 
-            color: #2c3e50;
-        }
-        .container { 
-            background-color: #ffffff; 
-            padding: 25px 20px; 
-            border-radius: 16px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06); 
-            width: 100%; 
-            max-width: 500px; 
-        }
+        /* Mismo diseño que te gustó */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 15px; display: flex; justify-content: center; color: #2c3e50;}
+        .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; }
         
-        /* Encabezados temáticos */
         h2 { color: #0056b3; text-align: center; margin-top: 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 8px;}
         h3 { color: #34495e; text-align: center; font-size: 18px; margin-top: 0;}
         
-        /* Formulario médico fluido */
         .form-group { margin-bottom: 12px; }
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-width { grid-column: span 2; }
         
         label { font-weight: 600; color: #5c6a79; font-size: 13px; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.5px;}
-        input[type="text"], textarea { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1.5px solid #dce4ec; 
-            border-radius: 10px; 
-            box-sizing: border-box; 
-            font-size: 15px; 
-            background-color: #fbfcff; 
-            transition: all 0.2s ease; 
-        }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1.5px solid #dce4ec; border-radius: 10px; box-sizing: border-box; font-size: 15px; background-color: #fbfcff; transition: all 0.2s ease; }
         input[type="text"]:focus, textarea:focus { border-color: #0056b3; background-color: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
         textarea { resize: vertical; min-height: 90px; }
         
-        /* Botones modernos */
-        .btn-dictar { 
-            background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 12px; width: 100%; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; transition: all 0.2s;
-        }
+        .btn-dictar { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 12px; width: 100%; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 8px; transition: all 0.2s;}
         .btn-dictar:active { transform: scale(0.98); }
         .btn-dictar.grabando { background-color: #ffebeb; color: #d63031; border-color: #ffcccc; animation: pulse 1.5s infinite; }
         
-        .btn-enviar { 
-            background-color: #0056b3; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); transition: all 0.2s; 
-        }
+        .btn-enviar { background-color: #0056b3; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); transition: all 0.2s; }
         .btn-enviar:active { transform: scale(0.98); box-shadow: 0 2px 5px rgba(0, 86, 179, 0.2); }
         .btn-enviar:disabled { background-color: #95a5a6; box-shadow: none; cursor: not-allowed; }
 
-        /* Tarjetas estilo expediente médico */
         .historial-seccion { margin-top: 35px; border-top: 2px solid #ecf0f1; padding-top: 25px; }
-        .tarjeta-pendiente { 
-            background-color: #ffffff; 
-            border: 1px solid #e1e8ed; 
-            border-left: 5px solid #e67e22; 
-            padding: 16px; 
-            margin-bottom: 16px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); 
-            transition: opacity 0.3s ease, transform 0.3s ease; 
-        }
+        .tarjeta-pendiente { background-color: #ffffff; border: 1px solid #e1e8ed; border-left: 5px solid #e67e22; padding: 16px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: opacity 0.3s ease, transform 0.3s ease; }
         .tarjeta-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; }
         .t-cama { font-size: 20px; font-weight: 800; color: #0056b3; display: flex; align-items: center; gap: 5px;}
         .t-paciente { font-size: 15px; color: #34495e; font-weight: 600; text-align: right;}
@@ -82,14 +41,14 @@
         
         .t-notas { font-size: 14px; color: #1a252f; background: #fffcf5; padding: 12px; border-radius: 8px; border-left: 3px solid #f1c40f; margin-top: 5px; line-height: 1.4;}
         
-        .btn-resolver { 
-            background-color: #ffffff; color: #27ae60; border: 1.5px solid #2ecc71; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: all 0.2s; 
-        }
+        .btn-resolver { background-color: #ffffff; color: #27ae60; border: 1.5px solid #2ecc71; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 15px; transition: all 0.2s; }
         .btn-resolver:hover { background-color: #2ecc71; color: #ffffff; }
         .btn-resolver:active { transform: scale(0.98); }
         
         .btn-actualizar { background-color: transparent; color: #7f8c8d; border: 1px dashed #bdc3c7; padding: 10px; width: 100%; border-radius: 8px; font-size: 13px; cursor: pointer; margin-bottom: 20px; transition: all 0.2s;}
         .btn-actualizar:active { background-color: #f4f6f7; }
+        
+        .info-dictado { font-size: 11px; color: #7f8c8d; text-align: center; margin-top: 5px; }
 
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
@@ -99,6 +58,11 @@
 <div class="container">
     <h2>🏥 Nuevo Registro</h2>
     
+    <div class="form-group full-width">
+        <button id="btn-dictar" class="btn-dictar">🎙️ Dictado Inteligente (Autocompletar)</button>
+        <div class="info-dictado">Di: "Cama...", "Paciente...", "Medicamento...", "Dosis...", "Horario...", "Pendientes..."</div>
+    </div>
+
     <div class="grid-form">
         <div class="form-group">
             <label>Cama / Hab.</label>
@@ -122,8 +86,7 @@
         </div>
         <div class="form-group full-width">
             <label>Notas Clínicas / Pendientes</label>
-            <textarea id="pendientes" placeholder="Toca el botón para dictar..."></textarea>
-            <button id="btn-dictar" class="btn-dictar">🎙️ Dictar indicaciones</button>
+            <textarea id="pendientes" placeholder="Si no usas palabras clave, el dictado aparecerá aquí..."></textarea>
         </div>
     </div>
 
@@ -139,27 +102,122 @@
 </div>
 
 <script>
-    // --- MISMA LÓGICA EXACTA, CERO CAMBIOS ESTRUCTURALES ---
     const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxHg3o72v1ol3E1WObJfqWn-GUkcW0UT-8hPiyyZ-sAh1ERdVujELF26kzi24hCiyVwNQ/exec';
 
     const btnDictar = document.getElementById('btn-dictar');
-    const txtPendientes = document.getElementById('pendientes');
     let dictando = false;
+    let textoAcumulado = ""; // Aquí guardaremos todo lo que hables
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
-        recognition.continuous = true; recognition.interimResults = false; recognition.lang = 'es-MX'; 
-        recognition.onresult = event => {
-            for (let i = event.resultIndex; i < event.results.length; i++) { txtPendientes.value += event.results[i][0].transcript + ". "; }
+        recognition.continuous = true; 
+        recognition.interimResults = false; 
+        recognition.lang = 'es-MX'; 
+        
+        recognition.onstart = function() {
+            textoAcumulado = ""; // Limpia el texto anterior al empezar
         };
-        recognition.onerror = () => { btnDictar.innerHTML = "🎙️ Dictar indicaciones"; btnDictar.classList.remove('grabando'); dictando = false; };
-        btnDictar.addEventListener('click', () => {
-            if (!dictando) { recognition.start(); btnDictar.innerHTML = "⏹️ Detener grabación"; btnDictar.classList.add('grabando'); dictando = true; } 
-            else { recognition.stop(); btnDictar.innerHTML = "🎙️ Dictar indicaciones"; btnDictar.classList.remove('grabando'); dictando = false; }
-        });
-    } else { btnDictar.style.display = 'none'; }
 
+        recognition.onresult = event => {
+            let fraseNueva = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) { 
+                fraseNueva += event.results[i][0].transcript; 
+            }
+            textoAcumulado += fraseNueva + " ";
+            // Cada vez que terminas una frase, la procesa y acomoda
+            distribuirTextoInteligente(textoAcumulado);
+        };
+        
+        recognition.onerror = () => { 
+            btnDictar.innerHTML = "🎙️ Dictado Inteligente (Autocompletar)"; 
+            btnDictar.classList.remove('grabando'); dictando = false; 
+        };
+        
+        btnDictar.addEventListener('click', () => {
+            if (!dictando) { 
+                recognition.start(); 
+                btnDictar.innerHTML = "⏹️ Detener grabación"; 
+                btnDictar.classList.add('grabando'); 
+                dictando = true; 
+            } else { 
+                recognition.stop(); 
+                btnDictar.innerHTML = "🎙️ Dictado Inteligente (Autocompletar)"; 
+                btnDictar.classList.remove('grabando'); 
+                dictando = false; 
+            }
+        });
+    } else { 
+        btnDictar.style.display = 'none'; 
+    }
+
+    // --- MAGIA: FUNCIÓN QUE REPARTE EL TEXTO ---
+    function distribuirTextoInteligente(textoTotal) {
+        const txt = textoTotal.toLowerCase();
+        
+        // Diccionario de palabras que el sistema va a buscar
+        const diccionario = [
+            { id: 'cama', palabras: ['cama ', 'habitación ', 'habitacion '] },
+            { id: 'paciente', palabras: ['paciente '] },
+            { id: 'medicamento', palabras: ['medicamento ', 'medicamentos '] },
+            { id: 'dosis', palabras: ['dosis '] },
+            { id: 'horarios', palabras: ['horario ', 'horarios '] },
+            { id: 'pendientes', palabras: ['pendiente ', 'pendientes ', 'nota ', 'notas '] }
+        ];
+
+        let posiciones = [];
+
+        // Buscar en dónde dijiste cada palabra
+        diccionario.forEach(categoria => {
+            let mejorIndice = -1;
+            let longitud = 0;
+            
+            categoria.palabras.forEach(palabra => {
+                let idx = txt.indexOf(palabra);
+                if (idx !== -1 && (mejorIndice === -1 || idx < mejorIndice)) {
+                    mejorIndice = idx;
+                    longitud = palabra.length;
+                }
+            });
+
+            if (mejorIndice !== -1) {
+                posiciones.push({ id: categoria.id, index: mejorIndice, length: longitud });
+            }
+        });
+
+        // Ordenar las palabras en el orden en que las hablaste
+        posiciones.sort((a, b) => a.index - b.index);
+
+        // Si no dijiste ninguna palabra clave, manda todo a la caja de pendientes normal
+        if (posiciones.length === 0) {
+            document.getElementById('pendientes').value = textoTotal;
+            return;
+        }
+
+        // Limpiar las cajas
+        ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+
+        // Cortar y repartir a cada cajita
+        for (let i = 0; i < posiciones.length; i++) {
+            let actual = posiciones[i];
+            let siguiente = posiciones[i + 1];
+            
+            let inicio = actual.index + actual.length;
+            let fin = siguiente ? siguiente.index : txt.length;
+            
+            let textoExtraido = textoTotal.substring(inicio, fin).trim();
+            
+            if (textoExtraido) {
+                // Poner mayúscula al principio
+                textoExtraido = textoExtraido.charAt(0).toUpperCase() + textoExtraido.slice(1);
+                document.getElementById(actual.id).value = textoExtraido;
+            }
+        }
+    }
+
+    // --- FUNCIONES QUE YA TENÍAS ---
     function enviarReporte() {
         const cama = document.getElementById('cama').value;
         const paciente = document.getElementById('paciente').value;
@@ -185,6 +243,7 @@
         fetch(URL_GOOGLE, { method: 'POST', body: formData, mode: 'no-cors' })
         .then(() => {
             document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+            textoAcumulado = ""; // Limpia la memoria del dictado
             btnEnviar.innerHTML = "Guardar en Expediente"; btnEnviar.disabled = false;
             setTimeout(() => cargarPendientes(false), 1500); 
         }).catch(err => { alert("Error al guardar."); btnEnviar.disabled = false; });

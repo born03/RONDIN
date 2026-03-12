@@ -6,7 +6,6 @@
     <title>Expediente Clínico Móvil Seguro</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
-        /* EL MISMO DISEÑO QUE YA TE GUSTABA */
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 15px; display: flex; justify-content: center; color: #2c3e50;}
         .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; transition: max-width 0.3s ease; }
         
@@ -141,28 +140,25 @@
 </div>
 
 <script type="module">
-    // Importamos las herramientas de Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, where, updateDoc, doc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // 🔴🔴🔴 PEGA TU FIREBASE CONFIG AQUÍ ABAJO 🔴🔴🔴
+    // Tu configuración exacta de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
-      projectId: "https://rondinhp-239a4-default-rtdb.firebaseio.com",
+      databaseURL: "https://rondinhp-239a4-default-rtdb.firebaseio.com",
+      projectId: "rondinhp-239a4",
       storageBucket: "rondinhp-239a4.firebasestorage.app",
       messagingSenderId: "383767424884",
       appId: "1:383767424884:web:e24192f8373ed096f30621"
     };
-    // 🔴🔴🔴 HASTA AQUÍ 🔴🔴🔴
 
-    // Inicializamos Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const pacientesRef = collection(db, "pacientes");
 
-    // --- MAGIA DEL TIEMPO REAL (Adiós al botón de actualizar) ---
-    // Esta función "escucha" la base de datos constántemente
+    // TIEMPO REAL
     const q = query(pacientesRef, where("estado", "==", "Activo"), orderBy("fecha", "desc"));
     
     onSnapshot(q, (snapshot) => {
@@ -176,7 +172,7 @@
         let nuevoHTML = '';
         snapshot.forEach((documento) => {
             const item = documento.data();
-            const id = documento.id; // El ID único de Firebase
+            const id = documento.id; 
             const formatText = (text) => text ? text.replace(/\n/g, '<br>') : '';
             
             nuevoHTML += `
@@ -197,16 +193,19 @@
             `;
         });
         contenedor.innerHTML = nuevoHTML;
+    }, (error) => {
+        console.error("Error al conectar con Firestore:", error);
+        document.getElementById('lista-pendientes').innerHTML = '<p style="text-align:center; color:#e74c3c; font-weight:bold;">❌ Error: Permisos denegados. Revisa las Reglas en Firebase.</p>';
     });
 
-    // --- ENVIAR REPORTE A FIREBASE ---
+    // ENVIAR REPORTE
     window.enviarReporte = async function() {
         const cama = document.getElementById('cama').value;
         const paciente = document.getElementById('paciente').value;
         const btnEnviar = document.getElementById('btn-enviar');
         const notas = document.getElementById('pendientes').value;
         
-        window.agregarMedicamento(); // Añadir si dejó uno a medias
+        window.agregarMedicamento(); 
 
         if(!cama && !paciente && window.medicamentosArray.length === 0 && !notas) { 
             alert("El expediente está vacío."); return; 
@@ -222,7 +221,6 @@
         });
 
         try {
-            // Guardamos en Firebase Firestore
             await addDoc(pacientesRef, {
                 cama: cama,
                 paciente: paciente,
@@ -231,10 +229,9 @@
                 horarios: horFinal.trim(),
                 pendientes: notas,
                 estado: "Activo",
-                fecha: serverTimestamp() // Hora exacta del servidor de Google
+                fecha: serverTimestamp() 
             });
 
-            // Limpieza
             document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
             window.medicamentosArray = [];
             window.renderizarListaMeds();
@@ -244,12 +241,12 @@
             btnEnviar.innerHTML = "💾 Guardar Seguro en Nube"; btnEnviar.disabled = false;
         } catch (error) {
             console.error("Error al guardar: ", error);
-            alert("Error al subir a la nube. Revisa tu conexión.");
-            btnEnviar.disabled = false;
+            alert("Error al subir a la nube. Probablemente las Reglas de Firebase están cerradas.");
+            btnEnviar.innerHTML = "💾 Guardar Seguro en Nube"; btnEnviar.disabled = false;
         }
     };
 
-    // --- MARCAR RESUELTO EN FIREBASE ---
+    // MARCAR RESUELTO
     window.marcarResuelto = async function(idFirebase, boton) {
         if(!confirm("¿Confirmas que el paciente ha sido atendido?")) return;
         
@@ -263,7 +260,6 @@
                 estado: "Resuelto",
                 fechaResolucion: serverTimestamp()
             });
-            // No necesitamos recargar la lista, ¡onSnapshot lo hará automáticamente en milisegundos!
         } catch (error) {
             console.error("Error al actualizar: ", error);
             alert("Hubo un error al actualizar el estado.");
@@ -271,15 +267,9 @@
         }
     };
 
-    // =========================================================================
-    // EL RESTO DEL CÓDIGO (Tesseract, Borrador, Medicamentos, Dictado) SE MANTIENE
-    // Solo lo pasamos al objeto window para que funcione dentro de un 'module'
-    // =========================================================================
-
-    // --- ESCANEO DE IMAGEN ---
+    // ESCANEO IMAGEN
     const fotoInput = document.getElementById('foto-input');
     const txtPendientes = document.getElementById('pendientes');
-
     fotoInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if(!file) return;
@@ -299,7 +289,7 @@
         });
     });
 
-    // --- BORRADOR Y MEDICAMENTOS ---
+    // BORRADOR Y MEDICAMENTOS
     window.medicamentosArray = [];
     window.onload = () => {
         const borrador = JSON.parse(localStorage.getItem('borradorRondines'));
@@ -352,7 +342,7 @@
         });
     };
 
-    // --- DICTADO INTELIGENTE ---
+    // DICTADO INTELIGENTE
     const btnDictar = document.getElementById('btn-dictar');
     let dictando = false; window.textoAcumulado = ""; 
 

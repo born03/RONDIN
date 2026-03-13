@@ -56,7 +56,7 @@
         .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px;}
 
         /* ===================================================
-           CENSO / LISTA DE PACIENTES ULTRA COMPACTA
+           CENSO / LISTA DE PACIENTES 
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
@@ -74,27 +74,45 @@
         .p-bloque:hover { border-color: var(--primary); }
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         
+        /* 🔥 LA MAGIA DE LA ÚLTIMA NOTA (Cortada a 3 líneas máx) */
+        .p-nota-reciente {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.4;
+            cursor: pointer;
+            color: #92400e;
+            /* Truco para que NUNCA estire la caja: */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; 
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .p-nota-reciente:hover { background: #fef3c7; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
-        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%;}
+        .p-col-acciones { display: flex; flex-direction: column; justify-content: center; gap: 8px; margin-top: 4px;}
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 8px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
-        .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
 
         .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;}
         .dot { height: 6px; width: 6px; background-color: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite;}
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* ===================================================
-           MODAL DE HISTORIAL DE NOTAS (POP UP)
+           MODAL DE HISTORIAL DE NOTAS
            =================================================== */
         .notas-container { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; display: flex; flex-direction: column; gap: 8px;}
         .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 13px;}
         .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 11px; margin-bottom: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
         .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 10px; }
         
-        .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; } 
-        .nota-visto .nota-texto { color: #64748b; text-decoration: line-through; text-decoration-color: #cbd5e1;}
+        .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; order: 999; } 
+        .nota-visto .nota-texto { color: #64748b; }
         
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
@@ -138,7 +156,7 @@
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO (NUEVO GRID: 2 COLUMNAS + ACCIONES)
+           DISEÑO RESPONSIVO (GRID DE 4 COLUMNAS EXACTAS)
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
@@ -146,18 +164,18 @@
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
             
-            /* LA MAGIA: Solo 3 columnas. Info, Indicaciones, y Botones */
+            /* LA MAGIA: 4 Columnas con align-items: start para no estirar */
             .paciente-row { 
                 display: grid; 
-                grid-template-columns: 160px 1fr 130px; 
+                grid-template-columns: 140px 1.4fr 1fr 100px; 
                 gap: 15px; 
                 padding: 12px; 
                 align-items: start; 
             }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
-            .p-col-meds { display: flex; flex-direction: column; height: max-content; margin: 0;}
-            .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 6px; border-left: 1px solid var(--border); padding-left: 10px; margin-top: 0;}
+            .p-col-meds, .p-col-obs { display: flex; flex-direction: column; margin: 0;}
+            .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 8px; border-left: 1px solid var(--border); padding-left: 10px; margin-top: 0;}
             
             .p-img-render { margin-top: 10px; max-width: 100%; }
         }
@@ -186,7 +204,7 @@
 
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 Evolución / Notas</h3>
+        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 Historial de Evolución</h3>
         
         <textarea id="input-nueva-nota" placeholder="Escribe una nueva evolución aquí..."></textarea>
         <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px;">➕ Guardar Evolución</button>
@@ -226,13 +244,13 @@
                 </div>
 
                 <div class="form-group full-width">
-                    <label>💊 Indicaciones (Caja Principal)</label>
+                    <label>💊 Indicaciones</label>
                     <textarea id="indicaciones-texto" class="caja-grande" placeholder="Fármaco, dosis, vía, horario..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
                 <div class="form-group full-width">
                     <label>📝 Evolución Inicial</label>
-                    <textarea id="pendientes" placeholder="Diagnóstico o nota de ingreso (Se guardará en el Pop-up de Notas)..." oninput="window.guardarBorrador()"></textarea>
+                    <textarea id="pendientes" placeholder="Diagnóstico de ingreso. Se irá al historial..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
                 <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()">
@@ -263,6 +281,13 @@
                 <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">Cirugía y Gastro</button>
                 <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">Traumatología</button>
                 <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">Infectología</button>
+            </div>
+
+            <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div>
+                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0;">Oncología</h2>
+                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px;">Conectando...</p>
+                </div>
             </div>
 
             <div class="entrega-toolbar">
@@ -330,7 +355,7 @@
         let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
         navigator.clipboard.writeText(texto).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
-            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Indicaciones copiadas");
+            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Texto copiado");
         });
     };
 
@@ -355,12 +380,12 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (SOLO 1 CAJA VISIBLE)
+    // EXPEDIENTE MODO CENSO (4 COLUMNAS)
     // ==========================================
     let isFirstLoad = true;
 
     function formatearFecha(timestampFirestore) {
-        if(!timestampFirestore) return 'Sin fecha';
+        if(!timestampFirestore) return 'Sin hora';
         const date = timestampFirestore.toDate();
         return date.toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
     }
@@ -385,19 +410,23 @@
         if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">Sala libre.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
-            let notasNoLeidas = 0; let totalNotas = 0;
-            if(item.historial) {
-                totalNotas = item.historial.length;
-                notasNoLeidas = item.historial.filter(n => !n.visto).length;
-            }
+            // 🔥 LA NOTA MÁS RECIENTE PARA MOSTRAR EN PANTALLA (CORTADA A 3 RENGLONES)
+            let ultimaNotaHtml = '<div class="p-nota-reciente" style="color:#94a3b8; border-color:#e2e8f0; background:#f8fafc;" onclick="window.abrirModalNotas(\''+item.id+'\')">Sin evolución. Clic para añadir.</div>';
             
-            let btnNotasColor = notasNoLeidas > 0 ? 'danger-badge' : '';
-            let btnNotasTexto = notasNoLeidas > 0 ? `💬 Evolución (${totalNotas}) 🔴` : `💬 Evolución (${totalNotas})`;
+            if (item.historial && item.historial.length > 0) {
+                let lastNote = item.historial[item.historial.length - 1]; // Toma la última agregada
+                let prefijo = lastNote.visto ? '' : '🔴 '; // Alerta visual sutil si no está vista
+                
+                ultimaNotaHtml = `
+                <div class="p-nota-reciente" onclick="window.abrirModalNotas('${item.id}')" title="Clic para abrir historial completo">
+                    <span style="font-weight:bold; font-size:10px; color:#b45309; display:block; margin-bottom:2px;">${prefijo}${lastNote.autor} (${lastNote.fecha}):</span>
+                    ${lastNote.texto}
+                </div>`;
+            }
 
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
 
-            // HTML LIMPIO: Ya no existe el div de p-col-obs
             return `
             <div class="paciente-row">
                 <div class="p-col-info">
@@ -414,8 +443,12 @@
                     <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
                 
+                <div class="p-col-obs">
+                    <span class="p-bloque-titulo">Última Evolución <span class="doble-clic-hint">1 Clic para Historial</span></span>
+                    ${ultimaNotaHtml}
+                </div>
+                
                 <div class="p-col-acciones">
-                    <button class="btn-outline ${btnNotasColor}" onclick="window.abrirModalNotas('${item.id}')">${btnNotasTexto}</button>
                     <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ Alta</button>
                 </div>
             </div>`;
@@ -455,7 +488,7 @@
 
         contenedor.innerHTML = notasMapeadas.map(n => {
             let esVistoClase = n.visto ? 'nota-visto' : '';
-            let btnVisto = n.visto ? '' : `<button class="btn-ver-nota" onclick="window.marcarNotaVistaModal(${n.originalIndex})">👁️ Marcar Visto</button>`;
+            let btnVisto = n.visto ? '' : `<button class="btn-ver-nota" onclick="window.marcarNotaVistaModal(${n.originalIndex})">👁️ Visto</button>`;
             
             return `
             <div class="nota-chat ${esVistoClase}" style="${n.visto ? '' : 'border-left: 4px solid ' + n.color};">
@@ -500,7 +533,6 @@
         const btn = document.getElementById('btn-enviar'); btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
         
         let hIni = []; 
-        // Convertimos el campo "pendientes" (Evolución Inicial) en la primera nota del Pop-up
         if (obs.trim() !== '') {
             hIni.push({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#0d9488', texto: obs.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), visto: false });
         }
@@ -535,7 +567,7 @@
     }
 
     // ==========================================
-    // ENTREGA DE GUARDIA
+    // ENTREGA DE GUARDIA (CORRECCIÓN TABS)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -543,14 +575,21 @@
     window.cambiarServicio = function(servicioId, boton) {
         document.querySelectorAll('.btn-servicio').forEach(b => b.classList.remove('activo')); boton.classList.add('activo');
         const n = {'Oncologia': 'Oncología', 'Cirugia_Gastro': 'Cirugía y Gastro', 'Traumatologia': 'Traumatología', 'Infectologia': 'Infectología'};
-        document.getElementById('titulo-servicio-actual').innerText = n[servicioId]; servicioActual = servicioId; cargarServicioFirebase(servicioId);
+        document.getElementById('titulo-servicio-actual').innerText = n[servicioId]; 
+        
+        // 🔥 CORRECCIÓN DEL BUG DE LAS PESTAÑAS
+        editandoEntrega = false; 
+        editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Cargando datos de '+n[servicioId]+'...</p>';
+        
+        servicioActual = servicioId; 
+        cargarServicioFirebase(servicioId);
     };
 
     function cargarServicioFirebase(servicio) {
         if(unsubscribeEntrega) unsubscribeEntrega();
         unsubscribeEntrega = onSnapshot(doc(db, "entregas", servicio), (docSnap) => {
             if (!editandoEntrega) {
-                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; } else editor.innerHTML = '<p style="color:#94a3b8;">Pega tu tabla aquí.</p>';
+                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; document.getElementById('info-ultima-modificacion').innerText = `Última edición: ${docSnap.data().autor || 'N/A'}`; } else editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Pega tu tabla aquí.</p>';
             }
         });
     }
@@ -564,9 +603,16 @@
     window.guardarCeldaModal = () => { if(celdaSeleccionada) { celdaSeleccionada.innerHTML = document.getElementById('texto-celda-visual').innerHTML; celdaSeleccionada.classList.add('celda-modificada'); celdaSeleccionada.setAttribute('data-autor', document.getElementById('nombre-usuario').value || 'Anónimo'); window.guardarEntrega(); } cerrarModalCelda(); };
     window.aceptarCambioCelda = () => { if(celdaSeleccionada) { celdaSeleccionada.classList.remove('celda-modificada'); celdaSeleccionada.removeAttribute('data-autor'); window.guardarEntrega(); } cerrarModalCelda(); };
 
-    window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("Guardia guardada.");} catch(e) { } };
-    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual?")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
-
+    window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: document.getElementById('nombre-usuario').value || 'Anónimo', timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("Guardia guardada.");} catch(e) { } };
+    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual? Limpiará celdas amarillas.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
+    
+    window.reiniciarTodasLasEntregas = async function() {
+        if(!confirm("⚠️ ¿BORRAR POR COMPLETO las tablas de los 4 servicios?")) return;
+        if(!confirm("¿Confirmas al 100% que quieres vaciar todo?")) return;
+        const servicios = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
+        for (const serv of servicios) { try { await setDoc(doc(db, "entregas", serv), { html_content: '<p style="color:#64748b;">Hoja en blanco.</p>', autor: 'Sistema', timestamp: serverTimestamp() }); } catch(e) { } }
+        alert("Guardias reiniciadas.");
+    };
 </script>
 </body>
 </html>

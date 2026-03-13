@@ -48,7 +48,10 @@
         input[type="text"], textarea, input[type="color"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 14.5px; background-color: #ffffff; color: var(--text-main); transition: all 0.2s; font-family: inherit; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
         input[type="color"] { padding: 2px; cursor: pointer; height: 45px; }
         input[type="text"]:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15), inset 0 1px 3px rgba(0,0,0,0.06);}
-        textarea.caja-grande { min-height: 120px; resize: vertical; }
+        
+        /* Reducimos ligeramente el tamaño base en el formulario si está vacío */
+        textarea { min-height: 60px; resize: vertical; }
+        textarea.caja-grande { min-height: 100px; }
 
         .botones-accion { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
         .btn-accion { background-color: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
@@ -76,7 +79,8 @@
         .p-bloque-titulo { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;}
         .doble-clic-hint { font-size: 9px; color: #94a3b8; font-weight: normal; text-transform: none; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; cursor: help;}
         
-        .p-bloque { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 14px; line-height: 1.6; white-space: pre-wrap; cursor: copy; transition: background 0.3s;}
+        /* 🔥 MAGIA DE ALTURA: Se quitó el estiramiento automático, ahora "abraza" el texto */
+        .p-bloque { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 14px; line-height: 1.6; white-space: pre-wrap; cursor: copy; transition: background 0.3s; height: fit-content; }
         .p-bloque:hover { border-color: var(--primary); box-shadow: 0 2px 5px rgba(13,148,136, 0.1);}
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         .p-obs { border-left: 3px solid var(--warning); }
@@ -84,13 +88,11 @@
         .p-img-render { max-width: 100px; max-height: 80px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in; transition: transform 0.2s;}
         .p-img-render:hover { transform: scale(1.05); border-color: var(--primary); }
 
-        /* NOTAS / HISTORIAL (AHORA MÁS PEQUEÑAS) */
         .p-historial { margin-top: 6px; }
         .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; font-size: 11.5px; transition: all 0.3s;}
         .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 10px; margin-bottom: 2px; border-bottom: 1px dashed var(--border); padding-bottom: 2px;}
         .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 9px; }
         
-        /* ESTILO PARA NOTA VISTA */
         .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.7; }
         .nota-visto .nota-texto { color: #64748b; text-decoration: line-through; text-decoration-color: #cbd5e1;}
         .btn-ver-nota { background: transparent; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 1px 4px; font-size: 9px; transition: all 0.2s;}
@@ -107,10 +109,11 @@
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* ===================================================
-           SISTEMA DE NOTIFICACIONES (TOAST)
+           SISTEMA DE NOTIFICACIONES (TOAST PEGAJOSO)
            =================================================== */
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
-        .toast { background: var(--text-main); color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 4px solid var(--primary);}
+        .toast { background: var(--text-main); color: white; padding: 14px 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 4px solid var(--primary); cursor: pointer;}
+        .toast:hover { background: #0f172a; }
         .toast.show { transform: translateX(0); }
 
         /* ===================================================
@@ -150,7 +153,7 @@
         .btn-cerrar-visor { position: absolute; top: -15px; right: -15px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO 
+           DISEÑO RESPONSIVO (ARREGLO DE GRID EN PC)
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 30px; align-items: start; }
@@ -275,7 +278,7 @@
             <div class="entrega-toolbar">
                 <button class="btn-tool primario" id="btn-guardar-entrega" onclick="window.guardarEntrega()">💾 Guardar Nube</button>
                 <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">🧹 Recibir Turno</button>
-                <button class="btn-reset-global" onclick="window.reiniciarTodasLasEntregas()">🔴 Reiniciar TODAS las Guardias</button>
+                <button class="btn-reset-global" onclick="window.reiniciarTodasLasEntregas()">🔴 Reiniciar TODAS</button>
             </div>
 
             <div class="editor-wrapper">
@@ -306,27 +309,47 @@
     const db = getFirestore(app);
     const pacientesRef = collection(db, "pacientes");
 
-    // Sonido sutil real
     const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-
     window.pacientesLocales = [];
 
     // ==========================================
-    // SISTEMA DE TOAST (NOTIFICACIONES)
+    // SISTEMA DE TOAST (PEGAJOSO Y ANTI-PÉRDIDA)
     // ==========================================
     window.mostrarToast = function(mensaje) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.innerHTML = mensaje;
-        container.appendChild(toast);
+        // Agregamos una X visual para invitar al cierre manual
+        toast.innerHTML = `<span>${mensaje}</span> <span style="font-size:18px; opacity:0.7;">&times;</span>`;
         
+        // Cerrar al dar clic al toast mismo
+        toast.onclick = (e) => {
+            e.stopPropagation();
+            cerrarToast(toast);
+        };
+
+        container.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 100);
+
+        // ESCUCHA DE MOVIMIENTO: Cerrar la alerta si el usuario toca/clica cualquier parte de la pantalla.
+        // Esperamos 1 segundo antes de activar la escucha para evitar cierres accidentales inmediatos.
         setTimeout(() => {
+            const removerEventos = () => {
+                cerrarToast(toast);
+                document.removeEventListener('click', removerEventos);
+                document.removeEventListener('touchstart', removerEventos);
+            };
+            document.addEventListener('click', removerEventos);
+            document.addEventListener('touchstart', removerEventos);
+        }, 1000);
+    };
+
+    function cerrarToast(toast) {
+        if(toast.classList.contains('show')) {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 400);
-        }, 4000);
-    };
+        }
+    }
 
     window.cambiarPestana = function(id, btn) {
         document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
@@ -335,9 +358,7 @@
         if(id === 'pestana-guardia') editor.setAttribute('contenteditable', window.innerWidth >= 900);
     };
 
-    window.abrirVisorImg = function(src) {
-        document.getElementById('img-visor-full').src = src; document.getElementById('modal-visor-img').style.display = 'flex';
-    };
+    window.abrirVisorImg = function(src) { document.getElementById('img-visor-full').src = src; document.getElementById('modal-visor-img').style.display = 'flex'; };
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
     // ==========================================
@@ -388,10 +409,10 @@
     onSnapshot(query(pacientesRef), (snapshot) => {
         const contenedor = document.getElementById('lista-pendientes'); let activos = [];
         
-        // CEREBRO DE NOTIFICACIONES: Solo suena si el cambio NO lo hiciste tú
         snapshot.docChanges().forEach((change) => {
             if (!isFirstLoad) {
-                // hasPendingWrites es FALSE cuando el cambio viene de la nube (otro dispositivo)
+                // Si hasPendingWrites es falso, el cambio viene de OTRO dispositivo. Suena el Ting.
+                // Si es verdadero, el cambio lo acabas de hacer tú. Guarda silencio.
                 if (!change.doc.metadata.hasPendingWrites) {
                     if (change.type === "added") {
                         window.mostrarToast(`🛏️ Nuevo ingreso: Cama ${change.doc.data().cama}`);
@@ -423,7 +444,7 @@
                     hist += `
                     <div class="nota-chat ${esVistoClase}" style="${n.visto ? '' : 'border-left: 3px solid ' + n.color};">
                         <div class="nota-autor" style="color: ${n.visto ? '#94a3b8' : n.color};">
-                            <span>${n.autor} <span class="nota-fecha">${n.fecha}</span></span>
+                            <span>${n.autor}</span>
                             ${btnVisto}
                         </div>
                         <div class="nota-texto" style="white-space: pre-wrap;">${n.texto}</div>
@@ -462,7 +483,6 @@
         }).join('');
     });
 
-    // LÓGICA: MARCAR NOTA COMO VISTA
     window.marcarNotaVista = async function(docId, notaIndex) {
         const paciente = window.pacientesLocales.find(p => p.id === docId);
         if(paciente && paciente.historial) {

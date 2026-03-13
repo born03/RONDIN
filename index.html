@@ -23,7 +23,7 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
-           MAYÚSCULAS GLOBALES
+           MAYÚSCULAS GLOBALES VISUALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
             text-transform: uppercase;
@@ -51,7 +51,7 @@
            =================================================== */
         .main-layout { display: flex; flex-direction: column; gap: 15px; }
         .form-section { background: var(--bg-body); border-radius: 10px; padding: 15px; border: 1px solid var(--border); }
-        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; text-transform: uppercase;}
+        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px;}
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
@@ -72,7 +72,7 @@
         .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px; text-transform: uppercase;}
 
         /* ===================================================
-           CENSO / LISTA DE PACIENTES (CON EVOLUCIÓN VISIBLE)
+           CENSO / LISTA DE PACIENTES
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
@@ -90,26 +90,7 @@
         .p-bloque:hover { border-color: var(--primary); }
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         
-        /* 🔥 LA CAJA DE EVOLUCIÓN VISIBLE (CORTADA A 3 RENGLONES MÁX) */
-        .p-nota-reciente {
-            background: #fffbeb;
-            border: 1px solid #fcd34d;
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            line-height: 1.4;
-            cursor: pointer;
-            color: #92400e;
-            /* Magia para que no estire la caja y ponga "..." */
-            display: -webkit-box;
-            -webkit-line-clamp: 3; 
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            height: max-content;
-            margin: 0;
-        }
+        .p-nota-reciente { background: #fffbeb; border: 1px solid #fcd34d; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.4; cursor: pointer; color: #92400e; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.2s; text-transform: uppercase; height: max-content; margin: 0;}
         .p-nota-reciente:hover { background: #fef3c7; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
@@ -136,7 +117,7 @@
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
         /* ===================================================
-           VISTA 2: ENTREGA DE GUARDIA
+           VISTA 2: ENTREGA DE GUARDIA (CON SUBRAYADO)
            =================================================== */
         .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
@@ -155,20 +136,19 @@
         #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
+        /* 🔥 LA CELDA MODIFICADA AHORA TIENE SUBRAYADO */
         .celda-modificada { 
             background-color: var(--warning-light) !important; 
             border: 2px solid var(--warning) !important; 
             color: #92400e !important; 
             font-weight: bold !important;
+            text-decoration: underline !important;
+            text-underline-offset: 3px;
             position: relative;
             animation: pulse-border 2s infinite;
         }
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-        }
-        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase;}
+        @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
 
         /* ===================================================
            VISTA 3: PENDIENTES (TO-DO LIST)
@@ -208,15 +188,13 @@
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO (4 COLUMNAS DE NUEVO)
+           DISEÑO RESPONSIVO PC
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
             .form-section { position: sticky; top: 70px; margin: 0;}
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
-            
-            /* 🔥 REGRESA EL GRID DE 4 COLUMNAS CON ALIGN-ITEMS START */
             .paciente-row { display: grid; grid-template-columns: 140px 1.4fr 1.2fr 110px; gap: 15px; padding: 12px; align-items: start; }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
@@ -240,7 +218,7 @@
 
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 15px;">✏️ EDICIÓN VISUAL</h3>
+        <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
@@ -252,7 +230,7 @@
 
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 HISTORIAL DE EVOLUCIÓN</h3>
+        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
         <textarea id="input-nueva-nota" placeholder="ESCRIBE UNA NUEVA EVOLUCIÓN AQUÍ..."></textarea>
         <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; text-transform: uppercase;">➕ AGREGAR A EVOLUCIÓN</button>
         <div id="contenedor-lista-notas" class="notas-container"></div>
@@ -312,7 +290,7 @@
 
             <div class="historial-seccion">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2 class="section-title" style="margin:0;">CENSO HOSPITALARIO</h2>
+                    <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
                         <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 ALTA A TODOS</button>
@@ -334,14 +312,14 @@
 
             <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <div>
-                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0;">ONCOLOGÍA</h2>
-                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px;">CONECTANDO...</p>
+                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0; text-transform: uppercase;">ONCOLOGÍA</h2>
+                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px; text-transform: uppercase;">CONECTANDO...</p>
                 </div>
             </div>
 
             <div class="entrega-toolbar">
                 <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 GUARDAR NUBE</button>
-                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO</button>
+                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO (QUITA ALERTAS)</button>
                 <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ VACIAR TABLA</button>
             </div>
 
@@ -353,7 +331,7 @@
 
     <div id="pestana-pendientes" class="vista">
         <div class="pendientes-container">
-            <h2 class="section-title">📌 LISTA DE PENDIENTES DEL TURNO</h2>
+            <h2 class="section-title" style="text-transform: uppercase;">📌 LISTA DE PENDIENTES DEL TURNO</h2>
             
             <div class="todo-input-group">
                 <input type="text" id="input-nuevo-pendiente" placeholder="EJ. REVISAR LABORATORIOS CAMA 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
@@ -366,7 +344,7 @@
             </div>
 
             <div id="lista-todo" style="display: flex; flex-direction: column;">
-                <p style="text-align:center; color:var(--text-muted); font-size:13px;">CARGANDO PENDIENTES...</p>
+                <p style="text-align:center; color:var(--text-muted); font-size:13px; text-transform: uppercase;">CARGANDO PENDIENTES...</p>
             </div>
         </div>
     </div>
@@ -423,6 +401,29 @@
     window.abrirVisorImg = function(src) { document.getElementById('img-visor-full').src = src; document.getElementById('modal-visor-img').style.display = 'flex'; };
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
+    window.copiarBloqueIndividual = function(elemento) {
+        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
+        navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
+            const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
+            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO");
+        });
+    };
+
+    // ==========================================
+    // ESCÁNER DE MAYÚSCULAS PARA HTML (FIREBASE)
+    // ==========================================
+    // Esta función convierte solo el texto real a mayúsculas, respetando las etiquetas HTML de la tabla
+    function getUppercasedHTML(htmlString) {
+        const div = document.createElement('div');
+        div.innerHTML = htmlString;
+        const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while ((node = walker.nextNode())) {
+            node.nodeValue = node.nodeValue.toUpperCase();
+        }
+        return div.innerHTML;
+    }
+
     // ==========================================
     // IMAGEN
     // ==========================================
@@ -444,7 +445,7 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (EVOLUCIÓN REGRESA)
+    // EXPEDIENTE MODO CENSO
     // ==========================================
     let isFirstLoad = true;
 
@@ -471,7 +472,7 @@
         activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
         window.pacientesLocales = activos; 
         
-        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">SALA LIBRE.</p>'; return; }
+        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600; text-transform: uppercase;">SALA LIBRE.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
             let notasNoLeidas = 0; let totalNotas = 0;
@@ -481,9 +482,8 @@
             }
             
             let btnNotasColor = notasNoLeidas > 0 ? 'danger-badge' : '';
-            let btnNotasTexto = notasNoLeidas > 0 ? `💬 NOTAS (${totalNotas}) 🔴` : `💬 NOTAS (${totalNotas})`;
+            let btnNotasTexto = notasNoLeidas > 0 ? `💬 EVOLUCIÓN (${totalNotas}) 🔴` : `💬 EVOLUCIÓN (${totalNotas})`;
 
-            // 🔥 LA NOTA MÁS RECIENTE PARA MOSTRAR EN PANTALLA
             let ultimaNotaHtml = '<div class="p-nota-reciente" style="color:#94a3b8; border-color:#e2e8f0; background:#f8fafc;" onclick="window.abrirModalNotas(\''+item.id+'\')">SIN EVOLUCIÓN. CLIC PARA AÑADIR.</div>';
             if (item.historial && item.historial.length > 0) {
                 let lastNote = item.historial[item.historial.length - 1]; 
@@ -510,12 +510,12 @@
                 </div>
                 
                 <div class="p-col-meds">
-                    <span class="p-bloque-titulo">INDICACIONES</span>
-                    <div class="p-bloque p-meds">${item.indicaciones || 'S/N'}</div>
+                    <span class="p-bloque-titulo">INDICACIONES <span class="doble-clic-hint">DOBLE CLIC PARA COPIAR</span></span>
+                    <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
 
                 <div class="p-col-obs">
-                    <span class="p-bloque-titulo">ÚLTIMA EVOLUCIÓN</span>
+                    <span class="p-bloque-titulo">ÚLTIMA EVOLUCIÓN <span class="doble-clic-hint">1 CLIC = HISTORIAL</span></span>
                     ${ultimaNotaHtml}
                 </div>
                 
@@ -541,7 +541,7 @@
     function renderizarListaNotasModal(idPaciente) {
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
         const contenedor = document.getElementById('contenedor-lista-notas');
-        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">NO HAY EVOLUCIÓN REGISTRADA.</p>'; return; }
+        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px; text-transform:uppercase;">NO HAY EVOLUCIÓN REGISTRADA.</p>'; return; }
 
         let notasMapeadas = paciente.historial.map((nota, idx) => ({...nota, originalIndex: idx}));
         notasMapeadas.sort((a, b) => { if (a.visto === b.visto) return b.originalIndex - a.originalIndex; return a.visto ? 1 : -1; });
@@ -613,7 +613,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA
+    // ENTREGA DE GUARDIA (SUBRAYADO Y MAYÚSCULAS REALES)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -664,16 +664,36 @@
     editor.addEventListener('click', (e) => { if(window.innerWidth < 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda) { e.preventDefault(); celdaSeleccionada = celda; document.getElementById('texto-celda-visual').innerHTML = celda.innerHTML; document.getElementById('btn-aceptar-celda').style.display = celda.classList.contains('celda-modificada') ? 'block' : 'none'; document.getElementById('modal-celda').style.display = 'flex'; } } });
 
     window.cerrarModalCelda = () => { document.getElementById('modal-celda').style.display = 'none'; celdaSeleccionada = null; };
-    window.guardarCeldaModal = () => { if(celdaSeleccionada) { celdaSeleccionada.innerHTML = document.getElementById('texto-celda-visual').innerHTML; celdaSeleccionada.classList.add('celda-modificada'); celdaSeleccionada.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); window.guardarEntrega(); } cerrarModalCelda(); };
+    
+    // GUARDADO CON CONVERSIÓN A MAYÚSCULAS REALES EN HTML
+    window.guardarCeldaModal = () => { 
+        if(celdaSeleccionada) { 
+            const htmlReal = document.getElementById('texto-celda-visual').innerHTML;
+            celdaSeleccionada.innerHTML = getUppercasedHTML(htmlReal); 
+            celdaSeleccionada.classList.add('celda-modificada'); 
+            celdaSeleccionada.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); 
+            window.guardarEntrega(); 
+        } 
+        cerrarModalCelda(); 
+    };
+    
     window.aceptarCambioCelda = () => { if(celdaSeleccionada) { celdaSeleccionada.classList.remove('celda-modificada'); celdaSeleccionada.removeAttribute('data-autor'); window.guardarEntrega(); } cerrarModalCelda(); };
 
-    window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.");} catch(e) { } };
+    window.guardarEntrega = async function() { 
+        const btn = document.getElementById('btn-guardar-entrega');
+        try { 
+            // Transformamos TODO el HTML a mayúsculas antes de guardar (respetando etiquetas)
+            const finalHTML = getUppercasedHTML(editor.innerHTML);
+            await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp() }, { merge: true }); 
+            editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.");
+        } catch(e) { } 
+    };
     
     window.limpiarMarcasGuardia = function() { if(!confirm("¿RECIBIR TURNO ACTUAL? LIMPIARÁ CELDAS AMARILLAS.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================
-    // PESTAÑA 3: PENDIENTES
+    // PESTAÑA 3: PENDIENTES (TO-DO LIST)
     // ==========================================
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
@@ -686,7 +706,7 @@
         if(conteoActivos > 0) { badge.innerText = conteoActivos; badge.classList.add('show'); } else { badge.classList.remove('show'); }
 
         const listaDOM = document.getElementById('lista-todo');
-        if(items.length === 0) { listaDOM.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px;">SIN PENDIENTES.</p>'; return; }
+        if(items.length === 0) { listaDOM.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px; text-transform: uppercase;">SIN PENDIENTES.</p>'; return; }
 
         listaDOM.innerHTML = items.map(item => `
             <div class="todo-item ${item.completado ? 'terminado' : ''}">

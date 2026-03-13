@@ -17,13 +17,22 @@
             --border: #cbd5e1; 
             --danger: #ef4444;
             --warning: #f59e0b;
+            --warning-light: #fef3c7;
         }
 
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
+        /* ===================================================
+           NAVEGACIÓN Y BADGES (CONTADORES)
+           =================================================== */
         .nav-tabs { width: 100%; background: var(--surface); display: flex; justify-content: center; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border);}
-        .tab-btn { background: transparent; color: var(--text-muted); border: none; border-bottom: 3px solid transparent; padding: 14px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;}
+        .tab-btn { background: transparent; color: var(--text-muted); border: none; border-bottom: 3px solid transparent; padding: 14px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;}
         .tab-btn.activa { color: var(--primary); border-bottom: 3px solid var(--primary); }
+
+        .tab-badge { background-color: var(--danger); color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; display: none; box-shadow: 0 2px 4px rgba(239,68,68,0.4);}
+        .tab-badge.show { display: inline-block; animation: pop 0.3s ease;}
+
+        @keyframes pop { 0% { transform: scale(0.5); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
         .container { padding: 15px; width: 100%; max-width: 1500px; margin: 0 auto; box-sizing: border-box; }
         .vista { display: none; width: 100%; animation: fadeIn 0.3s ease; }
@@ -35,7 +44,7 @@
            =================================================== */
         .main-layout { display: flex; flex-direction: column; gap: 15px; }
         .form-section { background: var(--bg-body); border-radius: 10px; padding: 15px; border: 1px solid var(--border); }
-        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;}
+        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px;}
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
@@ -56,7 +65,7 @@
         .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px;}
 
         /* ===================================================
-           CENSO / LISTA DE PACIENTES 
+           CENSO / LISTA DE PACIENTES
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
@@ -74,50 +83,32 @@
         .p-bloque:hover { border-color: var(--primary); }
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         
-        /* 🔥 LA MAGIA DE LA ÚLTIMA NOTA (Cortada a 3 líneas máx) */
-        .p-nota-reciente {
-            background: #fffbeb;
-            border: 1px solid #fcd34d;
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            line-height: 1.4;
-            cursor: pointer;
-            color: #92400e;
-            /* Truco para que NUNCA estire la caja: */
-            display: -webkit-box;
-            -webkit-line-clamp: 3; 
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            transition: all 0.2s;
-        }
-        .p-nota-reciente:hover { background: #fef3c7; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
-        .p-col-acciones { display: flex; flex-direction: column; justify-content: center; gap: 8px; margin-top: 4px;}
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 8px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center;}
+        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
+        .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
+        .btn-outline.borrar-todo { border-color: var(--danger); color: var(--danger); }
 
         .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;}
         .dot { height: 6px; width: 6px; background-color: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite;}
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* ===================================================
-           MODAL DE HISTORIAL DE NOTAS
+           MODAL DE HISTORIAL DE NOTAS (POP UP)
            =================================================== */
         .notas-container { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; display: flex; flex-direction: column; gap: 8px;}
         .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 13px;}
         .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 11px; margin-bottom: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
         .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 10px; }
         
-        .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; order: 999; } 
-        .nota-visto .nota-texto { color: #64748b; }
-        
+        .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; } 
+        .nota-visto .nota-texto { color: #64748b; text-decoration: line-through; text-decoration-color: #cbd5e1;}
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
         /* ===================================================
-           VISTA 2: ENTREGA DE GUARDIA
+           VISTA 2: ENTREGA DE GUARDIA (CON LATIDO)
            =================================================== */
         .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
@@ -127,7 +118,8 @@
         .entrega-toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
         .btn-tool { border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; background: var(--surface);}
         .btn-tool.primario { background: var(--primary); color: white; border-color: var(--primary); }
-        .btn-tool.limpiar { color: var(--danger); border-color: #fca5a5; margin-left: auto;}
+        .btn-tool.limpiar { color: var(--warning); border-color: #fcd34d;}
+        .btn-tool.peligro { color: var(--danger); border-color: #fca5a5; margin-left: auto;}
         
         .editor-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; background: #ffffff; min-height: 50vh;}
         #editor-entrega { min-width: 600px; padding: 15px; font-size: 13px; outline: none; line-height: 1.5;}
@@ -135,7 +127,39 @@
         #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
-        .celda-modificada { background-color: var(--warning-light) !important; border: 2px solid var(--warning) !important; color: #92400e; position: relative;}
+        /* 🔥 CLARIDAD AL MÁXIMO PARA LOS CAMBIOS */
+        .celda-modificada { 
+            background-color: var(--warning-light) !important; 
+            border: 2px solid var(--warning) !important; 
+            color: #92400e !important; 
+            font-weight: bold !important;
+            position: relative;
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
+
+        /* ===================================================
+           VISTA 3: PENDIENTES (TO-DO LIST)
+           =================================================== */
+        .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
+        .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
+        .todo-input-group input { flex-grow: 1; margin: 0;}
+        .todo-input-group button { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 6px; font-weight: bold; cursor: pointer;}
+        
+        .todo-item { display: flex; align-items: flex-start; gap: 12px; background: var(--bg-body); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; transition: all 0.2s;}
+        .todo-item:hover { border-color: var(--primary); }
+        .todo-item.terminado { background: var(--surface); opacity: 0.6; }
+        .todo-item.terminado .todo-texto { text-decoration: line-through; color: var(--text-muted); }
+        
+        .todo-check { width: 20px; height: 20px; cursor: pointer; margin-top: 2px; accent-color: var(--primary);}
+        .todo-content { flex-grow: 1; }
+        .todo-texto { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; display: block;}
+        .todo-meta { font-size: 10px; color: #94a3b8; display: block;}
 
         /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(2px);}
@@ -156,26 +180,18 @@
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO (GRID DE 4 COLUMNAS EXACTAS)
+           DISEÑO RESPONSIVO EN PC
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
             .form-section { position: sticky; top: 70px; margin: 0;}
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
-            
-            /* LA MAGIA: 4 Columnas con align-items: start para no estirar */
-            .paciente-row { 
-                display: grid; 
-                grid-template-columns: 140px 1.4fr 1fr 100px; 
-                gap: 15px; 
-                padding: 12px; 
-                align-items: start; 
-            }
+            .paciente-row { display: grid; grid-template-columns: 160px 1fr 130px; gap: 15px; padding: 12px; align-items: start; }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
-            .p-col-meds, .p-col-obs { display: flex; flex-direction: column; margin: 0;}
-            .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 8px; border-left: 1px solid var(--border); padding-left: 10px; margin-top: 0;}
+            .p-col-meds { display: flex; flex-direction: column; height: max-content; margin: 0;}
+            .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 6px; border-left: 1px solid var(--border); padding-left: 10px; margin-top: 0;}
             
             .p-img-render { margin-top: 10px; max-width: 100%; }
         }
@@ -187,7 +203,8 @@
 
 <div class="nav-tabs">
     <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 Expediente</button>
-    <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 Guardia</button>
+    <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 Guardia <span id="badge-guardia" class="tab-badge">0</span></button>
+    <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 Pendientes <span id="badge-pendientes" class="tab-badge">0</span></button>
 </div>
 
 <div id="modal-celda" class="modal-overlay">
@@ -196,7 +213,7 @@
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">Cancelar</button>
-            <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ Aprobar</button>
+            <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ Aprobar Cambio</button>
             <button style="background:#0d9488; color:white;" onclick="guardarCeldaModal()">Guardar</button>
         </div>
     </div>
@@ -205,12 +222,9 @@
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 Historial de Evolución</h3>
-        
         <textarea id="input-nueva-nota" placeholder="Escribe una nueva evolución aquí..."></textarea>
-        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px;">➕ Guardar Evolución</button>
-
+        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px;">➕ Agregar a Evolución</button>
         <div id="contenedor-lista-notas" class="notas-container"></div>
-
         <div class="modal-actions" style="margin-top: 10px;">
             <button style="background:#f1f5f9; color:#1e293b; width: 100%;" onclick="cerrarModalNotas()">Cerrar</button>
         </div>
@@ -225,6 +239,7 @@
 </div>
 
 <div class="container">
+    
     <div id="pestana-expediente" class="vista activa">
         <div class="main-layout">
             
@@ -239,7 +254,7 @@
                 </div>
 
                 <div class="grid-form">
-                    <div class="form-group"><label>Cama / Hab.</label><input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()"></div>
+                    <div class="form-group"><label>Cama</label><input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()"></div>
                     <div class="form-group"><label>Paciente</label><input type="text" id="paciente" placeholder="Nombre" oninput="window.guardarBorrador()"></div>
                 </div>
 
@@ -267,7 +282,10 @@
             <div class="historial-seccion">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <h2 class="section-title" style="margin:0;">Censo Hospitalario</h2>
-                    <div class="indicador-vivo"><span class="dot"></span> En Vivo</div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="indicador-vivo"><span class="dot"></span> En Vivo</div>
+                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 Alta a Todos</button>
+                    </div>
                 </div>
                 <div id="lista-pendientes" class="lista-pacientes"></div>
             </div>
@@ -277,10 +295,10 @@
     <div id="pestana-guardia" class="vista">
         <div class="entrega-container">
             <div class="nav-servicios">
-                <button class="btn-servicio activo" onclick="cambiarServicio('Oncologia', this)">Oncología</button>
-                <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">Cirugía y Gastro</button>
-                <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">Traumatología</button>
-                <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">Infectología</button>
+                <button class="btn-servicio activo" onclick="cambiarServicio('Oncologia', this)">Oncología <span id="b-onco"></span></button>
+                <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">Cirugía/Gastro <span id="b-ciru"></span></button>
+                <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">Trauma <span id="b-trau"></span></button>
+                <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">Infectología <span id="b-infe"></span></button>
             </div>
 
             <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -292,11 +310,32 @@
 
             <div class="entrega-toolbar">
                 <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 Guardar Nube</button>
-                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">🧹 Recibir Turno</button>
+                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ Marcar Visto (Quitar amarillos)</button>
+                <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ Vaciar Tabla (Hoja en blanco)</button>
             </div>
 
             <div class="editor-wrapper">
                 <div id="editor-entrega" contenteditable="true" placeholder="Pega tu tabla oficial aquí..."></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pestana-pendientes" class="vista">
+        <div class="pendientes-container">
+            <h2 class="section-title">📌 Lista de Pendientes del Turno</h2>
+            
+            <div class="todo-input-group">
+                <input type="text" id="input-nuevo-pendiente" placeholder="Ej. Revisar laboratorios cama 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
+                <button onclick="window.agregarPendiente()">Agregar</button>
+            </div>
+
+            <div class="entrega-toolbar" style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px; background: transparent; border:none; padding:0;">
+                <button class="btn-tool" onclick="window.borrarPendientesCompletados()">🧹 Borrar Terminados</button>
+                <button class="btn-tool peligro" onclick="window.borrarTodosPendientes()">🗑️ Borrar Todos</button>
+            </div>
+
+            <div id="lista-todo" style="display: flex; flex-direction: column;">
+                <p style="text-align:center; color:var(--text-muted); font-size:13px;">Cargando pendientes...</p>
             </div>
         </div>
     </div>
@@ -307,7 +346,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
@@ -321,10 +360,14 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    
+    // Referencias Principales
     const pacientesRef = collection(db, "pacientes");
+    const pendientesRef = collection(db, "pendientes_globales");
 
     const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     window.pacientesLocales = [];
+    window.listaPendientesToDos = [];
     window.miSesionID = Math.random().toString(36).substring(2, 15);
     window.pacienteModalActual = null; 
 
@@ -336,8 +379,7 @@
         const toast = document.createElement('div'); toast.className = 'toast';
         toast.innerHTML = `<span>${mensaje}</span> <span style="font-size:18px; opacity:0.7;">&times;</span>`;
         toast.onclick = (e) => { e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); };
-        container.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 100);
+        container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 100);
         setTimeout(() => { const rem = () => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); }; document.addEventListener('click', rem); }, 1000);
     };
 
@@ -355,12 +397,12 @@
         let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
         navigator.clipboard.writeText(texto).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
-            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Texto copiado");
+            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Copiado");
         });
     };
 
     // ==========================================
-    // PROCESAMIENTO IMAGEN
+    // IMAGEN
     // ==========================================
     let imagenBase64 = null;
     document.getElementById('foto-paciente-input').addEventListener('change', function(e) {
@@ -380,7 +422,7 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (4 COLUMNAS)
+    // EXPEDIENTE MODO CENSO (3 COLUMNAS LIMPIAS)
     // ==========================================
     let isFirstLoad = true;
 
@@ -410,19 +452,14 @@
         if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">Sala libre.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
-            // 🔥 LA NOTA MÁS RECIENTE PARA MOSTRAR EN PANTALLA (CORTADA A 3 RENGLONES)
-            let ultimaNotaHtml = '<div class="p-nota-reciente" style="color:#94a3b8; border-color:#e2e8f0; background:#f8fafc;" onclick="window.abrirModalNotas(\''+item.id+'\')">Sin evolución. Clic para añadir.</div>';
-            
-            if (item.historial && item.historial.length > 0) {
-                let lastNote = item.historial[item.historial.length - 1]; // Toma la última agregada
-                let prefijo = lastNote.visto ? '' : '🔴 '; // Alerta visual sutil si no está vista
-                
-                ultimaNotaHtml = `
-                <div class="p-nota-reciente" onclick="window.abrirModalNotas('${item.id}')" title="Clic para abrir historial completo">
-                    <span style="font-weight:bold; font-size:10px; color:#b45309; display:block; margin-bottom:2px;">${prefijo}${lastNote.autor} (${lastNote.fecha}):</span>
-                    ${lastNote.texto}
-                </div>`;
+            let notasNoLeidas = 0; let totalNotas = 0;
+            if(item.historial) {
+                totalNotas = item.historial.length;
+                notasNoLeidas = item.historial.filter(n => !n.visto).length;
             }
+            
+            let btnNotasColor = notasNoLeidas > 0 ? 'danger-badge' : '';
+            let btnNotasTexto = notasNoLeidas > 0 ? `💬 Evolución (${totalNotas}) 🔴` : `💬 Evolución (${totalNotas})`;
 
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
@@ -443,12 +480,8 @@
                     <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
                 
-                <div class="p-col-obs">
-                    <span class="p-bloque-titulo">Última Evolución <span class="doble-clic-hint">1 Clic para Historial</span></span>
-                    ${ultimaNotaHtml}
-                </div>
-                
                 <div class="p-col-acciones">
+                    <button class="btn-outline ${btnNotasColor}" onclick="window.abrirModalNotas('${item.id}')">${btnNotasTexto}</button>
                     <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ Alta</button>
                 </div>
             </div>`;
@@ -458,44 +491,28 @@
     });
 
     // ==========================================
-    // LÓGICA DEL POP-UP DE NOTAS
+    // POP-UP NOTAS
     // ==========================================
     window.abrirModalNotas = function(idPaciente) {
-        window.pacienteModalActual = idPaciente;
-        document.getElementById('input-nueva-nota').value = '';
-        renderizarListaNotasModal(idPaciente);
-        document.getElementById('modal-notas').style.display = 'flex';
+        window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
+        renderizarListaNotasModal(idPaciente); document.getElementById('modal-notas').style.display = 'flex';
     };
-
-    window.cerrarModalNotas = function() {
-        document.getElementById('modal-notas').style.display = 'none';
-        window.pacienteModalActual = null;
-    };
+    window.cerrarModalNotas = function() { document.getElementById('modal-notas').style.display = 'none'; window.pacienteModalActual = null; };
 
     function renderizarListaNotasModal(idPaciente) {
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
         const contenedor = document.getElementById('contenedor-lista-notas');
-        
-        if(!paciente || !paciente.historial || paciente.historial.length === 0) {
-            contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">No hay evolución registrada.</p>'; return;
-        }
+        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">No hay evolución registrada.</p>'; return; }
 
         let notasMapeadas = paciente.historial.map((nota, idx) => ({...nota, originalIndex: idx}));
-        notasMapeadas.sort((a, b) => {
-            if (a.visto === b.visto) return b.originalIndex - a.originalIndex; 
-            return a.visto ? 1 : -1; 
-        });
+        notasMapeadas.sort((a, b) => { if (a.visto === b.visto) return b.originalIndex - a.originalIndex; return a.visto ? 1 : -1; });
 
         contenedor.innerHTML = notasMapeadas.map(n => {
             let esVistoClase = n.visto ? 'nota-visto' : '';
             let btnVisto = n.visto ? '' : `<button class="btn-ver-nota" onclick="window.marcarNotaVistaModal(${n.originalIndex})">👁️ Visto</button>`;
-            
             return `
             <div class="nota-chat ${esVistoClase}" style="${n.visto ? '' : 'border-left: 4px solid ' + n.color};">
-                <div class="nota-autor" style="color: ${n.visto ? '#94a3b8' : n.color};">
-                    <span>${n.autor} <span class="nota-fecha">${n.fecha}</span></span>
-                    ${btnVisto}
-                </div>
+                <div class="nota-autor" style="color: ${n.visto ? '#94a3b8' : n.color};"><span>${n.autor} <span class="nota-fecha">${n.fecha}</span></span>${btnVisto}</div>
                 <div class="nota-texto" style="white-space: pre-wrap;">${n.texto}</div>
             </div>`;
         }).join('');
@@ -511,20 +528,15 @@
     };
 
     window.guardarNotaDesdeModal = async function() {
-        if(!window.pacienteModalActual) return;
-        const texto = document.getElementById('input-nueva-nota').value.trim();
-        if(!texto) return;
-
-        const autor = document.getElementById('nombre-usuario').value || 'Anónimo';
-        const color = document.getElementById('color-usuario').value || '#0d9488';
+        if(!window.pacienteModalActual) return; const texto = document.getElementById('input-nueva-nota').value.trim(); if(!texto) return;
+        const autor = document.getElementById('nombre-usuario').value || 'Anónimo'; const color = document.getElementById('color-usuario').value || '#0d9488';
         const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-
         document.getElementById('input-nueva-nota').value = ''; 
         try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID }); } catch(e) {}
     };
 
     // ==========================================
-    // CREAR PACIENTE
+    // CREAR PACIENTE Y VACIAR SALA
     // ==========================================
     window.enviarReporte = async function() {
         const cama = document.getElementById('cama').value; const paciente = document.getElementById('paciente').value; 
@@ -533,56 +545,70 @@
         const btn = document.getElementById('btn-enviar'); btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
         
         let hIni = []; 
-        if (obs.trim() !== '') {
-            hIni.push({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#0d9488', texto: obs.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), visto: false });
-        }
+        if (obs.trim() !== '') { hIni.push({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#0d9488', texto: obs.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), visto: false }); }
 
         try { 
-            await addDoc(pacientesRef, { 
-                cama: cama, paciente: paciente, indicaciones: ind, historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID 
-            }); 
+            await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
         } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "Guardar Expediente";
     };
 
-    window.marcarResuelto = async (id, b) => { if(confirm("¿Paciente de alta? Desaparecerá de la lista.")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
+    window.marcarResuelto = async (id, b) => { if(confirm("¿Paciente de alta?")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
+
+    // VACIAR SALA COMPLETA
+    window.vaciarSalaExpediente = async function() {
+        if(!confirm("⚠️ ¿Estás seguro de querer DAR DE ALTA a todos los pacientes activos de la sala? Esta acción limpiará todo el Censo.")) return;
+        if(!confirm("¿Confirmas vaciar la sala?")) return;
+        
+        for (let pac of window.pacientesLocales) {
+            try { await updateDoc(doc(db, "pacientes", pac.id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } catch(e) {}
+        }
+        window.mostrarToast("Sala vaciada exitosamente.");
+    };
 
     window.guardarPerfil = () => { localStorage.setItem('perfilUsuario', JSON.stringify({ nombre: document.getElementById('nombre-usuario').value, color: document.getElementById('color-usuario').value })); };
     const p = JSON.parse(localStorage.getItem('perfilUsuario')); if(p) { document.getElementById('nombre-usuario').value = p.nombre || ''; document.getElementById('color-usuario').value = p.color || '#0d9488'; }
-
     window.guardarBorrador = () => { localStorage.setItem('borradorRondines', JSON.stringify({ cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value, ind: document.getElementById('indicaciones-texto').value, obs: document.getElementById('pendientes').value })); document.getElementById('aviso-guardado').style.display = 'block'; setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000); };
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
-    const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(sr) {
-        const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
-        rec.onresult = e => { 
-            let t = ""; for(let i=e.resultIndex; i<e.results.length; i++) t += e.results[i][0].transcript;
-            const dic = [{id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']}, {id:'indicaciones-texto', p:['indicación','indicaciones','medicamento','medicamentos']}, {id:'pendientes', p:['observación','observaciones','pendiente','nota', 'evolución']}];
-            let pos = []; dic.forEach(c => { let idx = -1; let l = 0; c.p.forEach(p => { let i = t.toLowerCase().indexOf(p); if(i!==-1&&(idx===-1||i<idx)) {idx=i; l=p.length;} }); if(idx!==-1) pos.push({id:c.id, idx, l}); }); pos.sort((a,b) => a.idx - b.idx);
-            if(!pos.length) { document.getElementById('pendientes').value += (document.getElementById('pendientes').value ? "\n" : "") + t; window.guardarBorrador(); return; }
-            for(let i=0; i<pos.length; i++){ let f = pos[i+1] ? pos[i+1].idx : t.length; let val = t.substring(pos[i].idx + pos[i].l, f).trim(); if(val) document.getElementById(pos[i].id).value += (document.getElementById(pos[i].id).value ? "\n" : "") + val.charAt(0).toUpperCase() + val.slice(1); } window.guardarBorrador();
-        };
-        document.getElementById('btn-dictar').onclick = () => { if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictado Automático"; } else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 Detener Dictado"; } };
-    }
-
     // ==========================================
-    // ENTREGA DE GUARDIA (CORRECCIÓN TABS)
+    // ENTREGA DE GUARDIA (CONTADOR GLOBAL)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
+    let conteoGuardias = { Oncologia: 0, Cirugia_Gastro: 0, Traumatologia: 0, Infectologia: 0 };
+
+    // Listener Global para los 4 servicios (Calcula los contadores de la pestaña y botones)
+    const serviciosLista = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
+    serviciosLista.forEach(serv => {
+        onSnapshot(doc(db, "entregas", serv), (docSnap) => {
+            if(docSnap.exists()){
+                const htmlStr = docSnap.data().html_content || '';
+                const cambios = (htmlStr.match(/celda-modificada/g) || []).length;
+                conteoGuardias[serv] = cambios;
+                actualizarBadgesGuardia();
+            } else { conteoGuardias[serv] = 0; actualizarBadgesGuardia(); }
+        });
+    });
+
+    function actualizarBadgesGuardia() {
+        let total = 0;
+        document.getElementById('b-onco').innerText = conteoGuardias.Oncologia > 0 ? `(${conteoGuardias.Oncologia})` : ''; total += conteoGuardias.Oncologia;
+        document.getElementById('b-ciru').innerText = conteoGuardias.Cirugia_Gastro > 0 ? `(${conteoGuardias.Cirugia_Gastro})` : ''; total += conteoGuardias.Cirugia_Gastro;
+        document.getElementById('b-trau').innerText = conteoGuardias.Traumatologia > 0 ? `(${conteoGuardias.Traumatologia})` : ''; total += conteoGuardias.Traumatologia;
+        document.getElementById('b-infe').innerText = conteoGuardias.Infectologia > 0 ? `(${conteoGuardias.Infectologia})` : ''; total += conteoGuardias.Infectologia;
+        
+        const badgePrincipal = document.getElementById('badge-guardia');
+        if(total > 0) { badgePrincipal.innerText = total; badgePrincipal.classList.add('show'); } 
+        else { badgePrincipal.classList.remove('show'); }
+    }
 
     window.cambiarServicio = function(servicioId, boton) {
         document.querySelectorAll('.btn-servicio').forEach(b => b.classList.remove('activo')); boton.classList.add('activo');
         const n = {'Oncologia': 'Oncología', 'Cirugia_Gastro': 'Cirugía y Gastro', 'Traumatologia': 'Traumatología', 'Infectologia': 'Infectología'};
         document.getElementById('titulo-servicio-actual').innerText = n[servicioId]; 
-        
-        // 🔥 CORRECCIÓN DEL BUG DE LAS PESTAÑAS
-        editandoEntrega = false; 
-        editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Cargando datos de '+n[servicioId]+'...</p>';
-        
-        servicioActual = servicioId; 
-        cargarServicioFirebase(servicioId);
+        editandoEntrega = false; editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Cargando datos...</p>';
+        servicioActual = servicioId; cargarServicioFirebase(servicioId);
     };
 
     function cargarServicioFirebase(servicio) {
@@ -604,15 +630,64 @@
     window.aceptarCambioCelda = () => { if(celdaSeleccionada) { celdaSeleccionada.classList.remove('celda-modificada'); celdaSeleccionada.removeAttribute('data-autor'); window.guardarEntrega(); } cerrarModalCelda(); };
 
     window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: document.getElementById('nombre-usuario').value || 'Anónimo', timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("Guardia guardada.");} catch(e) { } };
-    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual? Limpiará celdas amarillas.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
     
-    window.reiniciarTodasLasEntregas = async function() {
-        if(!confirm("⚠️ ¿BORRAR POR COMPLETO las tablas de los 4 servicios?")) return;
-        if(!confirm("¿Confirmas al 100% que quieres vaciar todo?")) return;
-        const servicios = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
-        for (const serv of servicios) { try { await setDoc(doc(db, "entregas", serv), { html_content: '<p style="color:#64748b;">Hoja en blanco.</p>', autor: 'Sistema', timestamp: serverTimestamp() }); } catch(e) { } }
-        alert("Guardias reiniciadas.");
+    // LIMPIEZA DE GUARDIA
+    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual? Limpiará celdas amarillas.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
+    window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿Deseas dejar en blanco la tabla de ${servicioActual}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
+
+    // ==========================================
+    // PESTAÑA 3: PENDIENTES (TO-DO LIST)
+    // ==========================================
+    onSnapshot(query(pendientesRef), (snapshot) => {
+        let items = [];
+        snapshot.forEach(doc => items.push({id: doc.id, ...doc.data()}));
+        items.sort((a,b) => b.fecha?.toMillis() - a.fecha?.toMillis()); // Más nuevos arriba
+        window.listaPendientesToDos = items;
+
+        const conteoActivos = items.filter(i => !i.completado).length;
+        const badge = document.getElementById('badge-pendientes');
+        if(conteoActivos > 0) { badge.innerText = conteoActivos; badge.classList.add('show'); } else { badge.classList.remove('show'); }
+
+        const listaDOM = document.getElementById('lista-todo');
+        if(items.length === 0) { listaDOM.innerHTML = '<p style="text-align:center; color:#94a3b8;">Sin pendientes.</p>'; return; }
+
+        listaDOM.innerHTML = items.map(item => `
+            <div class="todo-item ${item.completado ? 'terminado' : ''}">
+                <input type="checkbox" class="todo-check" ${item.completado ? 'checked' : ''} onchange="window.togglePendiente('${item.id}', this.checked)">
+                <div class="todo-content">
+                    <span class="todo-texto">${item.texto}</span>
+                    <span class="todo-meta">Por: ${item.autor} (${formatearFecha(item.fecha)})</span>
+                </div>
+            </div>
+        `).join('');
+    });
+
+    window.agregarPendiente = async function() {
+        const input = document.getElementById('input-nuevo-pendiente');
+        const texto = input.value.trim();
+        if(!texto) return;
+        const autor = document.getElementById('nombre-usuario').value || 'Anónimo';
+        try {
+            await addDoc(pendientesRef, { texto: texto, completado: false, autor: autor, fecha: serverTimestamp() });
+            input.value = '';
+        } catch(e) {}
     };
+
+    window.togglePendiente = async function(id, isChecked) {
+        try { await updateDoc(doc(db, "pendientes_globales", id), { completado: isChecked }); } catch(e) {}
+    };
+
+    window.borrarPendientesCompletados = async function() {
+        if(!confirm("¿Borrar todos los pendientes marcados como terminados?")) return;
+        const terminados = window.listaPendientesToDos.filter(i => i.completado);
+        for(let t of terminados) { try { await deleteDoc(doc(db, "pendientes_globales", t.id)); } catch(e){} }
+    };
+
+    window.borrarTodosPendientes = async function() {
+        if(!confirm("⚠️ ¿Estás seguro de borrar TODOS los pendientes de la lista?")) return;
+        for(let t of window.listaPendientesToDos) { try { await deleteDoc(doc(db, "pendientes_globales", t.id)); } catch(e){} }
+    };
+
 </script>
 </body>
 </html>

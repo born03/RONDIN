@@ -20,14 +20,14 @@
             --warning-light: #fef3c7;
         }
 
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.5;}
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         .nav-tabs { width: 100%; background: var(--surface); display: flex; justify-content: center; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border);}
-        .tab-btn { background: transparent; color: var(--text-muted); border: none; border-bottom: 3px solid transparent; padding: 16px 24px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s;}
+        .tab-btn { background: transparent; color: var(--text-muted); border: none; border-bottom: 3px solid transparent; padding: 12px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;}
         .tab-btn:hover { color: var(--primary); background: var(--primary-light); }
         .tab-btn.activa { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
-        .container { padding: 20px; width: 100%; max-width: 1500px; margin: 0 auto; box-sizing: border-box; }
+        .container { padding: 15px; width: 100%; max-width: 1500px; margin: 0 auto; box-sizing: border-box; }
         .vista { display: none; width: 100%; animation: fadeIn 0.3s ease; }
         .vista.activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
@@ -35,144 +35,151 @@
         /* ===================================================
            VISTA 1: EXPEDIENTE
            =================================================== */
-        .main-layout { display: flex; flex-direction: column; gap: 20px; }
-        .form-section { background: var(--bg-body); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .main-layout { display: flex; flex-direction: column; gap: 15px; }
+        .form-section { background: var(--surface); border-radius: 10px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border); }
         .historial-seccion { width: 100%; }
         
-        .section-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;}
+        .section-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;}
         
-        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;}
+        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
-        label { font-weight: 700; color: var(--text-main); font-size: 13px; margin-bottom: 6px; display: block; text-transform: uppercase; }
+        label { font-weight: 700; color: var(--text-main); font-size: 11px; margin-bottom: 4px; display: block; text-transform: uppercase; }
         
-        input[type="text"], textarea, input[type="color"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 14.5px; background-color: #ffffff; color: var(--text-main); transition: all 0.2s; font-family: inherit; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
-        input[type="color"] { padding: 2px; cursor: pointer; height: 45px; }
-        input[type="text"]:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15), inset 0 1px 3px rgba(0,0,0,0.06);}
-        textarea.caja-grande { min-height: 120px; resize: vertical; }
+        input[type="text"], textarea, input[type="color"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 13px; background-color: #ffffff; color: var(--text-main); transition: all 0.2s; font-family: inherit; box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);}
+        input[type="color"] { padding: 2px; cursor: pointer; height: 38px; }
+        input[type="text"]:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15), inset 0 1px 2px rgba(0,0,0,0.06);}
+        textarea.caja-grande { min-height: 80px; resize: vertical; }
 
-        .botones-accion { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .btn-accion { background-color: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
+        .botones-accion { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .btn-accion { background-color: var(--bg-body); color: var(--text-main); border: 1px solid var(--border); padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;}
         .btn-accion:hover { border-color: var(--primary); color: var(--primary); }
         
-        .caja-imagen { background: #ffffff; border: 2px dashed #94a3b8; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;}
+        .caja-imagen { background: #ffffff; border: 1.5px dashed #94a3b8; padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-size: 12px;}
         .caja-imagen:hover { border-color: var(--primary); background: var(--primary-light); }
         #foto-paciente-input { display: none; }
-        #preview-img { max-width: 100%; max-height: 150px; border-radius: 8px; margin-top: 10px; display: none; object-fit: contain; }
+        #preview-img { max-width: 100%; max-height: 120px; border-radius: 6px; margin-top: 8px; display: none; object-fit: contain; }
 
-        .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px -1px rgba(13,148,136, 0.3);}
+        .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 8px; box-shadow: 0 2px 4px rgba(13,148,136, 0.3);}
         .btn-enviar:hover { background-color: var(--primary-hover); }
 
         /* ===================================================
-           CENSO / LISTA DE PACIENTES 
+           CENSO / LISTA DE PACIENTES (ULTRA COMPACTO)
            =================================================== */
-        .lista-pacientes { display: flex; flex-direction: column; gap: 12px; }
+        .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
-        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--primary); padding: 16px; border-radius: 8px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--primary); padding: 10px 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);}
         
-        .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 8px; align-items: center; flex-wrap: wrap; gap: 10px;}
-        .p-cama { font-size: 18px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px;}
-        .p-nombre { font-size: 15px; color: var(--text-muted); font-weight: 600; }
+        .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px; align-items: center; flex-wrap: wrap; gap: 8px;}
+        .p-cama { font-size: 16px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px;}
+        .p-nombre { font-size: 13px; color: var(--text-muted); font-weight: 600; }
         
-        .p-bloque-titulo { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;}
-        .doble-clic-hint { font-size: 9px; color: #94a3b8; font-weight: normal; text-transform: none; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; cursor: help;}
+        .p-bloque-titulo { display: flex; justify-content: space-between; font-size: 9.5px; font-weight: 700; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase;}
+        .doble-clic-hint { font-size: 8.5px; color: #94a3b8; font-weight: normal; text-transform: none; background: #f1f5f9; padding: 1px 4px; border-radius: 3px; cursor: help;}
         
-        /* 🔥 SOLUCIÓN DEL ALTO: quitamos el height stretch y ajustamos márgenes */
-        .p-bloque { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 14px; line-height: 1.6; white-space: pre-wrap; cursor: copy; transition: background 0.3s; height: fit-content;}
-        .p-bloque:hover { border-color: var(--primary); box-shadow: 0 2px 5px rgba(13,148,136, 0.1);}
+        /* 🔥 LA MAGIA DEL TAMAÑO AJUSTADO: height: max-content y paddings mínimos */
+        .p-bloque { background: #f8fafc; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 12.5px; line-height: 1.4; white-space: pre-wrap; cursor: copy; transition: background 0.2s; height: max-content; width: 100%; box-sizing: border-box; margin: 0;}
+        .p-bloque:hover { border-color: var(--primary); background: #f0fdfa;}
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         .p-obs { border-left: 3px solid var(--warning); }
         
-        .p-img-render { max-width: 100px; max-height: 80px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in; transition: transform 0.2s;}
-        .p-img-render:hover { transform: scale(1.05); border-color: var(--primary); }
+        .p-img-render { max-width: 80px; max-height: 60px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in; transition: transform 0.2s;}
+        .p-img-render:hover { transform: scale(1.1); border-color: var(--primary); }
 
-        .p-historial { margin-top: 6px; }
-        .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; font-size: 11.5px; transition: all 0.3s;}
-        .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 10px; margin-bottom: 2px; border-bottom: 1px dashed var(--border); padding-bottom: 2px;}
-        .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 9px; }
+        .p-historial { margin-top: 4px; }
+        .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 6px; border-radius: 4px; margin-bottom: 4px; font-size: 11px;}
+        .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 9.5px; margin-bottom: 2px; border-bottom: 1px dashed var(--border); padding-bottom: 2px;}
+        .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 8.5px; }
         
         .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.7; }
         .nota-visto .nota-texto { color: #64748b; text-decoration: line-through; text-decoration-color: #cbd5e1;}
-        .btn-ver-nota { background: transparent; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 1px 4px; font-size: 9px; transition: all 0.2s;}
+        .btn-ver-nota { background: transparent; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; padding: 1px 4px; font-size: 8.5px; transition: all 0.2s;}
         .btn-ver-nota:hover { background: #e2e8f0; }
 
-        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px;}
-        /* Ajuste de botones para no ser estirados */
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; transition: all 0.2s;}
+        .p-col-acciones { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px;}
+        .btn-outline { flex: 1; background: transparent; border: 1px solid var(--border); padding: 6px 8px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 11px; color: var(--text-main); text-align: center; transition: all 0.2s; height: max-content;}
         .btn-outline:hover { background: #f1f5f9; }
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
         .btn-outline.warning { color: #d97706; border-color: #fcd34d; }
 
-        .indicador-vivo { font-size: 12px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;}
-        .dot { height: 8px; width: 8px; background-color: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite;}
+        .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 4px;}
+        .dot { height: 6px; width: 6px; background-color: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite;}
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* ===================================================
-           SISTEMA DE NOTIFICACIONES (TOAST PEGAJOSO)
+           SISTEMA DE NOTIFICACIONES
            =================================================== */
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
-        .toast { background: var(--text-main); color: white; padding: 14px 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 4px solid var(--primary); cursor: pointer;}
-        .toast:hover { background: #0f172a; }
+        .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-left: 4px solid var(--primary); cursor: pointer;}
         .toast.show { transform: translateX(0); }
 
         /* ===================================================
            VISTA 2: ENTREGA DE GUARDIA
            =================================================== */
-        .entrega-container { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); width: 100%; box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
-        .nav-servicios { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
-        .btn-servicio { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap;}
+        .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
+        .btn-servicio { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap;}
         .btn-servicio.activo { background: var(--text-main); color: white; border-color: var(--text-main); }
 
-        .entrega-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-        .btn-tool { background: var(--surface); border: 1px solid var(--border); padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer;}
+        .entrega-toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+        .btn-tool { background: var(--surface); border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer;}
         .btn-tool.primario { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-tool.limpiar { color: var(--danger); border-color: #fca5a5; margin-left: auto;}
-        .btn-reset-global { background: var(--danger); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer;}
+        
+        .btn-reset-global { background: var(--danger); color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer;}
 
-        .editor-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: #ffffff; min-height: 50vh; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
-        #editor-entrega { min-width: 600px; padding: 20px; font-size: 14px; outline: none; line-height: 1.6;}
+        .editor-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; background: #ffffff; min-height: 50vh;}
+        #editor-entrega { min-width: 600px; padding: 15px; font-size: 13px; outline: none; line-height: 1.5;}
         #editor-entrega table { border-collapse: collapse; width: 100%; margin-bottom: 10px; }
-        #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 10px; vertical-align: top; cursor: text; position: relative;}
+        #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
         .celda-modificada { background-color: var(--warning-light) !important; border: 2px solid var(--warning) !important; color: #92400e; position: relative;}
-        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10;}
+        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 8.5px; font-weight: bold; padding: 2px 4px; border-radius: 8px; z-index: 10;}
 
         /* MODALES */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(3px);}
-        .modal-content { background: var(--surface); width: 90%; max-width: 450px; padding: 20px; border-radius: 12px;}
-        #texto-celda-visual { width: 100%; height: 180px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14.5px; margin-bottom: 16px; overflow-y: auto; background: #ffffff; outline: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(2px);}
+        .modal-content { background: var(--surface); width: 90%; max-width: 400px; padding: 15px; border-radius: 10px;}
+        #texto-celda-visual { width: 100%; height: 150px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13.5px; margin-bottom: 12px; overflow-y: auto; background: #ffffff; outline: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px;}
-        .modal-actions button { padding: 10px 16px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; flex: 1;}
+        .modal-actions button { padding: 8px 14px; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; flex: 1; font-size: 12px;}
 
         #modal-visor-img { flex-direction: column; cursor: zoom-out; }
         .visor-content { position: relative; max-width: 95vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;}
-        .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain; background: #000;}
-        .btn-cerrar-visor { position: absolute; top: -15px; right: -15px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;}
+        .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain; background: #000;}
+        .btn-cerrar-visor { position: absolute; top: -15px; right: -15px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO (ARREGLO DE GRID EN PC)
+           DISEÑO RESPONSIVO (ARREGLO DE ALTO EN PC)
            =================================================== */
         @media (min-width: 900px) {
-            .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 30px; align-items: start; }
-            .form-section { position: sticky; top: 80px; margin: 0;}
+            .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
+            .form-section { position: sticky; top: 70px; margin: 0;}
             
-            .lista-pacientes { display: flex; flex-direction: column; gap: 16px; }
+            .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
             
-            /* 🔥 CORRECCIÓN DEL ALTO: align-items: start evita que los bloques se estiren */
+            /* 🔥 CORRECCIÓN DEL ESTIRAMIENTO (align-items: start) */
             .paciente-row { 
                 display: grid; 
-                grid-template-columns: 140px 1.6fr 1.2fr 100px; 
-                gap: 15px; 
-                padding: 16px; 
-                align-items: start; 
+                grid-template-columns: 140px 1fr 1fr 100px; 
+                gap: 12px; 
+                padding: 12px; 
+                align-items: start; /* Obliga a que no se estiren las cajas grises hacia abajo */
             }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
-            .p-col-meds { display: flex; flex-direction: column; height: fit-content;}
-            .p-col-obs { display: flex; flex-direction: column; height: fit-content;}
-            .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 8px; border-left: 1px solid var(--border); padding-left: 15px;}
             
-            .p-img-render { margin-top: 10px; max-width: 100%; }
+            /* Aseguramos que las columnas contenedoras tampoco fuercen tamaño */
+            .p-col-meds, .p-col-obs { 
+                display: flex; 
+                flex-direction: column; 
+                justify-content: flex-start;
+                height: max-content; 
+            }
+            
+            .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 6px; border-left: 1px solid var(--border); padding-left: 10px;}
+            
+            .btn-outline { width: 100%; margin-bottom: 0;}
+            .p-img-render { margin-top: 8px; max-width: 100%; }
         }
     </style>
 </head>
@@ -187,7 +194,7 @@
 
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0;">✏️ Edición Visual</h3>
+        <h3 style="margin-top:0; font-size: 15px;">✏️ Edición Visual</h3>
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">Cancelar</button>
@@ -210,7 +217,7 @@
         <div class="main-layout">
             
             <div class="form-section">
-                <div class="grid-form" style="margin:0 0 16px 0; background:#ffffff; padding:10px; border-radius:8px; border:1px solid var(--border);">
+                <div class="grid-form" style="margin:0 0 12px 0; background:#ffffff; padding:8px; border-radius:6px; border:1px solid var(--border);">
                     <div><input type="text" id="nombre-usuario" placeholder="Firma (Dr. Pérez)" oninput="window.guardarPerfil()"></div>
                     <div><input type="color" id="color-usuario" value="#0d9488" onchange="window.guardarPerfil()"></div>
                 </div>
@@ -242,11 +249,11 @@
                 </div>
 
                 <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">Guardar Expediente</button>
-                <div id="aviso-guardado" style="font-size:12px; color:var(--primary); text-align:center; margin-top:8px; display:none; font-weight:600;">Borrador local guardado...</div>
+                <div id="aviso-guardado" style="font-size:11px; color:var(--primary); text-align:center; margin-top:6px; display:none; font-weight:600;">Borrador guardado</div>
             </div>
 
             <div class="historial-seccion">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <h2 class="section-title" style="margin:0;">Censo Hospitalario</h2>
                     <div class="indicador-vivo"><span class="dot"></span> En Vivo</div>
                 </div>
@@ -267,7 +274,7 @@
 
             <div class="entrega-header">
                 <div>
-                    <h2 class="entrega-titulo" id="titulo-servicio-actual">Oncología</h2>
+                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px;">Oncología</h2>
                     <p class="entrega-meta" id="info-ultima-modificacion">Conectando...</p>
                 </div>
             </div>
@@ -308,8 +315,6 @@
 
     const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     window.pacientesLocales = [];
-    
-    // CREAMOS UN ID ÚNICO PARA ESTA SESIÓN/CELULAR
     window.miSesionID = Math.random().toString(36).substring(2, 15);
 
     // ==========================================
@@ -351,7 +356,7 @@
     // ==========================================
     window.copiarBloqueIndividual = function(elemento) {
         let texto = elemento.innerText;
-        texto = texto.replace('INDICACIONES\nDoble clic para copiar', '').replace('EVOLUCIÓN\nDoble clic', '').trim();
+        texto = texto.replace(/INDICACIONES\s*Doble clic para copiar/i, '').replace(/EVOLUCIÓN\s*Doble clic/i, '').trim();
         
         navigator.clipboard.writeText(texto).then(() => {
             const bgColorOriginal = elemento.style.backgroundColor;
@@ -387,7 +392,7 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (CON NOTIFICACIONES SILENCIOSAS PARA EL AUTOR)
+    // EXPEDIENTE MODO CENSO
     // ==========================================
     let isFirstLoad = true;
 
@@ -397,8 +402,6 @@
         snapshot.docChanges().forEach((change) => {
             if (!isFirstLoad) {
                 const data = change.doc.data();
-                
-                // LA MAGIA: Si el cambio trae NUESTRO propio ID de sesión, guardamos absoluto silencio.
                 if (data.origen === window.miSesionID) return;
 
                 if (change.type === "added") {
@@ -417,7 +420,7 @@
         activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
         window.pacientesLocales = activos; 
         
-        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 40px; font-weight:600;">Sala libre. No hay pacientes activos.</p>'; return; }
+        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">Sala libre. No hay pacientes activos.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
             let hist = '';

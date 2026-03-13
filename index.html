@@ -14,7 +14,7 @@
             --surface: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --border: #e2e8f0;
+            --border: #cbd5e1; /* Borde más oscuro para mejor contraste */
             --danger: #ef4444;
             --warning: #f59e0b;
             --warning-light: #fef3c7;
@@ -36,56 +36,77 @@
            VISTA 1: EXPEDIENTE SIMPLIFICADO
            =================================================== */
         .main-layout { display: flex; flex-direction: column; gap: 20px; }
-        .form-section { background: var(--surface); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .form-section { background: var(--bg-body); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
         .historial-seccion { width: 100%; }
         
         .section-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-top: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;}
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;}
         .full-width { grid-column: span 2; }
-        label { font-weight: 600; color: var(--text-muted); font-size: 12px; margin-bottom: 4px; display: block; text-transform: uppercase; }
+        label { font-weight: 700; color: var(--text-main); font-size: 13px; margin-bottom: 6px; display: block; text-transform: uppercase; }
         
-        input[type="text"], textarea, input[type="color"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: #f1f5f9; color: var(--text-main); transition: all 0.2s; font-family: inherit;}
-        input[type="color"] { padding: 2px; cursor: pointer; height: 40px; }
-        input[type="text"]:focus, textarea:focus { border-color: var(--primary); outline: none; background-color: var(--surface); box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.1);}
+        /* 🎨 MEJORA DE CONTRASTE EN CAJAS DE TEXTO */
+        input[type="text"], textarea, input[type="color"] { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 14.5px; 
+            background-color: #ffffff; /* Blanco puro */
+            color: var(--text-main); 
+            transition: all 0.2s; 
+            font-family: inherit;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); /* Sombra interna para dar profundidad */
+        }
+        input[type="color"] { padding: 2px; cursor: pointer; height: 45px; }
+        input[type="text"]:focus, textarea:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            background-color: #ffffff; 
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15), inset 0 1px 3px rgba(0,0,0,0.06);
+        }
         
         textarea.caja-grande { min-height: 120px; resize: vertical; }
 
         .botones-accion { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-        .btn-accion { background-color: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;}
+        .btn-accion { background-color: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);}
         .btn-accion:hover { border-color: var(--primary); color: var(--primary); }
         
         /* Carga de imágenes */
-        .caja-imagen { background: #f8fafc; border: 1px dashed var(--border); padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;}
+        .caja-imagen { background: #ffffff; border: 2px dashed #94a3b8; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 12px; cursor: pointer; transition: all 0.2s;}
         .caja-imagen:hover { border-color: var(--primary); background: var(--primary-light); }
         #foto-paciente-input { display: none; }
         #preview-img { max-width: 100%; max-height: 150px; border-radius: 8px; margin-top: 10px; display: none; object-fit: contain; }
 
-        .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 10px;}
+        .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 6px -1px rgba(13,148,136, 0.3);}
+        .btn-enviar:hover { background-color: var(--primary-hover); }
 
         /* ===================================================
            CENSO / LISTA DE PACIENTES (Con imagen)
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 12px; }
         
-        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--primary); padding: 16px; border-radius: 8px; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s;}
-        .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 8px; align-items: center;}
+        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--primary); padding: 16px; border-radius: 8px; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 8px; align-items: center; flex-wrap: wrap; gap: 10px;}
         .p-cama { font-size: 18px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px;}
         .p-nombre { font-size: 15px; color: var(--text-muted); font-weight: 600; }
         
-        .p-bloque-titulo { display: block; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase;}
-        .p-bloque { background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; flex-grow: 1;}
+        .p-bloque-titulo { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;}
+        .p-bloque { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 14px; line-height: 1.6; white-space: pre-wrap; flex-grow: 1;}
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         
-        /* Imagen cargada en el paciente */
-        .p-img-render { max-width: 100%; max-height: 250px; border-radius: 8px; border: 1px solid var(--border); margin-top: 5px; object-fit: contain;}
+        /* 🔍 IMAGEN MINIATURA (Con efecto zoom) */
+        .p-img-render { max-width: 100px; max-height: 80px; border-radius: 6px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in; transition: transform 0.2s;}
+        .p-img-render:hover { transform: scale(1.05); border-color: var(--primary); }
 
         .p-historial { margin-top: 8px; }
-        .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12.5px;}
-        .nota-autor { display: flex; justify-content: space-between; font-weight: bold; font-size: 10px; margin-bottom: 4px; border-bottom: 1px dashed var(--border); padding-bottom: 2px;}
+        .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; margin-bottom: 6px; font-size: 13px;}
+        .nota-autor { display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; margin-bottom: 4px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
 
-        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn-outline { flex: 1; background: transparent; border: 1px solid var(--border); padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center;}
+        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px;}
+        .btn-outline { flex: 1; background: transparent; border: 1px solid var(--border); padding: 8px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--text-main); text-align: center; transition: all 0.2s;}
+        .btn-outline:hover { background: #f1f5f9; }
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
         .btn-outline.warning { color: #d97706; border-color: #fcd34d; }
 
@@ -94,7 +115,7 @@
         /* ===================================================
            VISTA 2: ENTREGA DE GUARDIA (Con botón Reset)
            =================================================== */
-        .entrega-container { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
+        .entrega-container { background: var(--surface); border-radius: 12px; padding: 20px; border: 1px solid var(--border); width: 100%; box-sizing: border-box; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
         
         .nav-servicios { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
         .btn-servicio { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap;}
@@ -105,32 +126,38 @@
         .btn-tool.primario { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-tool.limpiar { color: var(--danger); border-color: #fca5a5; margin-left: auto;}
         
-        /* BOTÓN REINICIO GLOBAL */
         .btn-reset-global { background: var(--danger); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);}
 
-        .editor-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); min-height: 50vh;}
-        #editor-entrega { min-width: 600px; padding: 16px; font-size: 13.5px; outline: none; line-height: 1.5;}
+        .editor-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: #ffffff; min-height: 50vh; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
+        #editor-entrega { min-width: 600px; padding: 20px; font-size: 14px; outline: none; line-height: 1.6;}
         #editor-entrega table { border-collapse: collapse; width: 100%; margin-bottom: 10px; }
-        #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 8px; vertical-align: top; cursor: text; position: relative;}
+        #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 10px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
         .celda-modificada { background-color: var(--warning-light) !important; border: 2px solid var(--warning) !important; color: #92400e; position: relative;}
         .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10;}
 
-        /* MODAL MÓVIL */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); display: none; justify-content: center; align-items: center; z-index: 2000;}
+        /* MODALES */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(3px);}
         .modal-content { background: var(--surface); width: 90%; max-width: 450px; padding: 20px; border-radius: 12px;}
-        #texto-celda-visual { width: 100%; height: 180px; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 14px; margin-bottom: 16px; overflow-y: auto; background: #fff; outline: none;}
+        #texto-celda-visual { width: 100%; height: 180px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14.5px; margin-bottom: 16px; overflow-y: auto; background: #ffffff; outline: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);}
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px;}
         .modal-actions button { padding: 10px 16px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; flex: 1;}
+
+        /* 🔍 MODAL VISOR DE IMÁGENES (FULL SCREEN) */
+        #modal-visor-img { flex-direction: column; cursor: zoom-out; }
+        .visor-content { position: relative; max-width: 95vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;}
+        .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain; background: #000;}
+        .btn-cerrar-visor { position: absolute; top: -15px; right: -15px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;}
 
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 320px 1fr; gap: 30px; align-items: start; }
             .form-section { position: sticky; top: 80px; margin: 0;}
-            .lista-pacientes { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px; }
+            .lista-pacientes { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 16px; }
             .paciente-row { flex-direction: row; align-items: stretch; padding: 16px 20px; }
-            .p-col-info { flex: 0 0 160px; flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 15px;}
-            .p-col-meds { flex: 1; min-width: 250px; padding: 0 10px;}
+            .p-col-info { flex: 0 0 140px; flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 15px;}
+            .p-img-render { margin-top: 10px; max-width: 100%; }
+            .p-col-meds { flex: 1.5; min-width: 250px; padding: 0 10px;}
             .p-col-obs { flex: 1; min-width: 200px; padding: 0 10px;}
             .p-col-acciones { flex: 0 0 120px; flex-direction: column; justify-content: center; border-left: 1px solid var(--border); padding-left: 15px;}
             .btn-outline { width: 100%; margin-bottom: 6px;}
@@ -156,6 +183,13 @@
     </div>
 </div>
 
+<div id="modal-visor-img" class="modal-overlay" onclick="cerrarVisorImg()">
+    <div class="visor-content" onclick="event.stopPropagation()">
+        <button class="btn-cerrar-visor" onclick="cerrarVisorImg()">×</button>
+        <img id="img-visor-full" src="">
+    </div>
+</div>
+
 <div class="container">
     
     <div id="pestana-expediente" class="vista activa">
@@ -168,17 +202,17 @@
                 </div>
 
                 <div class="botones-accion">
-                    <button id="btn-dictar" class="btn-accion">🎙️ Dictado Inteligente</button>
+                    <button id="btn-dictar" class="btn-accion">🎙️ Dictado Automático</button>
                 </div>
 
                 <div class="grid-form">
-                    <div class="form-group"><label>Cama</label><input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()"></div>
-                    <div class="form-group"><label>Paciente</label><input type="text" id="paciente" placeholder="Nombre" oninput="window.guardarBorrador()"></div>
+                    <div class="form-group"><label>Cama / Hab.</label><input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()"></div>
+                    <div class="form-group"><label>Paciente</label><input type="text" id="paciente" placeholder="Nombre/Iniciales" oninput="window.guardarBorrador()"></div>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>💊 Indicaciones (Fármaco, Dosis, Vía, Horario)</label>
-                    <textarea id="indicaciones-texto" class="caja-grande" placeholder="Escribe todo aquí de corrido. Usa 'Enter' para saltar de línea..." oninput="window.guardarBorrador()"></textarea>
+                    <label>💊 Indicaciones</label>
+                    <textarea id="indicaciones-texto" class="caja-grande" placeholder="Fármaco, dosis, vía, horario. Usa 'Enter' para saltos de línea..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
                 <div class="form-group full-width">
@@ -187,14 +221,14 @@
                 </div>
 
                 <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()">
-                    📷 <b>Tocar para añadir Foto/Estudio</b>
+                    📷 <b>Tocar para añadir Foto</b>
                     <input type="file" id="foto-paciente-input" accept="image/*" capture="environment">
                     <img id="preview-img" alt="Vista previa">
                     <div id="btn-quitar-foto" style="display:none; color:var(--danger); font-weight:bold; margin-top:5px;">❌ Quitar foto</div>
                 </div>
 
                 <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">Guardar Expediente</button>
-                <div id="aviso-guardado" style="font-size:12px; color:var(--primary); text-align:center; margin-top:8px; display:none;">Borrador local...</div>
+                <div id="aviso-guardado" style="font-size:12px; color:var(--primary); text-align:center; margin-top:8px; display:none; font-weight:600;">Borrador local guardado...</div>
             </div>
 
             <div class="historial-seccion">
@@ -242,7 +276,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // LLAVES INTACTAS
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
@@ -265,7 +298,20 @@
     };
 
     // ==========================================
-    // PROCESAMIENTO DE IMAGEN (COMPRESIÓN BASE64)
+    // 🔍 LÓGICA DEL VISOR DE IMÁGENES (LIGHTBOX)
+    // ==========================================
+    window.abrirVisorImg = function(src) {
+        document.getElementById('img-visor-full').src = src;
+        document.getElementById('modal-visor-img').style.display = 'flex';
+    };
+
+    window.cerrarVisorImg = function() {
+        document.getElementById('modal-visor-img').style.display = 'none';
+        document.getElementById('img-visor-full').src = '';
+    };
+
+    // ==========================================
+    // PROCESAMIENTO DE IMAGEN (CÁMARA/GALERÍA)
     // ==========================================
     let imagenBase64 = null;
     document.getElementById('foto-paciente-input').addEventListener('change', function(e) {
@@ -275,9 +321,8 @@
         reader.onload = function(event) {
             const img = new Image();
             img.onload = function() {
-                // Compresión con Canvas para no saturar Firestore
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 600; const MAX_HEIGHT = 600;
+                const MAX_WIDTH = 800; const MAX_HEIGHT = 800; // Un poco más grandes para ver mejor los detalles
                 let width = img.width; let height = img.height;
                 if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
                 else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
@@ -286,7 +331,7 @@
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 
-                imagenBase64 = canvas.toDataURL('image/jpeg', 0.6); // 60% calidad
+                imagenBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% calidad
                 document.getElementById('preview-img').src = imagenBase64;
                 document.getElementById('preview-img').style.display = 'block';
                 document.getElementById('btn-quitar-foto').style.display = 'block';
@@ -297,7 +342,7 @@
     });
 
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => {
-        e.stopPropagation(); // Evitar abrir la cámara otra vez
+        e.stopPropagation();
         imagenBase64 = null;
         document.getElementById('foto-paciente-input').value = "";
         document.getElementById('preview-img').style.display = 'none';
@@ -313,7 +358,7 @@
         snapshot.forEach(d => { if(d.data().estado === "Activo") activos.push({id: d.id, ...d.data()}); });
         activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
         
-        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 40px;">Sala libre.</p>'; return; }
+        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 40px; font-weight:600;">Sala libre. No hay pacientes activos.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
             let hist = '';
@@ -323,20 +368,22 @@
                 hist += '</div>';
             }
             
-            // Si hay imagen, la renderizamos
-            let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render">` : '';
+            // LA IMAGEN AHORA ABRE EL VISOR AL TOCARLA
+            let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')" title="Toca para ampliar">` : '';
 
             return `
             <div class="paciente-row">
                 <div class="p-col-info">
-                    <div class="p-cama">🛏️ ${item.cama || ''}</div>
-                    <div class="p-nombre">${item.paciente || ''}</div>
+                    <div>
+                        <div class="p-cama">🛏️ ${item.cama || ''}</div>
+                        <div class="p-nombre">${item.paciente || ''}</div>
+                    </div>
                     ${fotoHTML}
                 </div>
                 
                 <div class="p-col-meds">
                     <span class="p-bloque-titulo">Indicaciones</span>
-                    <div class="p-bloque p-meds">${item.indicaciones || 'Sin indicaciones registradas'}</div>
+                    <div class="p-bloque p-meds">${item.indicaciones || 'Sin indicaciones'}</div>
                 </div>
                 
                 <div class="p-col-obs">
@@ -358,12 +405,9 @@
         try { await updateDoc(doc(db, "pacientes", id), { historial: arrayUnion({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#0d9488', texto: t.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) }) }); } catch(e) {}
     };
 
-    // COPIA EXACTA: (FILA 1: NOMBRE, FILA 2: INDICACIONES)
     window.copiarLiteral = function(boton, data) {
         const item = JSON.parse(decodeURIComponent(data));
-        // Usamos \n real para que Excel detecte filas distintas.
-        const textoCopia = `${item.paciente || 'Sin Nombre'}\n${item.indicaciones || ''}`;
-        
+        const textoCopia = `${item.paciente || 'S/N'}\n${item.indicaciones || ''}`;
         navigator.clipboard.writeText(textoCopia).then(() => { 
             const temp = boton.innerHTML; boton.innerHTML = "✅"; setTimeout(() => boton.innerHTML = temp, 2000); 
         });
@@ -389,7 +433,6 @@
                 cama: cama, paciente: paciente, indicaciones: ind, historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp() 
             }); 
             
-            // Limpieza
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); 
             imagenBase64 = null;
             document.getElementById('foto-paciente-input').value = "";
@@ -402,33 +445,28 @@
 
     window.marcarResuelto = async (id, b) => { if(confirm("¿Paciente de alta?")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp() }); } };
 
-    // PERFIL Y BORRADORES
     window.guardarPerfil = () => { localStorage.setItem('perfilUsuario', JSON.stringify({ nombre: document.getElementById('nombre-usuario').value, color: document.getElementById('color-usuario').value })); };
     const p = JSON.parse(localStorage.getItem('perfilUsuario')); if(p) { document.getElementById('nombre-usuario').value = p.nombre || ''; document.getElementById('color-usuario').value = p.color || '#0d9488'; }
 
     window.guardarBorrador = () => { localStorage.setItem('borradorRondines', JSON.stringify({ cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value, ind: document.getElementById('indicaciones-texto').value, obs: document.getElementById('pendientes').value })); document.getElementById('aviso-guardado').style.display = 'block'; setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000); };
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
-    // DICTADO (Simplificado a las nuevas cajas)
     const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(sr) {
         const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
         rec.onresult = e => { 
             let t = ""; for(let i=e.resultIndex; i<e.results.length; i++) t += e.results[i][0].transcript;
-            
-            // Lógica simple de dictado: Si dices "Cama X, Paciente Y, Indicaciones Z, Observaciones W"
             const dic = [{id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']}, {id:'indicaciones-texto', p:['indicación','indicaciones','medicamento','medicamentos']}, {id:'pendientes', p:['observación','observaciones','pendiente','nota']}];
             let pos = []; dic.forEach(c => { let idx = -1; let l = 0; c.p.forEach(p => { let i = t.toLowerCase().indexOf(p); if(i!==-1&&(idx===-1||i<idx)) {idx=i; l=p.length;} }); if(idx!==-1) pos.push({id:c.id, idx, l}); }); pos.sort((a,b) => a.idx - b.idx);
             
             if(!pos.length) { document.getElementById('pendientes').value += (document.getElementById('pendientes').value ? "\n" : "") + t; window.guardarBorrador(); return; }
             for(let i=0; i<pos.length; i++){ let f = pos[i+1] ? pos[i+1].idx : t.length; let val = t.substring(pos[i].idx + pos[i].l, f).trim(); if(val) document.getElementById(pos[i].id).value += (document.getElementById(pos[i].id).value ? "\n" : "") + val.charAt(0).toUpperCase() + val.slice(1); } window.guardarBorrador();
         };
-        document.getElementById('btn-dictar').onclick = () => { if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictar"; } else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 Parar"; } };
+        document.getElementById('btn-dictar').onclick = () => { if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictado Automático"; } else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 Detener Dictado"; } };
     }
 
-
     // ==========================================
-    // ENTREGA DE GUARDIA Y RESET GLOBAL
+    // ENTREGA DE GUARDIA
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia';
@@ -447,7 +485,7 @@
                 if (docSnap.exists()) {
                     editor.innerHTML = docSnap.data().html_content || '';
                     document.getElementById('info-ultima-modificacion').innerText = `Última edición: ${docSnap.data().autor || 'N/A'}`;
-                } else editor.innerHTML = '<p>Pega tu tabla aquí.</p>';
+                } else editor.innerHTML = '<p style="color:#94a3b8;">Pega tu tabla aquí.</p>';
             }
         });
     }
@@ -474,7 +512,7 @@
 
     window.guardarEntrega = async function() {
         const btn = document.getElementById('btn-guardar-entrega'); btn.innerHTML = "⏳..."; btn.disabled = true;
-        try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: document.getElementById('nombre-usuario').value || 'Anónimo', fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; btn.innerHTML = "✅"; setTimeout(() => { btn.innerHTML = "💾 Guardar Nube"; btn.disabled = false; }, 2000); } catch(e) { btn.disabled = false; }
+        try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: document.getElementById('nombre-usuario').value || 'Anónimo', fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; btn.innerHTML = "✅ Nube"; setTimeout(() => { btn.innerHTML = "💾 Guardar Nube"; btn.disabled = false; }, 2000); } catch(e) { btn.disabled = false; }
     };
 
     window.limpiarMarcasGuardia = function() {
@@ -482,23 +520,15 @@
         editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega();
     };
 
-    // MAGIA: RESETEAR TODAS LAS GUARDIAS
     window.reiniciarTodasLasEntregas = async function() {
-        if(!confirm("⚠️ ¡ADVERTENCIA! ¿Estás seguro de que quieres BORRAR POR COMPLETO el formato y las tablas de los 4 servicios? Esta acción no se puede deshacer.")) return;
-        if(!confirm("¿Confirmas al 100% que quieres vaciar todas las hojas de guardia?")) return;
+        if(!confirm("⚠️ ¿BORRAR POR COMPLETO las tablas de los 4 servicios?")) return;
+        if(!confirm("¿Confirmas al 100% que quieres vaciar todo?")) return;
 
         const servicios = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
         for (const serv of servicios) {
-            try {
-                await setDoc(doc(db, "entregas", serv), { 
-                    html_content: '<p style="color:#64748b;">Hoja en blanco. Por favor pega la tabla oficial del servicio aquí.</p>', 
-                    autor: 'Sistema (Reinicio Global)', 
-                    fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), 
-                    timestamp: serverTimestamp() 
-                });
-            } catch(e) { console.error("Error al borrar " + serv); }
+            try { await setDoc(doc(db, "entregas", serv), { html_content: '<p style="color:#64748b;">Hoja en blanco. Pega la tabla oficial aquí.</p>', autor: 'Sistema (Reinicio)', fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), timestamp: serverTimestamp() }); } catch(e) { }
         }
-        alert("Todas las entregas de guardia han sido reiniciadas con éxito.");
+        alert("Todas las entregas de guardia han sido reiniciadas.");
     };
 </script>
 </body>

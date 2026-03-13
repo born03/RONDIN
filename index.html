@@ -150,7 +150,7 @@
         .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
 
         /* ===================================================
-           VISTA 3: PENDIENTES
+           VISTA 3: PENDIENTES (TO-DO LIST)
            =================================================== */
         .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
@@ -178,7 +178,7 @@
         #texto-celda-visual { height: 150px; overflow-y: auto; margin-bottom: 10px; }
         #input-nueva-nota { min-height: 60px; resize: vertical; }
 
-        /* TOASTS CON NAVEGACIÓN */
+        /* TOASTS */
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
         .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer; text-transform: uppercase; box-shadow: 0 10px 25px rgba(0,0,0,0.4);}
         .toast.show { transform: translateX(0); }
@@ -390,7 +390,7 @@
     window.pacienteModalActual = null; 
 
     // ==========================================
-    // TOASTS Y NAVEGACIÓN (GPS INCLUIDO)
+    // TOASTS CON GPS (NAVEGACIÓN AUTOMÁTICA)
     // ==========================================
     window.mostrarToast = function(mensaje, tipoTarget = null, targetId = null) {
         const container = document.getElementById('toast-container');
@@ -407,8 +407,7 @@
             toast.ondblclick = (e) => {
                 e.stopPropagation();
                 
-                // NAVEGACIÓN A INGRESO Y PACIENTE
-                if (tipoTarget === 'paciente') {
+                if (tipoTarget === 'paciente' || tipoTarget === 'nota_paciente') {
                     cambiarPestana('pestana-expediente', document.querySelector('.tab-btn[onclick*="pestana-expediente"]'));
                     setTimeout(() => {
                         const targetEl = document.getElementById(`paciente-${targetId}`);
@@ -416,10 +415,12 @@
                             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             const bg = targetEl.style.backgroundColor; targetEl.style.backgroundColor = '#ccfbf1';
                             targetEl.style.transition = 'background 0.8s'; setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
+                            
+                            // 🔥 SI ES UNA NOTA, ABRE EL POP-UP AUTOMÁTICAMENTE
+                            if(tipoTarget === 'nota_paciente') window.abrirModalNotas(targetId);
                         }
                     }, 100);
                 } 
-                // NAVEGACIÓN A GUARDIA Y SERVICIO
                 else if (tipoTarget === 'guardia') {
                     cambiarPestana('pestana-guardia', document.querySelector('.tab-btn[onclick*="pestana-guardia"]'));
                     setTimeout(() => {
@@ -427,7 +428,6 @@
                         if(btnServicio) cambiarServicio(targetId, btnServicio);
                     }, 100);
                 }
-                // NAVEGACIÓN A PENDIENTES
                 else if (tipoTarget === 'pendiente') {
                     cambiarPestana('pestana-pendientes', document.querySelector('.tab-btn[onclick*="pestana-pendientes"]'));
                 }
@@ -437,7 +437,6 @@
         }
 
         container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 100);
-        // El Toast se queda pegado. Se borra si das clic FUERA de él en cualquier lugar.
         setTimeout(() => { const rem = (e) => { if (!e.target.closest('.toast')) { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); document.removeEventListener('touchstart', rem); } }; document.addEventListener('click', rem); document.addEventListener('touchstart', rem); }, 1500);
     };
 
@@ -459,9 +458,6 @@
         });
     };
 
-    // ==========================================
-    // ESCÁNER DE MAYÚSCULAS PARA HTML
-    // ==========================================
     function getUppercasedHTML(htmlString) {
         const div = document.createElement('div');
         div.innerHTML = htmlString;
@@ -516,10 +512,15 @@
                 }
                 if (change.type === "modified" && data.estado === "Activo") { 
                     let msg = `🔄 ACTUALIZACIÓN: CAMA ${data.cama}`;
-                    if (data.ultimaAccion === 'VISTO') msg = `👀 VISTO CAMA: ${data.cama}`;
-                    else if (data.ultimaAccion === 'NOTA') msg = `📝 NOTA CAMA: ${data.cama}`;
+                    let tType = 'paciente';
                     
-                    window.mostrarToast(msg, 'paciente', change.doc.id); 
+                    if (data.ultimaAccion === 'VISTO') msg = `👀 VISTO CAMA: ${data.cama}`;
+                    else if (data.ultimaAccion === 'NOTA') { 
+                        msg = `📝 NOTA CAMA: ${data.cama}`; 
+                        tType = 'nota_paciente'; // 🔥 MANDAMOS ALERTA DE QUE ES UNA NOTA
+                    }
+                    
+                    window.mostrarToast(msg, tType, change.doc.id); 
                     audioAlerta.play().catch(e=>{}); 
                 }
             }
@@ -587,9 +588,6 @@
         if(window.pacienteModalActual) renderizarListaNotasModal(window.pacienteModalActual);
     });
 
-    // ==========================================
-    // POP-UP NOTAS 
-    // ==========================================
     window.abrirModalNotas = function(idPaciente) {
         window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
         renderizarListaNotasModal(idPaciente); document.getElementById('modal-notas').style.display = 'flex';
@@ -632,9 +630,6 @@
         try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID, ultimaAccion: 'NOTA' }); } catch(e) {}
     };
 
-    // ==========================================
-    // CREAR PACIENTE Y VACIAR SALA
-    // ==========================================
     window.enviarReporte = async function() {
         const cama = document.getElementById('cama').value.toUpperCase(); 
         const paciente = document.getElementById('paciente').value.toUpperCase(); 
@@ -671,7 +666,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA
+    // ENTREGA DE GUARDIA (SILENCIOSO AL REVISAR)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -684,11 +679,13 @@
             if(docSnap.exists()){
                 const data = docSnap.data();
                 
-                // 🔥 NOTIFICACIÓN CON GPS A GUARDIA
+                // 🔥 SI ES UNA ACCIÓN SILENCIOSA (VISTO), NO NOTIFICAMOS A NADIE
                 if (!isFirstLoadGuardia[serv] && !docSnap.metadata.hasPendingWrites && data.origen !== window.miSesionID) {
-                    const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
-                    window.mostrarToast(`🔄 MODIFICACIÓN GUARDIA ${nLindo}`, 'guardia', serv);
-                    audioAlerta.play().catch(e=>{});
+                    if (!data.silencioso) {
+                        const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
+                        window.mostrarToast(`🔄 MODIFICACIÓN GUARDIA ${nLindo}`, 'guardia', serv);
+                        audioAlerta.play().catch(e=>{});
+                    }
                 }
                 isFirstLoadGuardia[serv] = false;
 
@@ -725,7 +722,7 @@
         if(unsubscribeEntrega) unsubscribeEntrega();
         unsubscribeEntrega = onSnapshot(doc(db, "entregas", servicio), (docSnap) => {
             if (!editandoEntrega) {
-                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; document.getElementById('info-ultima-modificacion').innerText = `ÚLTIMA EDICIÓN: ${docSnap.data().autor || 'N/A'}`; } else editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">PEGA TU TABLA AQUÍ.</p>';
+                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; } else editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">PEGA TU TABLA AQUÍ.</p>';
             }
         });
     }
@@ -739,7 +736,7 @@
                     celda.classList.remove('celda-modificada'); 
                     celda.removeAttribute('data-autor'); 
                     celda.innerHTML = celda.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
-                    window.guardarEntrega(); 
+                    window.guardarEntrega(true); // TRUE = Es un guardado silencioso (Visto)
                 } 
             } 
         } 
@@ -756,7 +753,7 @@
             celdaSeleccionada.innerHTML = getUppercasedHTML(htmlReal); 
             celdaSeleccionada.classList.add('celda-modificada'); 
             celdaSeleccionada.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); 
-            window.guardarEntrega(); 
+            window.guardarEntrega(false); // FALSE = Es una edición real (notificar)
         } 
         cerrarModalCelda(); 
     };
@@ -766,16 +763,18 @@
             celdaSeleccionada.classList.remove('celda-modificada'); 
             celdaSeleccionada.removeAttribute('data-autor'); 
             celdaSeleccionada.innerHTML = celdaSeleccionada.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
-            window.guardarEntrega(); 
+            window.guardarEntrega(true); // TRUE = Es un Visto (Silencio)
         } 
         cerrarModalCelda(); 
     };
 
-    window.guardarEntrega = async function() { 
+    // 🔥 AHORA RECIBE UN PARÁMETRO PARA SABER SI DEBE NOTIFICAR O NO
+    window.guardarEntrega = async function(silencioso = false) { 
         try { 
             const finalHTML = getUppercasedHTML(editor.innerHTML);
-            await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp(), origen: window.miSesionID }, { merge: true }); 
-            editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.", null, null);
+            await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp(), origen: window.miSesionID, silencioso: silencioso }, { merge: true }); 
+            editandoEntrega = false; 
+            if(!silencioso) window.mostrarToast("GUARDIA GUARDADA.", null, null);
         } catch(e) { } 
     };
     
@@ -786,10 +785,10 @@
             c.removeAttribute('data-autor'); 
             c.innerHTML = c.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
         }); 
-        window.guardarEntrega(); 
+        window.guardarEntrega(true); // Silencioso
     };
     
-    window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
+    window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(false); };
 
     // ==========================================
     // PESTAÑA 3: PENDIENTES 
@@ -798,7 +797,6 @@
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
         
-        // 🔥 NOTIFICACIÓN CON GPS A PENDIENTES
         snapshot.docChanges().forEach((change) => {
             if (!isFirstLoadPendientes && !change.doc.metadata.hasPendingWrites) {
                 const data = change.doc.data();

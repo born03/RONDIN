@@ -23,7 +23,14 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
-           NAVEGACIÓN Y BADGES (CONTADORES)
+           MAYÚSCULAS GLOBALES PARA INPUTS
+           =================================================== */
+        input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
+            text-transform: uppercase;
+        }
+
+        /* ===================================================
+           NAVEGACIÓN Y BADGES
            =================================================== */
         .nav-tabs { width: 100%; background: var(--surface); display: flex; justify-content: center; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border);}
         .tab-btn { background: transparent; color: var(--text-muted); border: none; border-bottom: 3px solid transparent; padding: 14px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;}
@@ -48,7 +55,7 @@
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
-        label { font-weight: 700; font-size: 11px; margin-bottom: 4px; display: block; text-transform: uppercase; color: var(--text-main);}
+        label { font-weight: 700; font-size: 11px; margin-bottom: 4px; display: block; color: var(--text-main);}
         
         input[type="text"], textarea, input[type="color"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 13px; background-color: #ffffff; color: var(--text-main); font-family: inherit; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);}
         input[type="color"] { padding: 2px; cursor: pointer; height: 38px; }
@@ -72,62 +79,60 @@
         .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;}
         
         .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px; align-items: flex-start;}
-        .p-cama { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 2px;}
-        .p-nombre { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+        .p-cama { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase;}
+        .p-nombre { font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase;}
         .p-hora { font-size: 10px; color: #94a3b8; font-weight: normal; margin-top: 2px; display: block;} 
         
-        .p-bloque-titulo { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase;}
+        .p-bloque-titulo { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;}
         .doble-clic-hint { font-size: 8.5px; color: #94a3b8; font-weight: normal; background: #f1f5f9; padding: 2px 4px; border-radius: 4px; cursor: help; text-transform: none;}
         
-        .p-bloque { background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px; line-height: 1.5; white-space: pre-wrap; cursor: copy; height: max-content; margin: 0;}
+        .p-bloque { background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px; line-height: 1.5; white-space: pre-wrap; cursor: copy; height: max-content; margin: 0; text-transform: uppercase;}
         .p-bloque:hover { border-color: var(--primary); }
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
         .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%;}
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%; text-transform: uppercase;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
         .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
-        .btn-outline.borrar-todo { border-color: var(--danger); color: var(--danger); }
 
-        .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;}
+        .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px; text-transform: uppercase;}
         .dot { height: 6px; width: 6px; background-color: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite;}
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* ===================================================
-           MODAL DE HISTORIAL DE NOTAS (POP UP)
+           MODAL DE HISTORIAL DE NOTAS
            =================================================== */
         .notas-container { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; display: flex; flex-direction: column; gap: 8px;}
         .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 13px;}
-        .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 11px; margin-bottom: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
-        .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 10px; }
+        .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 11px; margin-bottom: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 4px; text-transform: uppercase;}
+        .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 10px; text-transform: none;}
         
         .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; } 
         .nota-visto .nota-texto { color: #64748b; text-decoration: line-through; text-decoration-color: #cbd5e1;}
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
         /* ===================================================
-           VISTA 2: ENTREGA DE GUARDIA (CON LATIDO)
+           VISTA 2: ENTREGA DE GUARDIA
            =================================================== */
         .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
-        .btn-servicio { background: var(--surface); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap;}
+        .btn-servicio { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-weight: 600; font-size: 12px; cursor: pointer; white-space: nowrap; text-transform: uppercase;}
         .btn-servicio.activo { background: var(--text-main); color: white; border-color: var(--text-main); }
 
         .entrega-toolbar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-        .btn-tool { border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; background: var(--surface);}
+        .btn-tool { border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; font-weight: 600; font-size: 11px; cursor: pointer; background: var(--surface); text-transform: uppercase;}
         .btn-tool.primario { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-tool.limpiar { color: var(--warning); border-color: #fcd34d;}
         .btn-tool.peligro { color: var(--danger); border-color: #fca5a5; margin-left: auto;}
         
         .editor-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; background: #ffffff; min-height: 50vh;}
-        #editor-entrega { min-width: 600px; padding: 15px; font-size: 13px; outline: none; line-height: 1.5;}
+        #editor-entrega { min-width: 600px; padding: 15px; font-size: 13px; outline: none; line-height: 1.5; text-transform: uppercase;}
         #editor-entrega table { border-collapse: collapse; width: 100%; margin-bottom: 10px; }
         #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
-        /* 🔥 CLARIDAD AL MÁXIMO PARA LOS CAMBIOS */
         .celda-modificada { 
             background-color: var(--warning-light) !important; 
             border: 2px solid var(--warning) !important; 
@@ -141,15 +146,15 @@
             70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
             100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
         }
-        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2);}
+        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase;}
 
         /* ===================================================
            VISTA 3: PENDIENTES (TO-DO LIST)
            =================================================== */
         .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        .todo-input-group input { flex-grow: 1; margin: 0;}
-        .todo-input-group button { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 6px; font-weight: bold; cursor: pointer;}
+        .todo-input-group input { flex-grow: 1; margin: 0; text-transform: uppercase;}
+        .todo-input-group button { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase;}
         
         .todo-item { display: flex; align-items: flex-start; gap: 12px; background: var(--bg-body); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; transition: all 0.2s;}
         .todo-item:hover { border-color: var(--primary); }
@@ -158,21 +163,22 @@
         
         .todo-check { width: 20px; height: 20px; cursor: pointer; margin-top: 2px; accent-color: var(--primary);}
         .todo-content { flex-grow: 1; }
-        .todo-texto { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; display: block;}
-        .todo-meta { font-size: 10px; color: #94a3b8; display: block;}
+        .todo-texto { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; display: block; text-transform: uppercase;}
+        .todo-resolucion { display: block; color: var(--primary); font-size: 12px; margin-top: 4px; font-weight: 700; text-transform: uppercase;}
+        .todo-meta { font-size: 10px; color: #94a3b8; display: block; text-transform: uppercase;}
 
         /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(2px);}
         .modal-content { background: var(--surface); width: 90%; max-width: 450px; padding: 20px; border-radius: 12px; display: flex; flex-direction: column; max-height: 90vh;}
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 15px;}
-        .modal-actions button { padding: 10px 14px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; font-size: 12px;}
+        .modal-actions button { padding: 10px 14px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; font-size: 12px; text-transform: uppercase;}
 
-        #texto-celda-visual, #input-nueva-nota { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13.5px; box-sizing: border-box; background: #ffffff; outline: none; font-family: inherit;}
+        #texto-celda-visual, #input-nueva-nota { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13.5px; box-sizing: border-box; background: #ffffff; outline: none; font-family: inherit; text-transform: uppercase;}
         #texto-celda-visual { height: 150px; overflow-y: auto; margin-bottom: 10px; }
         #input-nueva-nota { min-height: 60px; resize: vertical; }
 
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
-        .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer;}
+        .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer; text-transform: uppercase;}
         .toast.show { transform: translateX(0); }
 
         #modal-visor-img { flex-direction: column; cursor: zoom-out; }
@@ -180,7 +186,7 @@
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO EN PC
+           DISEÑO RESPONSIVO PC
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
@@ -202,31 +208,31 @@
 <div id="toast-container"></div>
 
 <div class="nav-tabs">
-    <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 Expediente</button>
-    <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 Guardia <span id="badge-guardia" class="tab-badge">0</span></button>
-    <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 Pendientes <span id="badge-pendientes" class="tab-badge">0</span></button>
+    <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 EXPEDIENTE</button>
+    <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
+    <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
 </div>
 
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 15px;">✏️ Edición Visual</h3>
+        <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
-            <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">Cancelar</button>
-            <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ Aprobar Cambio</button>
-            <button style="background:#0d9488; color:white;" onclick="guardarCeldaModal()">Guardar</button>
+            <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
+            <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ APROBAR CAMBIO</button>
+            <button style="background:#0d9488; color:white;" onclick="guardarCeldaModal()">GUARDAR</button>
         </div>
     </div>
 </div>
 
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 Historial de Evolución</h3>
-        <textarea id="input-nueva-nota" placeholder="Escribe una nueva evolución aquí..."></textarea>
-        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px;">➕ Agregar a Evolución</button>
+        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
+        <textarea id="input-nueva-nota" placeholder="ESCRIBE UNA NUEVA EVOLUCIÓN AQUÍ..."></textarea>
+        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; text-transform: uppercase;">➕ AGREGAR A EVOLUCIÓN</button>
         <div id="contenedor-lista-notas" class="notas-container"></div>
         <div class="modal-actions" style="margin-top: 10px;">
-            <button style="background:#f1f5f9; color:#1e293b; width: 100%;" onclick="cerrarModalNotas()">Cerrar</button>
+            <button style="background:#f1f5f9; color:#1e293b; width: 100%;" onclick="cerrarModalNotas()">CERRAR</button>
         </div>
     </div>
 </div>
@@ -245,46 +251,46 @@
             
             <div class="form-section">
                 <div class="grid-form" style="margin:0 0 12px 0; background:#ffffff; padding:8px; border-radius:6px; border:1px solid var(--border);">
-                    <div><input type="text" id="nombre-usuario" placeholder="Firma (Dr. Pérez)" oninput="window.guardarPerfil()"></div>
+                    <div><input type="text" id="nombre-usuario" placeholder="FIRMA (EJ. DR. PÉREZ)" oninput="window.guardarPerfil()"></div>
                     <div><input type="color" id="color-usuario" value="#0d9488" onchange="window.guardarPerfil()"></div>
                 </div>
 
                 <div class="botones-accion">
-                    <button id="btn-dictar" class="btn-accion">🎙️ Dictado Automático</button>
+                    <button id="btn-dictar" class="btn-accion" style="text-transform: uppercase;">🎙️ DICTADO AUTOMÁTICO</button>
                 </div>
 
                 <div class="grid-form">
-                    <div class="form-group"><label>Cama</label><input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()"></div>
-                    <div class="form-group"><label>Paciente</label><input type="text" id="paciente" placeholder="Nombre" oninput="window.guardarBorrador()"></div>
+                    <div class="form-group"><label>CAMA</label><input type="text" id="cama" placeholder="EJ. 302" oninput="window.guardarBorrador()"></div>
+                    <div class="form-group"><label>PACIENTE</label><input type="text" id="paciente" placeholder="NOMBRE" oninput="window.guardarBorrador()"></div>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>💊 Indicaciones</label>
-                    <textarea id="indicaciones-texto" class="caja-grande" placeholder="Fármaco, dosis, vía, horario..." oninput="window.guardarBorrador()"></textarea>
+                    <label>💊 INDICACIONES</label>
+                    <textarea id="indicaciones-texto" class="caja-grande" placeholder="FÁRMACO, DOSIS, VÍA, HORARIO..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>📝 Evolución Inicial</label>
-                    <textarea id="pendientes" placeholder="Diagnóstico de ingreso. Se irá al historial..." oninput="window.guardarBorrador()"></textarea>
+                    <label>📝 EVOLUCIÓN INICIAL</label>
+                    <textarea id="pendientes" placeholder="DIAGNÓSTICO O NOTA DE INGRESO..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
-                <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()">
-                    📷 <b>Tocar para añadir Foto/Estudio</b>
+                <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()" style="text-transform: uppercase;">
+                    📷 <b>TOCAR PARA AÑADIR FOTO/ESTUDIO</b>
                     <input type="file" id="foto-paciente-input" accept="image/*" capture="environment">
                     <img id="preview-img" alt="Vista previa">
-                    <div id="btn-quitar-foto" style="display:none; color:var(--danger); font-weight:bold; margin-top:5px;">❌ Quitar foto</div>
+                    <div id="btn-quitar-foto" style="display:none; color:var(--danger); font-weight:bold; margin-top:5px;">❌ QUITAR FOTO</div>
                 </div>
 
-                <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">Guardar Expediente</button>
-                <div id="aviso-guardado" style="font-size:11px; color:var(--primary); text-align:center; margin-top:6px; display:none;">Borrador guardado</div>
+                <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()" style="text-transform: uppercase;">GUARDAR EXPEDIENTE</button>
+                <div id="aviso-guardado" style="font-size:11px; color:var(--primary); text-align:center; margin-top:6px; display:none; text-transform: uppercase; font-weight: bold;">BORRADOR GUARDADO</div>
             </div>
 
             <div class="historial-seccion">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2 class="section-title" style="margin:0;">Censo Hospitalario</h2>
+                    <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <div class="indicador-vivo"><span class="dot"></span> En Vivo</div>
-                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 Alta a Todos</button>
+                        <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
+                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 ALTA A TODOS</button>
                     </div>
                 </div>
                 <div id="lista-pendientes" class="lista-pacientes"></div>
@@ -295,47 +301,47 @@
     <div id="pestana-guardia" class="vista">
         <div class="entrega-container">
             <div class="nav-servicios">
-                <button class="btn-servicio activo" onclick="cambiarServicio('Oncologia', this)">Oncología <span id="b-onco"></span></button>
-                <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">Cirugía/Gastro <span id="b-ciru"></span></button>
-                <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">Trauma <span id="b-trau"></span></button>
-                <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">Infectología <span id="b-infe"></span></button>
+                <button class="btn-servicio activo" onclick="cambiarServicio('Oncologia', this)">ONCOLOGÍA <span id="b-onco"></span></button>
+                <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">CIRUGÍA/GASTRO <span id="b-ciru"></span></button>
+                <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">TRAUMA <span id="b-trau"></span></button>
+                <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">INFECTOLOGÍA <span id="b-infe"></span></button>
             </div>
 
             <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <div>
-                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0;">Oncología</h2>
-                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px;">Conectando...</p>
+                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0; text-transform: uppercase;">ONCOLOGÍA</h2>
+                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px; text-transform: uppercase;">CONECTANDO...</p>
                 </div>
             </div>
 
             <div class="entrega-toolbar">
-                <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 Guardar Nube</button>
-                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ Marcar Visto (Quitar amarillos)</button>
-                <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ Vaciar Tabla (Hoja en blanco)</button>
+                <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 GUARDAR NUBE</button>
+                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO</button>
+                <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ VACIAR TABLA</button>
             </div>
 
             <div class="editor-wrapper">
-                <div id="editor-entrega" contenteditable="true" placeholder="Pega tu tabla oficial aquí..."></div>
+                <div id="editor-entrega" contenteditable="true" placeholder="PEGA TU TABLA OFICIAL AQUÍ..."></div>
             </div>
         </div>
     </div>
 
     <div id="pestana-pendientes" class="vista">
         <div class="pendientes-container">
-            <h2 class="section-title">📌 Lista de Pendientes del Turno</h2>
+            <h2 class="section-title" style="text-transform: uppercase;">📌 LISTA DE PENDIENTES DEL TURNO</h2>
             
             <div class="todo-input-group">
-                <input type="text" id="input-nuevo-pendiente" placeholder="Ej. Revisar laboratorios cama 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
-                <button onclick="window.agregarPendiente()">Agregar</button>
+                <input type="text" id="input-nuevo-pendiente" placeholder="EJ. REVISAR LABORATORIOS CAMA 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
+                <button onclick="window.agregarPendiente()">AGREGAR</button>
             </div>
 
             <div class="entrega-toolbar" style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px; background: transparent; border:none; padding:0;">
-                <button class="btn-tool" onclick="window.borrarPendientesCompletados()">🧹 Borrar Terminados</button>
-                <button class="btn-tool peligro" onclick="window.borrarTodosPendientes()">🗑️ Borrar Todos</button>
+                <button class="btn-tool" onclick="window.borrarPendientesCompletados()">🧹 BORRAR TERMINADOS</button>
+                <button class="btn-tool peligro" onclick="window.borrarTodosPendientes()">🗑️ BORRAR TODOS</button>
             </div>
 
             <div id="lista-todo" style="display: flex; flex-direction: column;">
-                <p style="text-align:center; color:var(--text-muted); font-size:13px;">Cargando pendientes...</p>
+                <p style="text-align:center; color:var(--text-muted); font-size:13px; text-transform: uppercase;">CARGANDO PENDIENTES...</p>
             </div>
         </div>
     </div>
@@ -361,7 +367,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     
-    // Referencias Principales
     const pacientesRef = collection(db, "pacientes");
     const pendientesRef = collection(db, "pendientes_globales");
 
@@ -377,7 +382,7 @@
     window.mostrarToast = function(mensaje) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div'); toast.className = 'toast';
-        toast.innerHTML = `<span>${mensaje}</span> <span style="font-size:18px; opacity:0.7;">&times;</span>`;
+        toast.innerHTML = `<span>${mensaje.toUpperCase()}</span> <span style="font-size:18px; opacity:0.7;">&times;</span>`;
         toast.onclick = (e) => { e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); };
         container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 100);
         setTimeout(() => { const rem = () => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); }; document.addEventListener('click', rem); }, 1000);
@@ -395,9 +400,9 @@
 
     window.copiarBloqueIndividual = function(elemento) {
         let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
-        navigator.clipboard.writeText(texto).then(() => {
+        navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
-            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Copiado");
+            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO");
         });
     };
 
@@ -422,14 +427,14 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (3 COLUMNAS LIMPIAS)
+    // EXPEDIENTE MODO CENSO
     // ==========================================
     let isFirstLoad = true;
 
     function formatearFecha(timestampFirestore) {
-        if(!timestampFirestore) return 'Sin hora';
+        if(!timestampFirestore) return 'SIN HORA';
         const date = timestampFirestore.toDate();
-        return date.toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        return date.toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).toUpperCase();
     }
 
     onSnapshot(query(pacientesRef), (snapshot) => {
@@ -439,8 +444,8 @@
             if (!isFirstLoad && !change.doc.metadata.hasPendingWrites) {
                 const data = change.doc.data();
                 if (data.origen === window.miSesionID) return;
-                if (change.type === "added") { window.mostrarToast(`🛏️ Nuevo ingreso: Cama ${data.cama}`); audioAlerta.play().catch(e=>{}); }
-                if (change.type === "modified" && data.estado === "Activo") { window.mostrarToast(`🔄 Actualización: Cama ${data.cama}`); audioAlerta.play().catch(e=>{}); }
+                if (change.type === "added") { window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`); audioAlerta.play().catch(e=>{}); }
+                if (change.type === "modified" && data.estado === "Activo") { window.mostrarToast(`🔄 ACTUALIZACIÓN: CAMA ${data.cama}`); audioAlerta.play().catch(e=>{}); }
             }
         });
         isFirstLoad = false;
@@ -449,7 +454,7 @@
         activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
         window.pacientesLocales = activos; 
         
-        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">Sala libre.</p>'; return; }
+        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600; text-transform: uppercase;">SALA LIBRE.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
             let notasNoLeidas = 0; let totalNotas = 0;
@@ -459,7 +464,7 @@
             }
             
             let btnNotasColor = notasNoLeidas > 0 ? 'danger-badge' : '';
-            let btnNotasTexto = notasNoLeidas > 0 ? `💬 Evolución (${totalNotas}) 🔴` : `💬 Evolución (${totalNotas})`;
+            let btnNotasTexto = notasNoLeidas > 0 ? `💬 EVOLUCIÓN (${totalNotas}) 🔴` : `💬 EVOLUCIÓN (${totalNotas})`;
 
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
@@ -476,13 +481,13 @@
                 </div>
                 
                 <div class="p-col-meds">
-                    <span class="p-bloque-titulo">Indicaciones <span class="doble-clic-hint">Doble clic para copiar</span></span>
+                    <span class="p-bloque-titulo">INDICACIONES <span class="doble-clic-hint">DOBLE CLIC PARA COPIAR</span></span>
                     <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
                 
                 <div class="p-col-acciones">
                     <button class="btn-outline ${btnNotasColor}" onclick="window.abrirModalNotas('${item.id}')">${btnNotasTexto}</button>
-                    <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ Alta</button>
+                    <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ ALTA</button>
                 </div>
             </div>`;
         }).join('');
@@ -491,7 +496,7 @@
     });
 
     // ==========================================
-    // POP-UP NOTAS
+    // POP-UP NOTAS (MAYÚSCULAS)
     // ==========================================
     window.abrirModalNotas = function(idPaciente) {
         window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
@@ -502,14 +507,14 @@
     function renderizarListaNotasModal(idPaciente) {
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
         const contenedor = document.getElementById('contenedor-lista-notas');
-        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">No hay evolución registrada.</p>'; return; }
+        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px; text-transform:uppercase;">NO HAY EVOLUCIÓN REGISTRADA.</p>'; return; }
 
         let notasMapeadas = paciente.historial.map((nota, idx) => ({...nota, originalIndex: idx}));
         notasMapeadas.sort((a, b) => { if (a.visto === b.visto) return b.originalIndex - a.originalIndex; return a.visto ? 1 : -1; });
 
         contenedor.innerHTML = notasMapeadas.map(n => {
             let esVistoClase = n.visto ? 'nota-visto' : '';
-            let btnVisto = n.visto ? '' : `<button class="btn-ver-nota" onclick="window.marcarNotaVistaModal(${n.originalIndex})">👁️ Visto</button>`;
+            let btnVisto = n.visto ? '' : `<button class="btn-ver-nota" onclick="window.marcarNotaVistaModal(${n.originalIndex})">👁️ MARCAR VISTO</button>`;
             return `
             <div class="nota-chat ${esVistoClase}" style="${n.visto ? '' : 'border-left: 4px solid ' + n.color};">
                 <div class="nota-autor" style="color: ${n.visto ? '#94a3b8' : n.color};"><span>${n.autor} <span class="nota-fecha">${n.fecha}</span></span>${btnVisto}</div>
@@ -528,9 +533,9 @@
     };
 
     window.guardarNotaDesdeModal = async function() {
-        if(!window.pacienteModalActual) return; const texto = document.getElementById('input-nueva-nota').value.trim(); if(!texto) return;
-        const autor = document.getElementById('nombre-usuario').value || 'Anónimo'; const color = document.getElementById('color-usuario').value || '#0d9488';
-        const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        if(!window.pacienteModalActual) return; const texto = document.getElementById('input-nueva-nota').value.trim().toUpperCase(); if(!texto) return;
+        const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(); const color = document.getElementById('color-usuario').value || '#0d9488';
+        const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).toUpperCase();
         document.getElementById('input-nueva-nota').value = ''; 
         try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID }); } catch(e) {}
     };
@@ -539,54 +544,55 @@
     // CREAR PACIENTE Y VACIAR SALA
     // ==========================================
     window.enviarReporte = async function() {
-        const cama = document.getElementById('cama').value; const paciente = document.getElementById('paciente').value; 
-        const ind = document.getElementById('indicaciones-texto').value; const obs = document.getElementById('pendientes').value;
+        // FORZAMOS MAYÚSCULAS AL GUARDAR
+        const cama = document.getElementById('cama').value.toUpperCase(); 
+        const paciente = document.getElementById('paciente').value.toUpperCase(); 
+        const ind = document.getElementById('indicaciones-texto').value.toUpperCase(); 
+        const obs = document.getElementById('pendientes').value.toUpperCase();
+        
         if(!cama && !paciente && !ind && !obs && !imagenBase64) return;
-        const btn = document.getElementById('btn-enviar'); btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
+        const btn = document.getElementById('btn-enviar'); btn.disabled = true; btn.innerHTML = "⏳ GUARDANDO...";
         
         let hIni = []; 
-        if (obs.trim() !== '') { hIni.push({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#0d9488', texto: obs.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), visto: false }); }
+        if (obs.trim() !== '') { 
+            const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
+            hIni.push({ autor: autor, color: document.getElementById('color-usuario').value || '#0d9488', texto: obs.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).toUpperCase(), visto: false }); 
+        }
 
         try { 
-            await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID }); 
+            await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
-        } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "Guardar Expediente";
+        } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "GUARDAR EXPEDIENTE";
     };
 
-    window.marcarResuelto = async (id, b) => { if(confirm("¿Paciente de alta?")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
+    window.marcarResuelto = async (id, b) => { if(confirm("¿PACIENTE DE ALTA?")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
 
-    // VACIAR SALA COMPLETA
     window.vaciarSalaExpediente = async function() {
-        if(!confirm("⚠️ ¿Estás seguro de querer DAR DE ALTA a todos los pacientes activos de la sala? Esta acción limpiará todo el Censo.")) return;
-        if(!confirm("¿Confirmas vaciar la sala?")) return;
-        
-        for (let pac of window.pacientesLocales) {
-            try { await updateDoc(doc(db, "pacientes", pac.id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } catch(e) {}
-        }
-        window.mostrarToast("Sala vaciada exitosamente.");
+        if(!confirm("⚠️ ¿ESTÁS SEGURO DE QUERER DAR DE ALTA A TODOS LOS PACIENTES ACTIVOS DE LA SALA? ESTA ACCIÓN LIMPIARÁ TODO EL CENSO.")) return;
+        if(!confirm("¿CONFIRMAS VACIAR LA SALA?")) return;
+        for (let pac of window.pacientesLocales) { try { await updateDoc(doc(db, "pacientes", pac.id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } catch(e) {} }
+        window.mostrarToast("SALA VACIADA EXITOSAMENTE.");
     };
 
-    window.guardarPerfil = () => { localStorage.setItem('perfilUsuario', JSON.stringify({ nombre: document.getElementById('nombre-usuario').value, color: document.getElementById('color-usuario').value })); };
+    window.guardarPerfil = () => { localStorage.setItem('perfilUsuario', JSON.stringify({ nombre: document.getElementById('nombre-usuario').value.toUpperCase(), color: document.getElementById('color-usuario').value })); };
     const p = JSON.parse(localStorage.getItem('perfilUsuario')); if(p) { document.getElementById('nombre-usuario').value = p.nombre || ''; document.getElementById('color-usuario').value = p.color || '#0d9488'; }
-    window.guardarBorrador = () => { localStorage.setItem('borradorRondines', JSON.stringify({ cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value, ind: document.getElementById('indicaciones-texto').value, obs: document.getElementById('pendientes').value })); document.getElementById('aviso-guardado').style.display = 'block'; setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000); };
+    window.guardarBorrador = () => { localStorage.setItem('borradorRondines', JSON.stringify({ cama: document.getElementById('cama').value.toUpperCase(), paciente: document.getElementById('paciente').value.toUpperCase(), ind: document.getElementById('indicaciones-texto').value.toUpperCase(), obs: document.getElementById('pendientes').value.toUpperCase() })); document.getElementById('aviso-guardado').style.display = 'block'; setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000); };
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA (CONTADOR GLOBAL)
+    // ENTREGA DE GUARDIA (CONTADOR GLOBAL Y MAYÚSCULAS)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
     let conteoGuardias = { Oncologia: 0, Cirugia_Gastro: 0, Traumatologia: 0, Infectologia: 0 };
 
-    // Listener Global para los 4 servicios (Calcula los contadores de la pestaña y botones)
     const serviciosLista = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
     serviciosLista.forEach(serv => {
         onSnapshot(doc(db, "entregas", serv), (docSnap) => {
             if(docSnap.exists()){
                 const htmlStr = docSnap.data().html_content || '';
                 const cambios = (htmlStr.match(/celda-modificada/g) || []).length;
-                conteoGuardias[serv] = cambios;
-                actualizarBadgesGuardia();
+                conteoGuardias[serv] = cambios; actualizarBadgesGuardia();
             } else { conteoGuardias[serv] = 0; actualizarBadgesGuardia(); }
         });
     });
@@ -599,15 +605,14 @@
         document.getElementById('b-infe').innerText = conteoGuardias.Infectologia > 0 ? `(${conteoGuardias.Infectologia})` : ''; total += conteoGuardias.Infectologia;
         
         const badgePrincipal = document.getElementById('badge-guardia');
-        if(total > 0) { badgePrincipal.innerText = total; badgePrincipal.classList.add('show'); } 
-        else { badgePrincipal.classList.remove('show'); }
+        if(total > 0) { badgePrincipal.innerText = total; badgePrincipal.classList.add('show'); } else { badgePrincipal.classList.remove('show'); }
     }
 
     window.cambiarServicio = function(servicioId, boton) {
         document.querySelectorAll('.btn-servicio').forEach(b => b.classList.remove('activo')); boton.classList.add('activo');
-        const n = {'Oncologia': 'Oncología', 'Cirugia_Gastro': 'Cirugía y Gastro', 'Traumatologia': 'Traumatología', 'Infectologia': 'Infectología'};
+        const n = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'};
         document.getElementById('titulo-servicio-actual').innerText = n[servicioId]; 
-        editandoEntrega = false; editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Cargando datos...</p>';
+        editandoEntrega = false; editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">CARGANDO DATOS...</p>';
         servicioActual = servicioId; cargarServicioFirebase(servicioId);
     };
 
@@ -615,33 +620,32 @@
         if(unsubscribeEntrega) unsubscribeEntrega();
         unsubscribeEntrega = onSnapshot(doc(db, "entregas", servicio), (docSnap) => {
             if (!editandoEntrega) {
-                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; document.getElementById('info-ultima-modificacion').innerText = `Última edición: ${docSnap.data().autor || 'N/A'}`; } else editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">Pega tu tabla aquí.</p>';
+                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; document.getElementById('info-ultima-modificacion').innerText = `ÚLTIMA EDICIÓN: ${docSnap.data().autor || 'N/A'}`; } else editor.innerHTML = '<p style="color:#94a3b8; font-size:13px;">PEGA TU TABLA AQUÍ.</p>';
             }
         });
     }
     cargarServicioFirebase(servicioActual);
 
-    editor.addEventListener('dblclick', (e) => { if(window.innerWidth >= 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda && celda.classList.contains('celda-modificada')) { if(confirm("¿Revisado?")) { celda.classList.remove('celda-modificada'); celda.removeAttribute('data-autor'); window.guardarEntrega(); } } } });
-    editor.addEventListener('input', (e) => { editandoEntrega = true; let nodo = document.getSelection().anchorNode; if(nodo && nodo.nodeType === 3) nodo = nodo.parentNode; if(nodo) { let celda = nodo.closest('td') || nodo.closest('th'); if(celda) { celda.classList.add('celda-modificada'); celda.setAttribute('data-autor', document.getElementById('nombre-usuario').value || 'Anónimo'); } } });
+    editor.addEventListener('dblclick', (e) => { if(window.innerWidth >= 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda && celda.classList.contains('celda-modificada')) { if(confirm("¿REVISADO?")) { celda.classList.remove('celda-modificada'); celda.removeAttribute('data-autor'); window.guardarEntrega(); } } } });
+    editor.addEventListener('input', (e) => { editandoEntrega = true; let nodo = document.getSelection().anchorNode; if(nodo && nodo.nodeType === 3) nodo = nodo.parentNode; if(nodo) { let celda = nodo.closest('td') || nodo.closest('th'); if(celda) { celda.classList.add('celda-modificada'); celda.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); } } });
     editor.addEventListener('click', (e) => { if(window.innerWidth < 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda) { e.preventDefault(); celdaSeleccionada = celda; document.getElementById('texto-celda-visual').innerHTML = celda.innerHTML; document.getElementById('btn-aceptar-celda').style.display = celda.classList.contains('celda-modificada') ? 'block' : 'none'; document.getElementById('modal-celda').style.display = 'flex'; } } });
 
     window.cerrarModalCelda = () => { document.getElementById('modal-celda').style.display = 'none'; celdaSeleccionada = null; };
-    window.guardarCeldaModal = () => { if(celdaSeleccionada) { celdaSeleccionada.innerHTML = document.getElementById('texto-celda-visual').innerHTML; celdaSeleccionada.classList.add('celda-modificada'); celdaSeleccionada.setAttribute('data-autor', document.getElementById('nombre-usuario').value || 'Anónimo'); window.guardarEntrega(); } cerrarModalCelda(); };
+    window.guardarCeldaModal = () => { if(celdaSeleccionada) { celdaSeleccionada.innerHTML = document.getElementById('texto-celda-visual').innerHTML; celdaSeleccionada.classList.add('celda-modificada'); celdaSeleccionada.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); window.guardarEntrega(); } cerrarModalCelda(); };
     window.aceptarCambioCelda = () => { if(celdaSeleccionada) { celdaSeleccionada.classList.remove('celda-modificada'); celdaSeleccionada.removeAttribute('data-autor'); window.guardarEntrega(); } cerrarModalCelda(); };
 
-    window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: document.getElementById('nombre-usuario').value || 'Anónimo', timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("Guardia guardada.");} catch(e) { } };
+    window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.");} catch(e) { } };
     
-    // LIMPIEZA DE GUARDIA
-    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual? Limpiará celdas amarillas.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
-    window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿Deseas dejar en blanco la tabla de ${servicioActual}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
+    window.limpiarMarcasGuardia = function() { if(!confirm("¿RECIBIR TURNO ACTUAL? LIMPIARÁ CELDAS AMARILLAS.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
+    window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================
-    // PESTAÑA 3: PENDIENTES (TO-DO LIST)
+    // PESTAÑA 3: PENDIENTES (TO-DO LIST CON RESOLUCIÓN)
     // ==========================================
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
         snapshot.forEach(doc => items.push({id: doc.id, ...doc.data()}));
-        items.sort((a,b) => b.fecha?.toMillis() - a.fecha?.toMillis()); // Más nuevos arriba
+        items.sort((a,b) => b.fecha?.toMillis() - a.fecha?.toMillis()); 
         window.listaPendientesToDos = items;
 
         const conteoActivos = items.filter(i => !i.completado).length;
@@ -649,14 +653,15 @@
         if(conteoActivos > 0) { badge.innerText = conteoActivos; badge.classList.add('show'); } else { badge.classList.remove('show'); }
 
         const listaDOM = document.getElementById('lista-todo');
-        if(items.length === 0) { listaDOM.innerHTML = '<p style="text-align:center; color:#94a3b8;">Sin pendientes.</p>'; return; }
+        if(items.length === 0) { listaDOM.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px;">SIN PENDIENTES.</p>'; return; }
 
         listaDOM.innerHTML = items.map(item => `
             <div class="todo-item ${item.completado ? 'terminado' : ''}">
-                <input type="checkbox" class="todo-check" ${item.completado ? 'checked' : ''} onchange="window.togglePendiente('${item.id}', this.checked)">
+                <input type="checkbox" class="todo-check" ${item.completado ? 'checked' : ''} onchange="window.togglePendiente('${item.id}', this.checked, this)">
                 <div class="todo-content">
                     <span class="todo-texto">${item.texto}</span>
-                    <span class="todo-meta">Por: ${item.autor} (${formatearFecha(item.fecha)})</span>
+                    ${item.resolucion && item.completado ? `<span class="todo-resolucion">↳ RESULTADO: ${item.resolucion}</span>` : ''}
+                    <span class="todo-meta">POR: ${item.autor} (${formatearFecha(item.fecha)})</span>
                 </div>
             </div>
         `).join('');
@@ -664,30 +669,62 @@
 
     window.agregarPendiente = async function() {
         const input = document.getElementById('input-nuevo-pendiente');
-        const texto = input.value.trim();
+        const texto = input.value.trim().toUpperCase(); // Forzado a Mayúscula
         if(!texto) return;
-        const autor = document.getElementById('nombre-usuario').value || 'Anónimo';
+        const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
         try {
-            await addDoc(pendientesRef, { texto: texto, completado: false, autor: autor, fecha: serverTimestamp() });
+            await addDoc(pendientesRef, { texto: texto, completado: false, resolucion: "", autor: autor, fecha: serverTimestamp() });
             input.value = '';
         } catch(e) {}
     };
 
-    window.togglePendiente = async function(id, isChecked) {
-        try { await updateDoc(doc(db, "pendientes_globales", id), { completado: isChecked }); } catch(e) {}
+    // LÓGICA DE RESOLUCIÓN OBLIGATORIA
+    window.togglePendiente = async function(id, isChecked, checkboxElement) {
+        if(isChecked) {
+            const resolucion = prompt("📝 ESCRIBE LA RESOLUCIÓN DE ESTE PENDIENTE:");
+            if(resolucion === null) { 
+                checkboxElement.checked = false; // Revierte si cancela
+                return; 
+            }
+            try { 
+                await updateDoc(doc(db, "pendientes_globales", id), { 
+                    completado: true, 
+                    resolucion: resolucion.trim().toUpperCase() // Guarda la resolución en mayúsculas
+                }); 
+            } catch(e) {}
+        } else {
+            // Si desmarca la casilla, borramos la resolución
+            try { 
+                await updateDoc(doc(db, "pendientes_globales", id), { 
+                    completado: false, 
+                    resolucion: "" 
+                }); 
+            } catch(e) {}
+        }
     };
 
     window.borrarPendientesCompletados = async function() {
-        if(!confirm("¿Borrar todos los pendientes marcados como terminados?")) return;
+        if(!confirm("¿BORRAR TODOS LOS PENDIENTES MARCADOS COMO TERMINADOS?")) return;
         const terminados = window.listaPendientesToDos.filter(i => i.completado);
         for(let t of terminados) { try { await deleteDoc(doc(db, "pendientes_globales", t.id)); } catch(e){} }
     };
 
     window.borrarTodosPendientes = async function() {
-        if(!confirm("⚠️ ¿Estás seguro de borrar TODOS los pendientes de la lista?")) return;
+        if(!confirm("⚠️ ¿ESTÁS SEGURO DE BORRAR TODOS LOS PENDIENTES DE LA LISTA?")) return;
         for(let t of window.listaPendientesToDos) { try { await deleteDoc(doc(db, "pendientes_globales", t.id)); } catch(e){} }
     };
 
+    // DICTADO AUTOMÁTICO REPARADO PARA MAYÚSCULAS
+    const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(sr) {
+        const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
+        rec.onresult = e => { 
+            let t = ""; for(let i=e.resultIndex; i<e.results.length; i++) t += e.results[i][0].transcript;
+            document.getElementById('indicaciones-texto').value += (document.getElementById('indicaciones-texto').value ? "\n" : "") + t.trim().toUpperCase(); 
+            window.guardarBorrador();
+        };
+        document.getElementById('btn-dictar').onclick = () => { if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ DICTADO AUTOMÁTICO"; } else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 DETENER DICTADO"; } };
+    }
 </script>
 </body>
 </html>

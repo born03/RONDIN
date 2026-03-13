@@ -23,7 +23,7 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
-           MAYÚSCULAS GLOBALES PARA INPUTS
+           MAYÚSCULAS GLOBALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
             text-transform: uppercase;
@@ -51,11 +51,11 @@
            =================================================== */
         .main-layout { display: flex; flex-direction: column; gap: 15px; }
         .form-section { background: var(--bg-body); border-radius: 10px; padding: 15px; border: 1px solid var(--border); }
-        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px;}
+        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; text-transform: uppercase;}
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
-        label { font-weight: 700; font-size: 11px; margin-bottom: 4px; display: block; color: var(--text-main);}
+        label { font-weight: 700; font-size: 11px; margin-bottom: 4px; display: block; color: var(--text-main); text-transform: uppercase;}
         
         input[type="text"], textarea, input[type="color"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 13px; background-color: #ffffff; color: var(--text-main); font-family: inherit; box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);}
         input[type="color"] { padding: 2px; cursor: pointer; height: 38px; }
@@ -63,16 +63,16 @@
         textarea.caja-grande { min-height: 80px; resize: vertical; }
 
         .botones-accion { display: grid; grid-template-columns: 1fr; margin-bottom: 12px; }
-        .btn-accion { background-color: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px;}
+        .btn-accion { background-color: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 6px; text-transform: uppercase;}
         
-        .caja-imagen { background: #ffffff; border: 1.5px dashed #94a3b8; padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 10px; cursor: pointer; font-size: 12px;}
+        .caja-imagen { background: #ffffff; border: 1.5px dashed #94a3b8; padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 10px; cursor: pointer; font-size: 12px; text-transform: uppercase;}
         #foto-paciente-input { display: none; }
         #preview-img { max-width: 100%; max-height: 120px; border-radius: 6px; margin-top: 8px; display: none; object-fit: contain; }
 
-        .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px;}
+        .btn-enviar { background-color: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 5px; text-transform: uppercase;}
 
         /* ===================================================
-           CENSO / LISTA DE PACIENTES
+           CENSO / LISTA DE PACIENTES (CON EVOLUCIÓN VISIBLE)
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
@@ -90,9 +90,31 @@
         .p-bloque:hover { border-color: var(--primary); }
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
         
+        /* 🔥 LA CAJA DE EVOLUCIÓN VISIBLE (CORTADA A 3 RENGLONES MÁX) */
+        .p-nota-reciente {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.4;
+            cursor: pointer;
+            color: #92400e;
+            /* Magia para que no estire la caja y ponga "..." */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; 
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            height: max-content;
+            margin: 0;
+        }
+        .p-nota-reciente:hover { background: #fef3c7; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
-        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
+        .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; flex-direction: column; justify-content: flex-start;}
         .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%; text-transform: uppercase;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
         .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
@@ -105,7 +127,7 @@
            MODAL DE HISTORIAL DE NOTAS
            =================================================== */
         .notas-container { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; display: flex; flex-direction: column; gap: 8px;}
-        .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 13px;}
+        .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 13px; text-transform: uppercase;}
         .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 11px; margin-bottom: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 4px; text-transform: uppercase;}
         .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 10px; text-transform: none;}
         
@@ -186,17 +208,20 @@
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO PC
+           DISEÑO RESPONSIVO (4 COLUMNAS DE NUEVO)
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
             .form-section { position: sticky; top: 70px; margin: 0;}
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
-            .paciente-row { display: grid; grid-template-columns: 160px 1fr 130px; gap: 15px; padding: 12px; align-items: start; }
+            
+            /* 🔥 REGRESA EL GRID DE 4 COLUMNAS CON ALIGN-ITEMS START */
+            .paciente-row { display: grid; grid-template-columns: 140px 1.4fr 1.2fr 110px; gap: 15px; padding: 12px; align-items: start; }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
             .p-col-meds { display: flex; flex-direction: column; height: max-content; margin: 0;}
+            .p-col-obs { display: flex; flex-direction: column; height: max-content; margin: 0;}
             .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 6px; border-left: 1px solid var(--border); padding-left: 10px; margin-top: 0;}
             
             .p-img-render { margin-top: 10px; max-width: 100%; }
@@ -215,7 +240,7 @@
 
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
+        <h3 style="margin-top:0; font-size: 15px;">✏️ EDICIÓN VISUAL</h3>
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
@@ -227,7 +252,7 @@
 
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
+        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 HISTORIAL DE EVOLUCIÓN</h3>
         <textarea id="input-nueva-nota" placeholder="ESCRIBE UNA NUEVA EVOLUCIÓN AQUÍ..."></textarea>
         <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; text-transform: uppercase;">➕ AGREGAR A EVOLUCIÓN</button>
         <div id="contenedor-lista-notas" class="notas-container"></div>
@@ -287,7 +312,7 @@
 
             <div class="historial-seccion">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
+                    <h2 class="section-title" style="margin:0;">CENSO HOSPITALARIO</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
                         <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 ALTA A TODOS</button>
@@ -309,8 +334,8 @@
 
             <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <div>
-                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0; text-transform: uppercase;">ONCOLOGÍA</h2>
-                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px; text-transform: uppercase;">CONECTANDO...</p>
+                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0;">ONCOLOGÍA</h2>
+                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px;">CONECTANDO...</p>
                 </div>
             </div>
 
@@ -328,7 +353,7 @@
 
     <div id="pestana-pendientes" class="vista">
         <div class="pendientes-container">
-            <h2 class="section-title" style="text-transform: uppercase;">📌 LISTA DE PENDIENTES DEL TURNO</h2>
+            <h2 class="section-title">📌 LISTA DE PENDIENTES DEL TURNO</h2>
             
             <div class="todo-input-group">
                 <input type="text" id="input-nuevo-pendiente" placeholder="EJ. REVISAR LABORATORIOS CAMA 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
@@ -341,7 +366,7 @@
             </div>
 
             <div id="lista-todo" style="display: flex; flex-direction: column;">
-                <p style="text-align:center; color:var(--text-muted); font-size:13px; text-transform: uppercase;">CARGANDO PENDIENTES...</p>
+                <p style="text-align:center; color:var(--text-muted); font-size:13px;">CARGANDO PENDIENTES...</p>
             </div>
         </div>
     </div>
@@ -398,14 +423,6 @@
     window.abrirVisorImg = function(src) { document.getElementById('img-visor-full').src = src; document.getElementById('modal-visor-img').style.display = 'flex'; };
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
-    window.copiarBloqueIndividual = function(elemento) {
-        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
-        navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
-            const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
-            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO");
-        });
-    };
-
     // ==========================================
     // IMAGEN
     // ==========================================
@@ -427,7 +444,7 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO
+    // EXPEDIENTE MODO CENSO (EVOLUCIÓN REGRESA)
     // ==========================================
     let isFirstLoad = true;
 
@@ -454,7 +471,7 @@
         activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
         window.pacientesLocales = activos; 
         
-        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600; text-transform: uppercase;">SALA LIBRE.</p>'; return; }
+        if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">SALA LIBRE.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
             let notasNoLeidas = 0; let totalNotas = 0;
@@ -464,7 +481,19 @@
             }
             
             let btnNotasColor = notasNoLeidas > 0 ? 'danger-badge' : '';
-            let btnNotasTexto = notasNoLeidas > 0 ? `💬 EVOLUCIÓN (${totalNotas}) 🔴` : `💬 EVOLUCIÓN (${totalNotas})`;
+            let btnNotasTexto = notasNoLeidas > 0 ? `💬 NOTAS (${totalNotas}) 🔴` : `💬 NOTAS (${totalNotas})`;
+
+            // 🔥 LA NOTA MÁS RECIENTE PARA MOSTRAR EN PANTALLA
+            let ultimaNotaHtml = '<div class="p-nota-reciente" style="color:#94a3b8; border-color:#e2e8f0; background:#f8fafc;" onclick="window.abrirModalNotas(\''+item.id+'\')">SIN EVOLUCIÓN. CLIC PARA AÑADIR.</div>';
+            if (item.historial && item.historial.length > 0) {
+                let lastNote = item.historial[item.historial.length - 1]; 
+                let prefijo = lastNote.visto ? '' : '🔴 ';
+                ultimaNotaHtml = `
+                <div class="p-nota-reciente" onclick="window.abrirModalNotas('${item.id}')" title="CLIC PARA ABRIR HISTORIAL COMPLETO">
+                    <span style="font-weight:bold; font-size:10px; color:#b45309; display:block; margin-bottom:2px;">${prefijo}${lastNote.autor} (${lastNote.fecha}):</span>
+                    ${lastNote.texto}
+                </div>`;
+            }
 
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
@@ -481,8 +510,13 @@
                 </div>
                 
                 <div class="p-col-meds">
-                    <span class="p-bloque-titulo">INDICACIONES <span class="doble-clic-hint">DOBLE CLIC PARA COPIAR</span></span>
-                    <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
+                    <span class="p-bloque-titulo">INDICACIONES</span>
+                    <div class="p-bloque p-meds">${item.indicaciones || 'S/N'}</div>
+                </div>
+
+                <div class="p-col-obs">
+                    <span class="p-bloque-titulo">ÚLTIMA EVOLUCIÓN</span>
+                    ${ultimaNotaHtml}
                 </div>
                 
                 <div class="p-col-acciones">
@@ -507,7 +541,7 @@
     function renderizarListaNotasModal(idPaciente) {
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
         const contenedor = document.getElementById('contenedor-lista-notas');
-        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px; text-transform:uppercase;">NO HAY EVOLUCIÓN REGISTRADA.</p>'; return; }
+        if(!paciente || !paciente.historial || paciente.historial.length === 0) { contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">NO HAY EVOLUCIÓN REGISTRADA.</p>'; return; }
 
         let notasMapeadas = paciente.historial.map((nota, idx) => ({...nota, originalIndex: idx}));
         notasMapeadas.sort((a, b) => { if (a.visto === b.visto) return b.originalIndex - a.originalIndex; return a.visto ? 1 : -1; });
@@ -544,7 +578,6 @@
     // CREAR PACIENTE Y VACIAR SALA
     // ==========================================
     window.enviarReporte = async function() {
-        // FORZAMOS MAYÚSCULAS AL GUARDAR
         const cama = document.getElementById('cama').value.toUpperCase(); 
         const paciente = document.getElementById('paciente').value.toUpperCase(); 
         const ind = document.getElementById('indicaciones-texto').value.toUpperCase(); 
@@ -580,7 +613,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA (CONTADOR GLOBAL Y MAYÚSCULAS)
+    // ENTREGA DE GUARDIA
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -640,7 +673,7 @@
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================
-    // PESTAÑA 3: PENDIENTES (TO-DO LIST CON RESOLUCIÓN)
+    // PESTAÑA 3: PENDIENTES
     // ==========================================
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
@@ -669,7 +702,7 @@
 
     window.agregarPendiente = async function() {
         const input = document.getElementById('input-nuevo-pendiente');
-        const texto = input.value.trim().toUpperCase(); // Forzado a Mayúscula
+        const texto = input.value.trim().toUpperCase(); 
         if(!texto) return;
         const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
         try {
@@ -678,28 +711,13 @@
         } catch(e) {}
     };
 
-    // LÓGICA DE RESOLUCIÓN OBLIGATORIA
     window.togglePendiente = async function(id, isChecked, checkboxElement) {
         if(isChecked) {
             const resolucion = prompt("📝 ESCRIBE LA RESOLUCIÓN DE ESTE PENDIENTE:");
-            if(resolucion === null) { 
-                checkboxElement.checked = false; // Revierte si cancela
-                return; 
-            }
-            try { 
-                await updateDoc(doc(db, "pendientes_globales", id), { 
-                    completado: true, 
-                    resolucion: resolucion.trim().toUpperCase() // Guarda la resolución en mayúsculas
-                }); 
-            } catch(e) {}
+            if(resolucion === null) { checkboxElement.checked = false; return; }
+            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: true, resolucion: resolucion.trim().toUpperCase() }); } catch(e) {}
         } else {
-            // Si desmarca la casilla, borramos la resolución
-            try { 
-                await updateDoc(doc(db, "pendientes_globales", id), { 
-                    completado: false, 
-                    resolucion: "" 
-                }); 
-            } catch(e) {}
+            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: false, resolucion: "" }); } catch(e) {}
         }
     };
 
@@ -714,7 +732,6 @@
         for(let t of window.listaPendientesToDos) { try { await deleteDoc(doc(db, "pendientes_globales", t.id)); } catch(e){} }
     };
 
-    // DICTADO AUTOMÁTICO REPARADO PARA MAYÚSCULAS
     const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(sr) {
         const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;

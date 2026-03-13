@@ -117,7 +117,7 @@
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
         /* ===================================================
-           VISTA 2: ENTREGA DE GUARDIA
+           VISTA 2: ENTREGA DE GUARDIA (CON SUBRAYADO)
            =================================================== */
         .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
@@ -136,20 +136,21 @@
         #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
-        /* 🔥 LA CELDA MODIFICADA YA NO SUBRAYA TODO EL CUADRO */
         .celda-modificada { 
             background-color: var(--warning-light) !important; 
             border: 2px solid var(--warning) !important; 
             color: #92400e !important; 
             font-weight: bold !important;
+            text-decoration: underline !important;
+            text-underline-offset: 3px;
             position: relative;
             animation: pulse-border 2s infinite;
         }
         @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
-        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase;}
+        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
 
         /* ===================================================
-           VISTA 3: PENDIENTES
+           VISTA 3: PENDIENTES (TO-DO LIST)
            =================================================== */
         .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
@@ -177,6 +178,7 @@
         #texto-celda-visual { height: 150px; overflow-y: auto; margin-bottom: 10px; }
         #input-nueva-nota { min-height: 60px; resize: vertical; }
 
+        /* 🔥 TOASTS AJUSTADOS (Cursor pointer) */
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
         .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer; text-transform: uppercase;}
         .toast.show { transform: translateX(0); }
@@ -389,15 +391,53 @@
     window.pacienteModalActual = null; 
 
     // ==========================================
-    // TOASTS
+    // TOASTS Y NAVEGACIÓN A PACIENTE
     // ==========================================
-    window.mostrarToast = function(mensaje) {
+    window.mostrarToast = function(mensaje, targetId = null) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div'); toast.className = 'toast';
-        toast.innerHTML = `<span>${mensaje.toUpperCase()}</span> <span style="font-size:18px; opacity:0.7;">&times;</span>`;
-        toast.onclick = (e) => { e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); };
+        
+        let hint = targetId ? '<div style="font-size:9px; opacity:0.8; margin-top:2px; font-weight:normal; text-transform:none;">Doble clic para ir al paciente</div>' : '';
+        
+        toast.innerHTML = `<div style="display:flex; flex-direction:column;"><span>${mensaje.toUpperCase()}</span>${hint}</div> <span class="cerrar-toast" style="font-size:18px; opacity:0.7; cursor:pointer; padding-left:10px;">&times;</span>`;
+        
+        toast.onclick = (e) => { e.stopPropagation(); }; // Evitar que clic simple lo cierre y deje hacer doble clic
+        
+        toast.querySelector('.cerrar-toast').onclick = (e) => { 
+            e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); 
+        };
+
+        if (targetId) {
+            toast.ondblclick = (e) => {
+                e.stopPropagation();
+                cambiarPestana('pestana-expediente', document.querySelector('.tab-btn[onclick*="pestana-expediente"]'));
+                
+                setTimeout(() => {
+                    const targetEl = document.getElementById(`paciente-${targetId}`);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const bg = targetEl.style.backgroundColor;
+                        targetEl.style.backgroundColor = '#ccfbf1';
+                        targetEl.style.transition = 'background 0.8s';
+                        setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
+                    }
+                }, 100);
+
+                toast.classList.remove('show'); setTimeout(() => toast.remove(), 400);
+            };
+        }
+
         container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => { const rem = () => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); }; document.addEventListener('click', rem); }, 1000);
+        
+        setTimeout(() => { 
+            const rem = (e) => { 
+                if (!e.target.closest('.toast')) {
+                    toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); 
+                    document.removeEventListener('click', rem); document.removeEventListener('touchstart', rem);
+                }
+            }; 
+            document.addEventListener('click', rem); document.addEventListener('touchstart', rem); 
+        }, 1000);
     };
 
     window.cambiarPestana = function(id, btn) {
@@ -411,7 +451,7 @@
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
     window.copiarBloqueIndividual = function(elemento) {
-        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
+        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').replace(/ÚLTIMA EVOLUCIÓN\s*1 CLIC = HISTORIAL/i, '').trim();
         navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
             setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO");
@@ -470,8 +510,10 @@
             if (!isFirstLoad && !change.doc.metadata.hasPendingWrites) {
                 const data = change.doc.data();
                 if (data.origen === window.miSesionID) return;
-                if (change.type === "added") { window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`); audioAlerta.play().catch(e=>{}); }
-                if (change.type === "modified" && data.estado === "Activo") { window.mostrarToast(`🔄 ACTUALIZACIÓN: CAMA ${data.cama}`); audioAlerta.play().catch(e=>{}); }
+                
+                // Agregamos el ID del documento para que el Toast sepa a dónde ir
+                if (change.type === "added") { window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`, change.doc.id); audioAlerta.play().catch(e=>{}); }
+                if (change.type === "modified" && data.estado === "Activo") { window.mostrarToast(`🔄 ACTUALIZACIÓN: CAMA ${data.cama}`, change.doc.id); audioAlerta.play().catch(e=>{}); }
             }
         });
         isFirstLoad = false;
@@ -506,8 +548,9 @@
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
 
+            // AGREGAMOS EL ID AL DIV PRINCIPAL PARA QUE EL TOAST PUEDA NAVEGAR HACIA ÉL
             return `
-            <div class="paciente-row">
+            <div class="paciente-row" id="paciente-${item.id}">
                 <div class="p-col-info">
                     <div>
                         <div class="p-cama">🛏️ ${item.cama || ''}</div>
@@ -521,7 +564,7 @@
                     <span class="p-bloque-titulo">INDICACIONES <span class="doble-clic-hint">DOBLE CLIC PARA COPIAR</span></span>
                     <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
-                
+
                 <div class="p-col-obs">
                     <span class="p-bloque-titulo">ÚLTIMA EVOLUCIÓN <span class="doble-clic-hint">1 CLIC = HISTORIAL</span></span>
                     ${ultimaNotaHtml}
@@ -538,7 +581,7 @@
     });
 
     // ==========================================
-    // POP-UP NOTAS
+    // POP-UP NOTAS 
     // ==========================================
     window.abrirModalNotas = function(idPaciente) {
         window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
@@ -621,7 +664,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA (LIMPIEZA DE SUBRAYADO AL APROBAR)
+    // ENTREGA DE GUARDIA 
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -667,7 +710,7 @@
     }
     cargarServicioFirebase(servicioActual);
 
-    // 🔥 LIMPIEZA DE SUBRAYADO Y ALERTAS AL ACEPTAR EL CAMBIO
+    // LIMPIEZA DE SUBRAYADO Y ALERTAS AL ACEPTAR EL CAMBIO
     editor.addEventListener('dblclick', (e) => { 
         if(window.innerWidth >= 900) { 
             let celda = e.target.closest('td') || e.target.closest('th'); 
@@ -675,7 +718,6 @@
                 if(confirm("¿REVISADO? EL SUBRAYADO Y LA ALERTA DESAPARECERÁN.")) { 
                     celda.classList.remove('celda-modificada'); 
                     celda.removeAttribute('data-autor'); 
-                    // Limpia etiquetas de subrayado generadas al editar
                     celda.innerHTML = celda.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
                     window.guardarEntrega(); 
                 } 
@@ -700,7 +742,6 @@
         cerrarModalCelda(); 
     };
     
-    // LIMPIA SUBRAYADOS TAMBIÉN DESDE EL CELULAR AL APROBAR
     window.aceptarCambioCelda = () => { 
         if(celdaSeleccionada) { 
             celdaSeleccionada.classList.remove('celda-modificada'); 
@@ -712,7 +753,6 @@
     };
 
     window.guardarEntrega = async function() { 
-        const btn = document.getElementById('btn-guardar-entrega');
         try { 
             const finalHTML = getUppercasedHTML(editor.innerHTML);
             await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp() }, { merge: true }); 
@@ -721,7 +761,7 @@
     };
     
     window.limpiarMarcasGuardia = function() { 
-        if(!confirm("¿RECIBIR TURNO ACTUAL? LIMPIARÁ CELDAS AMARILLAS.")) return; 
+        if(!confirm("¿RECIBIR TURNO ACTUAL? LIMPIARÁ CELDAS AMARILLAS Y SUBRAYADOS.")) return; 
         editor.querySelectorAll('.celda-modificada').forEach(c => { 
             c.classList.remove('celda-modificada'); 
             c.removeAttribute('data-autor'); 
@@ -733,7 +773,7 @@
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================
-    // PESTAÑA 3: PENDIENTES (TO-DO LIST)
+    // PESTAÑA 3: PENDIENTES
     // ==========================================
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];

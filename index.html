@@ -178,7 +178,7 @@
         #texto-celda-visual { height: 150px; overflow-y: auto; margin-bottom: 10px; }
         #input-nueva-nota { min-height: 60px; resize: vertical; }
 
-        /* TOASTS */
+        /* TOASTS CON NAVEGACIÓN */
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
         .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer; text-transform: uppercase; box-shadow: 0 10px 25px rgba(0,0,0,0.4);}
         .toast.show { transform: translateX(0); }
@@ -222,11 +222,13 @@
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
+        
         <div class="mini-toolbar">
             <button onclick="document.execCommand('underline', false, null)" style="text-decoration:underline;">U</button>
             <button onclick="document.execCommand('bold', false, null)">B</button>
             <span style="font-size: 10px; color: var(--text-muted); margin-left: 5px;">SELECCIONA EL TEXTO NUEVO Y SUBRÁYALO</span>
         </div>
+
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
@@ -388,37 +390,55 @@
     window.pacienteModalActual = null; 
 
     // ==========================================
-    // TOASTS Y NAVEGACIÓN A PACIENTE (CON NOMBRES CLAROS)
+    // TOASTS Y NAVEGACIÓN (GPS INCLUIDO)
     // ==========================================
-    window.mostrarToast = function(mensaje, targetId = null) {
+    window.mostrarToast = function(mensaje, tipoTarget = null, targetId = null) {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div'); toast.className = 'toast';
         
-        let hint = targetId ? '<div style="font-size:9px; opacity:0.8; margin-top:2px; font-weight:normal; text-transform:none;">Doble clic para ir al paciente</div>' : '';
+        let hint = tipoTarget ? '<div style="font-size:9px; opacity:0.8; margin-top:3px; font-weight:normal; text-transform:none;">Doble clic para ir al sitio</div>' : '';
         
-        toast.innerHTML = `<div style="display:flex; flex-direction:column;"><span>${mensaje.toUpperCase()}</span>${hint}</div> <span class="cerrar-toast" style="font-size:18px; opacity:0.7; cursor:pointer; padding-left:10px;">&times;</span>`;
+        toast.innerHTML = `<div style="display:flex; flex-direction:column; pointer-events:none;"><span>${mensaje.toUpperCase()}</span>${hint}</div> <span class="cerrar-toast" style="font-size:20px; opacity:0.7; cursor:pointer; padding-left:15px;">&times;</span>`;
         
         toast.onclick = (e) => { e.stopPropagation(); }; 
         toast.querySelector('.cerrar-toast').onclick = (e) => { e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); };
 
-        if (targetId) {
+        if (tipoTarget) {
             toast.ondblclick = (e) => {
                 e.stopPropagation();
-                cambiarPestana('pestana-expediente', document.querySelector('.tab-btn[onclick*="pestana-expediente"]'));
-                setTimeout(() => {
-                    const targetEl = document.getElementById(`paciente-${targetId}`);
-                    if (targetEl) {
-                        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        const bg = targetEl.style.backgroundColor; targetEl.style.backgroundColor = '#ccfbf1';
-                        targetEl.style.transition = 'background 0.8s'; setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
-                    }
-                }, 100);
+                
+                // NAVEGACIÓN A INGRESO Y PACIENTE
+                if (tipoTarget === 'paciente') {
+                    cambiarPestana('pestana-expediente', document.querySelector('.tab-btn[onclick*="pestana-expediente"]'));
+                    setTimeout(() => {
+                        const targetEl = document.getElementById(`paciente-${targetId}`);
+                        if (targetEl) {
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            const bg = targetEl.style.backgroundColor; targetEl.style.backgroundColor = '#ccfbf1';
+                            targetEl.style.transition = 'background 0.8s'; setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
+                        }
+                    }, 100);
+                } 
+                // NAVEGACIÓN A GUARDIA Y SERVICIO
+                else if (tipoTarget === 'guardia') {
+                    cambiarPestana('pestana-guardia', document.querySelector('.tab-btn[onclick*="pestana-guardia"]'));
+                    setTimeout(() => {
+                        const btnServicio = document.querySelector(`.btn-servicio[onclick*="${targetId}"]`);
+                        if(btnServicio) cambiarServicio(targetId, btnServicio);
+                    }, 100);
+                }
+                // NAVEGACIÓN A PENDIENTES
+                else if (tipoTarget === 'pendiente') {
+                    cambiarPestana('pestana-pendientes', document.querySelector('.tab-btn[onclick*="pestana-pendientes"]'));
+                }
+
                 toast.classList.remove('show'); setTimeout(() => toast.remove(), 400);
             };
         }
 
         container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 100);
-        setTimeout(() => { const rem = (e) => { if (!e.target.closest('.toast')) { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); document.removeEventListener('touchstart', rem); } }; document.addEventListener('click', rem); document.addEventListener('touchstart', rem); }, 1000);
+        // El Toast se queda pegado. Se borra si das clic FUERA de él en cualquier lugar.
+        setTimeout(() => { const rem = (e) => { if (!e.target.closest('.toast')) { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); document.removeEventListener('touchstart', rem); } }; document.addEventListener('click', rem); document.addEventListener('touchstart', rem); }, 1500);
     };
 
     window.cambiarPestana = function(id, btn) {
@@ -435,12 +455,12 @@
         let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').replace(/ÚLTIMA EVOLUCIÓN\s*1 CLIC = HISTORIAL/i, '').trim();
         navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
-            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO");
+            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO", null, null);
         });
     };
 
     // ==========================================
-    // ESCÁNER DE MAYÚSCULAS PARA HTML (FIREBASE)
+    // ESCÁNER DE MAYÚSCULAS PARA HTML
     // ==========================================
     function getUppercasedHTML(htmlString) {
         const div = document.createElement('div');
@@ -472,7 +492,7 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (CON NOMBRES DE ALERTAS AJUSTADOS)
+    // EXPEDIENTE MODO CENSO
     // ==========================================
     let isFirstLoad = true;
 
@@ -491,16 +511,15 @@
                 if (data.origen === window.miSesionID) return;
                 
                 if (change.type === "added") { 
-                    window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`, change.doc.id); 
+                    window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`, 'paciente', change.doc.id); 
                     audioAlerta.play().catch(e=>{}); 
                 }
                 if (change.type === "modified" && data.estado === "Activo") { 
-                    // 🔥 SELECCIONAMOS EL MENSAJE CORRECTO SEGÚN LA ACCIÓN
                     let msg = `🔄 ACTUALIZACIÓN: CAMA ${data.cama}`;
                     if (data.ultimaAccion === 'VISTO') msg = `👀 VISTO CAMA: ${data.cama}`;
                     else if (data.ultimaAccion === 'NOTA') msg = `📝 NOTA CAMA: ${data.cama}`;
                     
-                    window.mostrarToast(msg, change.doc.id); 
+                    window.mostrarToast(msg, 'paciente', change.doc.id); 
                     audioAlerta.play().catch(e=>{}); 
                 }
             }
@@ -601,7 +620,6 @@
         const paciente = window.pacientesLocales.find(p => p.id === window.pacienteModalActual);
         if(paciente && paciente.historial) {
             paciente.historial[notaIndex].visto = true;
-            // 🔥 AGREGAMOS LA ETIQUETA "VISTO" A LA ACCIÓN
             try { await updateDoc(doc(db, "pacientes", paciente.id), { historial: paciente.historial, origen: window.miSesionID, ultimaAccion: 'VISTO' }); } catch(e) {}
         }
     };
@@ -611,7 +629,6 @@
         const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(); const color = document.getElementById('color-usuario').value || '#0d9488';
         const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).toUpperCase();
         document.getElementById('input-nueva-nota').value = ''; 
-        // 🔥 AGREGAMOS LA ETIQUETA "NOTA" A LA ACCIÓN
         try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID, ultimaAccion: 'NOTA' }); } catch(e) {}
     };
 
@@ -645,7 +662,7 @@
         if(!confirm("⚠️ ¿ESTÁS SEGURO DE QUERER MARCAR COMO VISTO A TODOS LOS PACIENTES ACTIVOS DE LA SALA? ESTA ACCIÓN LIMPIARÁ TODO EL CENSO.")) return;
         if(!confirm("¿CONFIRMAS VACIAR LA SALA?")) return;
         for (let pac of window.pacientesLocales) { try { await updateDoc(doc(db, "pacientes", pac.id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } catch(e) {} }
-        window.mostrarToast("SALA VACIADA EXITOSAMENTE.");
+        window.mostrarToast("SALA VACIADA EXITOSAMENTE.", null, null);
     };
 
     window.guardarPerfil = () => { localStorage.setItem('perfilUsuario', JSON.stringify({ nombre: document.getElementById('nombre-usuario').value.toUpperCase(), color: document.getElementById('color-usuario').value })); };
@@ -654,7 +671,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA (NOTIFICACIONES POR SERVICIO)
+    // ENTREGA DE GUARDIA
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -667,10 +684,10 @@
             if(docSnap.exists()){
                 const data = docSnap.data();
                 
-                // 🔥 NOTIFICACIÓN DE MODIFICACIÓN DE GUARDIA
+                // 🔥 NOTIFICACIÓN CON GPS A GUARDIA
                 if (!isFirstLoadGuardia[serv] && !docSnap.metadata.hasPendingWrites && data.origen !== window.miSesionID) {
                     const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
-                    window.mostrarToast(`🔄 MODIFICACIÓN GUARDIA ${nLindo}`);
+                    window.mostrarToast(`🔄 MODIFICACIÓN GUARDIA ${nLindo}`, 'guardia', serv);
                     audioAlerta.play().catch(e=>{});
                 }
                 isFirstLoadGuardia[serv] = false;
@@ -758,7 +775,7 @@
         try { 
             const finalHTML = getUppercasedHTML(editor.innerHTML);
             await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp(), origen: window.miSesionID }, { merge: true }); 
-            editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.");
+            editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.", null, null);
         } catch(e) { } 
     };
     
@@ -775,18 +792,18 @@
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================
-    // PESTAÑA 3: PENDIENTES (NOTIFICACIÓN AÑADIDA)
+    // PESTAÑA 3: PENDIENTES 
     // ==========================================
     let isFirstLoadPendientes = true;
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
         
-        // 🔥 NOTIFICACIÓN DE NUEVO PENDIENTE
+        // 🔥 NOTIFICACIÓN CON GPS A PENDIENTES
         snapshot.docChanges().forEach((change) => {
             if (!isFirstLoadPendientes && !change.doc.metadata.hasPendingWrites) {
                 const data = change.doc.data();
                 if (data.origen !== window.miSesionID && change.type === "added") {
-                    window.mostrarToast(`📌 NUEVO PENDIENTE`);
+                    window.mostrarToast(`📌 NUEVO PENDIENTE`, 'pendiente', null);
                     audioAlerta.play().catch(e=>{});
                 }
             }

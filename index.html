@@ -80,6 +80,21 @@
     <option value="TRIMETOPRIM"><option value="VANCOMICINA"><option value="VORICONAZOL">
 </datalist>
 
+<datalist id="diccionario-horarios">
+    <option value="10-18-02">
+    <option value="06-14-22">
+    <option value="08-16-24">
+    <option value="18-24-06-12">
+    <option value="10-16-22-04">
+    <option value="08-14-20-02">
+    <option value="10-22">
+    <option value="12-24">
+    <option value="08-20">
+    <option value="24 HRS">
+    <option value="PRN">
+    <option value="DOSIS ÚNICA">
+</datalist>
+
 <div class="container">
     <div class="main-layout">
         <div class="form-section">
@@ -89,6 +104,8 @@
                 <button class="btn-accion" onclick="document.getElementById('foto-input').click()">📷 Escanear Foto</button>
                 <input type="file" id="foto-input" accept="image/*" capture="environment">
             </div>
+            
+            <div class="info-dictado" style="margin-top:8px;">💡 Tip: Di <b>"Medicamento Paracetamol 500 miligramos intravenoso 10 18 2"</b> de corrido.</div>
 
             <div class="grid-form" style="margin-top: 15px;">
                 <div class="form-group">
@@ -102,11 +119,11 @@
             </div>
 
             <div class="caja-medicamentos">
-                <p class="titulo-caja">💊 Indicaciones (Horarios)</p>
+                <p class="titulo-caja">💊 Indicaciones</p>
                 <div class="grid-form">
                     <div class="form-group full-width">
                         <label>Medicamento</label>
-                        <input type="text" id="medicamento" list="diccionario-meds" placeholder="Buscar..." oninput="window.guardarBorrador()" style="text-transform: uppercase;">
+                        <input type="text" id="medicamento" list="diccionario-meds" placeholder="Buscar o dictar todo junto..." oninput="window.guardarBorrador()" style="text-transform: uppercase;">
                     </div>
                     <div class="form-group">
                         <label>Dosis</label>
@@ -121,7 +138,7 @@
                     </div>
                     <div class="form-group full-width">
                         <label>Horarios</label>
-                        <input type="text" id="horarios" placeholder="Ej. 10-18-02" oninput="window.guardarBorrador()">
+                        <input type="text" id="horarios" list="diccionario-horarios" placeholder="Toca para opciones..." oninput="window.guardarBorrador()">
                     </div>
                 </div>
                 <button type="button" class="btn-add-med" onclick="window.agregarMedicamento()">➕ Añadir a la lista</button>
@@ -157,7 +174,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // YA ESTÁN TUS LLAVES AQUÍ INTEGRADAS
+    // LLAVES DE FIREBASE INTACTAS
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
@@ -204,12 +221,11 @@
         `).join('');
     });
 
-    // COPIAR A EXCEL (CELDA ÚNICA PARA HORARIOS Y OBSERVACIONES)
+    // COPIAR A EXCEL 
     window.copiarTabla = function(boton, data) {
         const item = JSON.parse(decodeURIComponent(data));
         const horariosExcel = item.columnaHorarios ? `"${item.columnaHorarios.replace(/"/g, '""')}"` : '""';
         const obsExcel = item.pendientes ? `"${item.pendientes.replace(/"/g, '""')}"` : '""';
-        
         const texto = `${item.cama || ''}\t${item.paciente || ''}\t${horariosExcel}\t${obsExcel}`;
         
         navigator.clipboard.writeText(texto).then(() => {
@@ -231,7 +247,7 @@
         const btn = document.getElementById('btn-enviar');
         btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
         
-        const bloque = window.medicamentosArray.map(m => `${m.med} ${m.dos} ${m.via} ${m.hor}`).join('\n');
+        const bloque = window.medicamentosArray.map(m => m.textoFinal).join('\n');
 
         try {
             await addDoc(pacientesRef, {
@@ -254,22 +270,44 @@
         }
     };
 
-    // LÓGICA DE DICCIONARIO Y MEDICAMENTOS
+    // ==========================================
+    // MAGIA: LÓGICA DE TEXTO Y MEDICAMENTOS
+    // ==========================================
     window.medicamentosArray = [];
     window.agregarMedicamento = () => {
         const med = document.getElementById('medicamento').value.trim().toUpperCase();
         const dos = document.getElementById('dosis').value.trim().toUpperCase();
         const via = document.getElementById('via').value;
-        const hor = document.getElementById('horarios').value.trim();
+        const hor = document.getElementById('horarios').value.trim().toUpperCase();
         if(!med && !dos && !hor) return;
-        window.medicamentosArray.push({med, dos, via, hor});
+
+        let textoFinal = "";
+        
+        // Si el usuario dictó todo de corrido en la caja de medicamento y no usó dosis ni horarios
+        if (dos === '' && hor === '') {
+            // Revisamos si ya mencionó la vía IV/VO en su frase
+            if (/\b(IV|VO|IM|SC|SL|INHAL|TOPICA)\b/.test(med)) {
+                textoFinal = med; // Ya viene con la vía en el texto
+            } else {
+                textoFinal = `${med} ${via}`; // Le agregamos la vía del botón por si acaso
+            }
+        } else {
+            // Formato normal ensamblado
+            textoFinal = `${med} ${dos} ${via} ${hor}`;
+        }
+        
+        // Limpiamos los espacios múltiples
+        textoFinal = textoFinal.replace(/\s+/g, ' ').trim();
+
+        window.medicamentosArray.push({ textoFinal });
         ['medicamento','dosis','horarios'].forEach(i => document.getElementById(i).value = '');
+        document.getElementById('via').value = 'IV';
         window.renderizarListaMeds(); window.guardarBorrador();
     };
 
     window.renderizarListaMeds = () => {
         document.getElementById('lista-med-temporal').innerHTML = window.medicamentosArray.map((m,i) => `
-            <li class="item-med"><span>${m.med} ${m.dos} ${m.via} ${m.hor}</span>
+            <li class="item-med"><span>${m.textoFinal}</span>
             <button class="btn-quitar" onclick="window.quitarMedicamento(${i})">×</button></li>
         `).join('');
     };
@@ -288,7 +326,6 @@
         setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000);
     };
 
-    // RECUPERAR BORRADOR
     const b = JSON.parse(localStorage.getItem('borradorRondines'));
     if(b) {
         document.getElementById('cama').value = b.cama || ''; document.getElementById('paciente').value = b.paciente || '';
@@ -314,13 +351,50 @@
         }).catch(() => { alert("Error al leer la imagen."); btn.innerHTML = temp; btn.disabled = false; });
     });
 
-    // DICTADO POR VOZ INTELIGENTE
+    // ==========================================
+    // TRADUCTOR MÉDICO INTELIGENTE Y DICTADO
+    // ==========================================
+    function formatearDictadoMedico(texto) {
+        let t = texto.toLowerCase();
+        
+        // Traductor de palabras médicas a abreviaturas
+        t = t.replace(/miligramos/g, 'MG');
+        t = t.replace(/gramos/g, 'G');
+        t = t.replace(/unidades/g, 'UI');
+        t = t.replace(/intravenos[oa]/g, 'IV');
+        t = t.replace(/\bi v\b/g, 'IV');
+        t = t.replace(/por vía oral/g, 'VO');
+        t = t.replace(/vía oral/g, 'VO');
+        t = t.replace(/\boral\b/g, 'VO');
+        t = t.replace(/\bv o\b/g, 'VO');
+        t = t.replace(/intramuscular/g, 'IM');
+        t = t.replace(/subcutáne[oa]/g, 'SC');
+
+        // Formateador Mágico de Horarios: "10 18 2" -> "10-18-02"
+        // Busca 4 números seguidos
+        t = t.replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b,c,d) => `${a.padStart(2,'0')}-${b.padStart(2,'0')}-${c.padStart(2,'0')}-${d.padStart(2,'0')}`);
+        // Busca 3 números seguidos
+        t = t.replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b,c) => `${a.padStart(2,'0')}-${b.padStart(2,'0')}-${c.padStart(2,'0')}`);
+        // Busca 2 números (Solo si parecen horas reales menores o iguales a 24)
+        t = t.replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b) => {
+            if(Number(a) <= 24 && Number(b) <= 24) return `${a.padStart(2,'0')}-${b.padStart(2,'0')}`;
+            return m;
+        });
+        
+        return t;
+    }
+
     const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(sr) {
         const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
         rec.onresult = e => {
-            let t = ""; for(let i=e.resultIndex; i<e.results.length; i++) t += e.results[i][0].transcript;
-            distribuir(t); window.guardarBorrador();
+            let rawText = ""; 
+            for(let i=e.resultIndex; i<e.results.length; i++) rawText += e.results[i][0].transcript;
+            
+            // Pasamos el texto por nuestro filtro médico inteligente
+            let t = formatearDictadoMedico(rawText);
+            distribuir(t); 
+            window.guardarBorrador();
         };
         document.getElementById('btn-dictar').onclick = () => {
             if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictar"; }
@@ -333,8 +407,9 @@
         const dic = [
             {id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']},
             {id:'medicamento', p:['medicamento']}, {id:'dosis', p:['dosis']},
-            {id:'horarios', p:['horario']}, {id:'pendientes', p:['observación','pendiente','nota']}
+            {id:'horarios', p:['horario', 'cada']}, {id:'pendientes', p:['observación','observaciones','pendiente','pendientes','nota','notas']}
         ];
+        
         let pos = [];
         dic.forEach(c => {
             let idx = -1; let l = 0;
@@ -342,11 +417,24 @@
             if(idx!==-1) pos.push({id:c.id, idx, l});
         });
         pos.sort((a,b) => a.idx - b.idx);
-        if(!pos.length) { document.getElementById('pendientes').value = t; return; }
+        
+        // Si no usó ninguna palabra clave, lo manda todo a la caja de pendientes libremente
+        if(!pos.length) { document.getElementById('pendientes').value += (document.getElementById('pendientes').value ? " " : "") + t; return; }
+        
+        // Limpiamos las cajas antes de repartir
+        ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => { document.getElementById(id).value = ''; });
+
         for(let i=0; i<pos.length; i++){
             let f = pos[i+1] ? pos[i+1].idx : t.length;
             let val = t.substring(pos[i].idx + pos[i].l, f).trim();
-            if(val) document.getElementById(pos[i].id).value = (pos[i].id==='medicamento'||pos[i].id==='dosis') ? val.toUpperCase() : val;
+            if(val) {
+                // Todo lo que sea medicina o dosis, lo forzamos a MAYÚSCULAS
+                if (pos[i].id === 'medicamento' || pos[i].id === 'dosis' || pos[i].id === 'horarios') {
+                    document.getElementById(pos[i].id).value = val.toUpperCase();
+                } else {
+                    document.getElementById(pos[i].id).value = val.charAt(0).toUpperCase() + val.slice(1);
+                }
+            }
         }
     }
 </script>

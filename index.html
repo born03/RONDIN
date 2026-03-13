@@ -23,7 +23,7 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
-           MAYÚSCULAS GLOBALES VISUALES
+           MAYÚSCULAS GLOBALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
             text-transform: uppercase;
@@ -47,11 +47,11 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ===================================================
-           VISTA 1: EXPEDIENTE FORMULARIO
+           VISTA 1: INGRESO FORMULARIO
            =================================================== */
         .main-layout { display: flex; flex-direction: column; gap: 15px; }
         .form-section { background: var(--bg-body); border-radius: 10px; padding: 15px; border: 1px solid var(--border); }
-        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px;}
+        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; text-transform: uppercase;}
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
@@ -117,7 +117,7 @@
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
         /* ===================================================
-           VISTA 2: ENTREGA DE GUARDIA (CON SUBRAYADO)
+           VISTA 2: ENTREGA DE GUARDIA
            =================================================== */
         .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
@@ -136,22 +136,20 @@
         #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
-        /* 🔥 LA CELDA MODIFICADA AHORA TIENE SUBRAYADO */
+        /* 🔥 LA CELDA MODIFICADA YA NO SUBRAYA TODO EL CUADRO */
         .celda-modificada { 
             background-color: var(--warning-light) !important; 
             border: 2px solid var(--warning) !important; 
             color: #92400e !important; 
             font-weight: bold !important;
-            text-decoration: underline !important;
-            text-underline-offset: 3px;
             position: relative;
             animation: pulse-border 2s infinite;
         }
         @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
-        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
+        .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase;}
 
         /* ===================================================
-           VISTA 3: PENDIENTES (TO-DO LIST)
+           VISTA 3: PENDIENTES
            =================================================== */
         .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
@@ -187,6 +185,10 @@
         .visor-content { position: relative; max-width: 95vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;}
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
+        /* BARRA DE HERRAMIENTAS MINI PARA MODAL CELULAR */
+        .mini-toolbar { display: flex; gap: 5px; margin-bottom: 8px; background: #f1f5f9; padding: 6px; border-radius: 6px; border: 1px solid var(--border); align-items: center;}
+        .mini-toolbar button { padding: 4px 10px; cursor: pointer; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; font-size: 12px; color: var(--text-main);}
+
         /* ===================================================
            DISEÑO RESPONSIVO PC
            =================================================== */
@@ -211,7 +213,7 @@
 <div id="toast-container"></div>
 
 <div class="nav-tabs">
-    <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 EXPEDIENTE</button>
+    <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 INGRESO</button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
 </div>
@@ -219,6 +221,13 @@
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
+        
+        <div class="mini-toolbar">
+            <button onclick="document.execCommand('underline', false, null)" style="text-decoration:underline;">U</button>
+            <button onclick="document.execCommand('bold', false, null)">B</button>
+            <span style="font-size: 10px; color: var(--text-muted); margin-left: 5px;">SELECCIONA EL TEXTO NUEVO Y SUBRÁYALO</span>
+        </div>
+
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
@@ -284,7 +293,7 @@
                     <div id="btn-quitar-foto" style="display:none; color:var(--danger); font-weight:bold; margin-top:5px;">❌ QUITAR FOTO</div>
                 </div>
 
-                <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()" style="text-transform: uppercase;">GUARDAR EXPEDIENTE</button>
+                <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()" style="text-transform: uppercase;">GUARDAR INGRESO</button>
                 <div id="aviso-guardado" style="font-size:11px; color:var(--primary); text-align:center; margin-top:6px; display:none; text-transform: uppercase; font-weight: bold;">BORRADOR GUARDADO</div>
             </div>
 
@@ -293,7 +302,7 @@
                     <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
-                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 ALTA A TODOS</button>
+                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 VISTO A TODOS</button>
                     </div>
                 </div>
                 <div id="lista-pendientes" class="lista-pacientes"></div>
@@ -319,7 +328,7 @@
 
             <div class="entrega-toolbar">
                 <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 GUARDAR NUBE</button>
-                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO (QUITA ALERTAS)</button>
+                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO (LIMPIAR ALERTAS)</button>
                 <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ VACIAR TABLA</button>
             </div>
 
@@ -412,7 +421,6 @@
     // ==========================================
     // ESCÁNER DE MAYÚSCULAS PARA HTML (FIREBASE)
     // ==========================================
-    // Esta función convierte solo el texto real a mayúsculas, respetando las etiquetas HTML de la tabla
     function getUppercasedHTML(htmlString) {
         const div = document.createElement('div');
         div.innerHTML = htmlString;
@@ -513,7 +521,7 @@
                     <span class="p-bloque-titulo">INDICACIONES <span class="doble-clic-hint">DOBLE CLIC PARA COPIAR</span></span>
                     <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
-
+                
                 <div class="p-col-obs">
                     <span class="p-bloque-titulo">ÚLTIMA EVOLUCIÓN <span class="doble-clic-hint">1 CLIC = HISTORIAL</span></span>
                     ${ultimaNotaHtml}
@@ -521,7 +529,7 @@
                 
                 <div class="p-col-acciones">
                     <button class="btn-outline ${btnNotasColor}" onclick="window.abrirModalNotas('${item.id}')">${btnNotasTexto}</button>
-                    <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ ALTA</button>
+                    <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ VISTO</button>
                 </div>
             </div>`;
         }).join('');
@@ -530,7 +538,7 @@
     });
 
     // ==========================================
-    // POP-UP NOTAS (MAYÚSCULAS)
+    // POP-UP NOTAS
     // ==========================================
     window.abrirModalNotas = function(idPaciente) {
         window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
@@ -595,13 +603,13 @@
         try { 
             await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
-        } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "GUARDAR EXPEDIENTE";
+        } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "GUARDAR INGRESO";
     };
 
-    window.marcarResuelto = async (id, b) => { if(confirm("¿PACIENTE DE ALTA?")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
+    window.marcarResuelto = async (id, b) => { if(confirm("¿MARCAR COMO VISTO? EL PACIENTE DESAPARECERÁ DE LA LISTA.")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
 
     window.vaciarSalaExpediente = async function() {
-        if(!confirm("⚠️ ¿ESTÁS SEGURO DE QUERER DAR DE ALTA A TODOS LOS PACIENTES ACTIVOS DE LA SALA? ESTA ACCIÓN LIMPIARÁ TODO EL CENSO.")) return;
+        if(!confirm("⚠️ ¿ESTÁS SEGURO DE QUERER MARCAR COMO VISTO A TODOS LOS PACIENTES ACTIVOS DE LA SALA? ESTA ACCIÓN LIMPIARÁ TODO EL CENSO.")) return;
         if(!confirm("¿CONFIRMAS VACIAR LA SALA?")) return;
         for (let pac of window.pacientesLocales) { try { await updateDoc(doc(db, "pacientes", pac.id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } catch(e) {} }
         window.mostrarToast("SALA VACIADA EXITOSAMENTE.");
@@ -613,7 +621,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA (SUBRAYADO Y MAYÚSCULAS REALES)
+    // ENTREGA DE GUARDIA (LIMPIEZA DE SUBRAYADO AL APROBAR)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -659,13 +667,28 @@
     }
     cargarServicioFirebase(servicioActual);
 
-    editor.addEventListener('dblclick', (e) => { if(window.innerWidth >= 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda && celda.classList.contains('celda-modificada')) { if(confirm("¿REVISADO?")) { celda.classList.remove('celda-modificada'); celda.removeAttribute('data-autor'); window.guardarEntrega(); } } } });
+    // 🔥 LIMPIEZA DE SUBRAYADO Y ALERTAS AL ACEPTAR EL CAMBIO
+    editor.addEventListener('dblclick', (e) => { 
+        if(window.innerWidth >= 900) { 
+            let celda = e.target.closest('td') || e.target.closest('th'); 
+            if(celda && celda.classList.contains('celda-modificada')) { 
+                if(confirm("¿REVISADO? EL SUBRAYADO Y LA ALERTA DESAPARECERÁN.")) { 
+                    celda.classList.remove('celda-modificada'); 
+                    celda.removeAttribute('data-autor'); 
+                    // Limpia etiquetas de subrayado generadas al editar
+                    celda.innerHTML = celda.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
+                    window.guardarEntrega(); 
+                } 
+            } 
+        } 
+    });
+
     editor.addEventListener('input', (e) => { editandoEntrega = true; let nodo = document.getSelection().anchorNode; if(nodo && nodo.nodeType === 3) nodo = nodo.parentNode; if(nodo) { let celda = nodo.closest('td') || nodo.closest('th'); if(celda) { celda.classList.add('celda-modificada'); celda.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); } } });
+    
     editor.addEventListener('click', (e) => { if(window.innerWidth < 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda) { e.preventDefault(); celdaSeleccionada = celda; document.getElementById('texto-celda-visual').innerHTML = celda.innerHTML; document.getElementById('btn-aceptar-celda').style.display = celda.classList.contains('celda-modificada') ? 'block' : 'none'; document.getElementById('modal-celda').style.display = 'flex'; } } });
 
     window.cerrarModalCelda = () => { document.getElementById('modal-celda').style.display = 'none'; celdaSeleccionada = null; };
     
-    // GUARDADO CON CONVERSIÓN A MAYÚSCULAS REALES EN HTML
     window.guardarCeldaModal = () => { 
         if(celdaSeleccionada) { 
             const htmlReal = document.getElementById('texto-celda-visual').innerHTML;
@@ -677,19 +700,36 @@
         cerrarModalCelda(); 
     };
     
-    window.aceptarCambioCelda = () => { if(celdaSeleccionada) { celdaSeleccionada.classList.remove('celda-modificada'); celdaSeleccionada.removeAttribute('data-autor'); window.guardarEntrega(); } cerrarModalCelda(); };
+    // LIMPIA SUBRAYADOS TAMBIÉN DESDE EL CELULAR AL APROBAR
+    window.aceptarCambioCelda = () => { 
+        if(celdaSeleccionada) { 
+            celdaSeleccionada.classList.remove('celda-modificada'); 
+            celdaSeleccionada.removeAttribute('data-autor'); 
+            celdaSeleccionada.innerHTML = celdaSeleccionada.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
+            window.guardarEntrega(); 
+        } 
+        cerrarModalCelda(); 
+    };
 
     window.guardarEntrega = async function() { 
         const btn = document.getElementById('btn-guardar-entrega');
         try { 
-            // Transformamos TODO el HTML a mayúsculas antes de guardar (respetando etiquetas)
             const finalHTML = getUppercasedHTML(editor.innerHTML);
             await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp() }, { merge: true }); 
             editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.");
         } catch(e) { } 
     };
     
-    window.limpiarMarcasGuardia = function() { if(!confirm("¿RECIBIR TURNO ACTUAL? LIMPIARÁ CELDAS AMARILLAS.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
+    window.limpiarMarcasGuardia = function() { 
+        if(!confirm("¿RECIBIR TURNO ACTUAL? LIMPIARÁ CELDAS AMARILLAS.")) return; 
+        editor.querySelectorAll('.celda-modificada').forEach(c => { 
+            c.classList.remove('celda-modificada'); 
+            c.removeAttribute('data-autor'); 
+            c.innerHTML = c.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
+        }); 
+        window.guardarEntrega(); 
+    };
+    
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================

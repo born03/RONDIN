@@ -150,7 +150,7 @@
         .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
 
         /* ===================================================
-           VISTA 3: PENDIENTES (TO-DO LIST)
+           VISTA 3: PENDIENTES
            =================================================== */
         .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
@@ -240,7 +240,7 @@
 
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
+        <h3 id="titulo-modal-notas" style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
         <textarea id="input-nueva-nota" placeholder="ESCRIBE UNA NUEVA EVOLUCIÓN AQUÍ..."></textarea>
         <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; text-transform: uppercase;">➕ AGREGAR A EVOLUCIÓN</button>
         <div id="contenedor-lista-notas" class="notas-container"></div>
@@ -390,7 +390,7 @@
     window.pacienteModalActual = null; 
 
     // ==========================================
-    // TOASTS CON GPS (NAVEGACIÓN AUTOMÁTICA)
+    // TOASTS Y NAVEGACIÓN
     // ==========================================
     window.mostrarToast = function(mensaje, tipoTarget = null, targetId = null) {
         const container = document.getElementById('toast-container');
@@ -415,8 +415,6 @@
                             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             const bg = targetEl.style.backgroundColor; targetEl.style.backgroundColor = '#ccfbf1';
                             targetEl.style.transition = 'background 0.8s'; setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
-                            
-                            // 🔥 SI ES UNA NOTA, ABRE EL POP-UP AUTOMÁTICAMENTE
                             if(tipoTarget === 'nota_paciente') window.abrirModalNotas(targetId);
                         }
                     }, 100);
@@ -458,6 +456,9 @@
         });
     };
 
+    // ==========================================
+    // ESCÁNER DE MAYÚSCULAS PARA HTML
+    // ==========================================
     function getUppercasedHTML(htmlString) {
         const div = document.createElement('div');
         div.innerHTML = htmlString;
@@ -517,7 +518,7 @@
                     if (data.ultimaAccion === 'VISTO') msg = `👀 VISTO CAMA: ${data.cama}`;
                     else if (data.ultimaAccion === 'NOTA') { 
                         msg = `📝 NOTA CAMA: ${data.cama}`; 
-                        tType = 'nota_paciente'; // 🔥 MANDAMOS ALERTA DE QUE ES UNA NOTA
+                        tType = 'nota_paciente'; 
                     }
                     
                     window.mostrarToast(msg, tType, change.doc.id); 
@@ -588,10 +589,23 @@
         if(window.pacienteModalActual) renderizarListaNotasModal(window.pacienteModalActual);
     });
 
+    // ==========================================
+    // POP-UP NOTAS 
+    // ==========================================
     window.abrirModalNotas = function(idPaciente) {
-        window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
-        renderizarListaNotasModal(idPaciente); document.getElementById('modal-notas').style.display = 'flex';
+        window.pacienteModalActual = idPaciente; 
+        document.getElementById('input-nueva-nota').value = '';
+        
+        // 🔥 AQUI AGREGAMOS LA CAMA AL TÍTULO DEL MODAL
+        const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
+        if (paciente) {
+            document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`;
+        }
+        
+        renderizarListaNotasModal(idPaciente); 
+        document.getElementById('modal-notas').style.display = 'flex';
     };
+    
     window.cerrarModalNotas = function() { document.getElementById('modal-notas').style.display = 'none'; window.pacienteModalActual = null; };
 
     function renderizarListaNotasModal(idPaciente) {
@@ -630,6 +644,9 @@
         try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID, ultimaAccion: 'NOTA' }); } catch(e) {}
     };
 
+    // ==========================================
+    // CREAR PACIENTE Y VACIAR SALA
+    // ==========================================
     window.enviarReporte = async function() {
         const cama = document.getElementById('cama').value.toUpperCase(); 
         const paciente = document.getElementById('paciente').value.toUpperCase(); 
@@ -666,7 +683,7 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA (SILENCIOSO AL REVISAR)
+    // ENTREGA DE GUARDIA
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
@@ -679,7 +696,6 @@
             if(docSnap.exists()){
                 const data = docSnap.data();
                 
-                // 🔥 SI ES UNA ACCIÓN SILENCIOSA (VISTO), NO NOTIFICAMOS A NADIE
                 if (!isFirstLoadGuardia[serv] && !docSnap.metadata.hasPendingWrites && data.origen !== window.miSesionID) {
                     if (!data.silencioso) {
                         const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
@@ -736,7 +752,7 @@
                     celda.classList.remove('celda-modificada'); 
                     celda.removeAttribute('data-autor'); 
                     celda.innerHTML = celda.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
-                    window.guardarEntrega(true); // TRUE = Es un guardado silencioso (Visto)
+                    window.guardarEntrega(true); 
                 } 
             } 
         } 
@@ -753,7 +769,7 @@
             celdaSeleccionada.innerHTML = getUppercasedHTML(htmlReal); 
             celdaSeleccionada.classList.add('celda-modificada'); 
             celdaSeleccionada.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); 
-            window.guardarEntrega(false); // FALSE = Es una edición real (notificar)
+            window.guardarEntrega(false); 
         } 
         cerrarModalCelda(); 
     };
@@ -763,12 +779,11 @@
             celdaSeleccionada.classList.remove('celda-modificada'); 
             celdaSeleccionada.removeAttribute('data-autor'); 
             celdaSeleccionada.innerHTML = celdaSeleccionada.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
-            window.guardarEntrega(true); // TRUE = Es un Visto (Silencio)
+            window.guardarEntrega(true); 
         } 
         cerrarModalCelda(); 
     };
 
-    // 🔥 AHORA RECIBE UN PARÁMETRO PARA SABER SI DEBE NOTIFICAR O NO
     window.guardarEntrega = async function(silencioso = false) { 
         try { 
             const finalHTML = getUppercasedHTML(editor.innerHTML);
@@ -785,7 +800,7 @@
             c.removeAttribute('data-autor'); 
             c.innerHTML = c.innerHTML.replace(/<\/?u>/gi, '').replace(/text-decoration(-line)?:\s*underline;?/gi, '');
         }); 
-        window.guardarEntrega(true); // Silencioso
+        window.guardarEntrega(true); 
     };
     
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(false); };
@@ -824,8 +839,8 @@
                 <input type="checkbox" class="todo-check" ${item.completado ? 'checked' : ''} onchange="window.togglePendiente('${item.id}', this.checked, this)">
                 <div class="todo-content">
                     <span class="todo-texto">${item.texto}</span>
-                    ${item.resolucion && item.completado ? `<span class="todo-resolucion">↳ RESULTADO: ${item.resolucion}</span>` : ''}
-                    <span class="todo-meta">POR: ${item.autor} (${formatearFecha(item.fecha)})</span>
+                    ${item.resolucion && item.completado ? `<span class="todo-resolucion">↳ RESULTADO: ${item.resolucion} <span style="color:#64748b; font-size:10px; font-weight:normal;">(POR: ${item.autorResolucion || 'ANÓNIMO'})</span></span>` : ''}
+                    <span class="todo-meta">CREADO POR: ${item.autor} (${formatearFecha(item.fecha)})</span>
                 </div>
             </div>
         `).join('');
@@ -837,7 +852,7 @@
         if(!texto) return;
         const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
         try {
-            await addDoc(pendientesRef, { texto: texto, completado: false, resolucion: "", autor: autor, fecha: serverTimestamp(), origen: window.miSesionID });
+            await addDoc(pendientesRef, { texto: texto, completado: false, resolucion: "", autorResolucion: "", autor: autor, fecha: serverTimestamp(), origen: window.miSesionID });
             input.value = '';
         } catch(e) {}
     };
@@ -846,9 +861,20 @@
         if(isChecked) {
             const resolucion = prompt("📝 ESCRIBE LA RESOLUCIÓN DE ESTE PENDIENTE:");
             if(resolucion === null) { checkboxElement.checked = false; return; }
-            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: true, resolucion: resolucion.trim().toUpperCase(), origen: window.miSesionID }); } catch(e) {}
+            
+            // 🔥 CAPTURAMOS QUIÉN RESOLVIÓ EL PENDIENTE
+            const autorRes = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
+            
+            try { 
+                await updateDoc(doc(db, "pendientes_globales", id), { 
+                    completado: true, 
+                    resolucion: resolucion.trim().toUpperCase(), 
+                    autorResolucion: autorRes,
+                    origen: window.miSesionID 
+                }); 
+            } catch(e) {}
         } else {
-            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: false, resolucion: "", origen: window.miSesionID }); } catch(e) {}
+            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: false, resolucion: "", autorResolucion: "", origen: window.miSesionID }); } catch(e) {}
         }
     };
 

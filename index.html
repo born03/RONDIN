@@ -65,7 +65,7 @@
         .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px; align-items: flex-start;}
         .p-cama { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 2px;}
         .p-nombre { font-size: 13px; color: var(--text-muted); font-weight: 600; }
-        .p-hora { font-size: 10px; color: #94a3b8; font-weight: normal; margin-top: 2px; display: block;} /* HORA EN INFO */
+        .p-hora { font-size: 10px; color: #94a3b8; font-weight: normal; margin-top: 2px; display: block;} 
         
         .p-bloque-titulo { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase;}
         .doble-clic-hint { font-size: 8.5px; color: #94a3b8; font-weight: normal; background: #f1f5f9; padding: 2px 4px; border-radius: 4px; cursor: help; text-transform: none;}
@@ -73,29 +73,28 @@
         .p-bloque { background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px; line-height: 1.5; white-space: pre-wrap; cursor: copy; height: max-content; margin: 0;}
         .p-bloque:hover { border-color: var(--primary); }
         .p-meds { font-family: monospace; border-left: 3px solid var(--primary); }
-        .p-obs { border-left: 3px solid var(--warning); }
         
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
         .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;}
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center;}
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
-        .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} /* Para notas no leídas */
+        .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
 
         .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px;}
         .dot { height: 6px; width: 6px; background-color: var(--primary); border-radius: 50%; display: inline-block; animation: blink 2s infinite;}
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
         /* ===================================================
-           MODAL DE HISTORIAL DE NOTAS (NUEVO)
+           MODAL DE HISTORIAL DE NOTAS (POP UP)
            =================================================== */
         .notas-container { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; display: flex; flex-direction: column; gap: 8px;}
         .nota-chat { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 13px;}
         .nota-autor { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 11px; margin-bottom: 6px; border-bottom: 1px dashed var(--border); padding-bottom: 4px;}
         .nota-fecha { color: var(--text-muted); font-weight: normal; font-size: 10px; }
         
-        .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; order: 999; } /* Magia para mandar al fondo */
-        .nota-visto .nota-texto { color: #64748b; }
+        .nota-visto { background: #f1f5f9; border-color: #e2e8f0; opacity: 0.6; } 
+        .nota-visto .nota-texto { color: #64748b; text-decoration: line-through; text-decoration-color: #cbd5e1;}
         
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
@@ -139,7 +138,7 @@
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
         /* ===================================================
-           DISEÑO RESPONSIVO (GRID PERFECTO EN PC)
+           DISEÑO RESPONSIVO (NUEVO GRID: 2 COLUMNAS + ACCIONES)
            =================================================== */
         @media (min-width: 900px) {
             .main-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
@@ -147,16 +146,17 @@
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
             
+            /* LA MAGIA: Solo 3 columnas. Info, Indicaciones, y Botones */
             .paciente-row { 
                 display: grid; 
-                grid-template-columns: 160px 1fr 1fr 120px; 
+                grid-template-columns: 160px 1fr 130px; 
                 gap: 15px; 
                 padding: 12px; 
-                align-items: start; /* SIN ESTIRAMIENTO */
+                align-items: start; 
             }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
-            .p-col-meds, .p-col-obs { display: flex; flex-direction: column; height: max-content; margin: 0;}
+            .p-col-meds { display: flex; flex-direction: column; height: max-content; margin: 0;}
             .p-col-acciones { display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 6px; border-left: 1px solid var(--border); padding-left: 10px; margin-top: 0;}
             
             .p-img-render { margin-top: 10px; max-width: 100%; }
@@ -178,6 +178,7 @@
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">Cancelar</button>
+            <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ Aprobar</button>
             <button style="background:#0d9488; color:white;" onclick="guardarCeldaModal()">Guardar</button>
         </div>
     </div>
@@ -185,13 +186,12 @@
 
 <div id="modal-notas" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 Historial Clínico</h3>
+        <h3 style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">💬 Evolución / Notas</h3>
         
-        <textarea id="input-nueva-nota" placeholder="Escribe una nueva nota o evolución aquí..."></textarea>
-        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px;">➕ Agregar Nota</button>
+        <textarea id="input-nueva-nota" placeholder="Escribe una nueva evolución aquí..."></textarea>
+        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px;">➕ Guardar Evolución</button>
 
-        <div id="contenedor-lista-notas" class="notas-container">
-            </div>
+        <div id="contenedor-lista-notas" class="notas-container"></div>
 
         <div class="modal-actions" style="margin-top: 10px;">
             <button style="background:#f1f5f9; color:#1e293b; width: 100%;" onclick="cerrarModalNotas()">Cerrar</button>
@@ -201,6 +201,7 @@
 
 <div id="modal-visor-img" class="modal-overlay" onclick="cerrarVisorImg()">
     <div class="visor-content" onclick="event.stopPropagation()">
+        <button class="btn-cerrar-visor" onclick="cerrarVisorImg()">×</button>
         <img id="img-visor-full" src="">
     </div>
 </div>
@@ -225,13 +226,13 @@
                 </div>
 
                 <div class="form-group full-width">
-                    <label>💊 Indicaciones</label>
+                    <label>💊 Indicaciones (Caja Principal)</label>
                     <textarea id="indicaciones-texto" class="caja-grande" placeholder="Fármaco, dosis, vía, horario..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
                 <div class="form-group full-width">
-                    <label>📝 Motivo de Ingreso / Base</label>
-                    <textarea id="pendientes" placeholder="Diagnóstico principal..." oninput="window.guardarBorrador()"></textarea>
+                    <label>📝 Evolución Inicial</label>
+                    <textarea id="pendientes" placeholder="Diagnóstico o nota de ingreso (Se guardará en el Pop-up de Notas)..." oninput="window.guardarBorrador()"></textarea>
                 </div>
 
                 <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()">
@@ -267,7 +268,6 @@
             <div class="entrega-toolbar">
                 <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 Guardar Nube</button>
                 <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">🧹 Recibir Turno</button>
-                <button class="btn-reset-global" onclick="window.reiniciarTodasLasEntregas()">🔴 Reiniciar TODAS</button>
             </div>
 
             <div class="editor-wrapper">
@@ -301,7 +301,7 @@
     const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     window.pacientesLocales = [];
     window.miSesionID = Math.random().toString(36).substring(2, 15);
-    window.pacienteModalActual = null; // Para saber a quién le agregamos nota
+    window.pacienteModalActual = null; 
 
     // ==========================================
     // TOASTS
@@ -327,10 +327,10 @@
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
     window.copiarBloqueIndividual = function(elemento) {
-        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').replace(/EVOLUCIÓN\s*Doble clic/i, '').trim();
+        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').trim();
         navigator.clipboard.writeText(texto).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
-            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Texto copiado");
+            setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 Indicaciones copiadas");
         });
     };
 
@@ -355,11 +355,10 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO (SIN HISTORIAL EN PANTALLA)
+    // EXPEDIENTE MODO CENSO (SOLO 1 CAJA VISIBLE)
     // ==========================================
     let isFirstLoad = true;
 
-    // Función auxiliar para formatear la fecha a texto legible
     function formatearFecha(timestampFirestore) {
         if(!timestampFirestore) return 'Sin fecha';
         const date = timestampFirestore.toDate();
@@ -386,20 +385,19 @@
         if(!activos.length) { contenedor.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding: 30px; font-weight:600;">Sala libre.</p>'; return; }
 
         contenedor.innerHTML = activos.map(item => {
-            // Contar notas sin leer
-            let notasNoLeidas = 0;
-            let totalNotas = 0;
+            let notasNoLeidas = 0; let totalNotas = 0;
             if(item.historial) {
                 totalNotas = item.historial.length;
                 notasNoLeidas = item.historial.filter(n => !n.visto).length;
             }
             
             let btnNotasColor = notasNoLeidas > 0 ? 'danger-badge' : '';
-            let btnNotasTexto = notasNoLeidas > 0 ? `💬 Notas (${totalNotas}) 🔴` : `💬 Notas (${totalNotas})`;
+            let btnNotasTexto = notasNoLeidas > 0 ? `💬 Evolución (${totalNotas}) 🔴` : `💬 Evolución (${totalNotas})`;
 
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
 
+            // HTML LIMPIO: Ya no existe el div de p-col-obs
             return `
             <div class="paciente-row">
                 <div class="p-col-info">
@@ -413,12 +411,7 @@
                 
                 <div class="p-col-meds">
                     <span class="p-bloque-titulo">Indicaciones <span class="doble-clic-hint">Doble clic para copiar</span></span>
-                    <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'N/A'}</div>
-                </div>
-                
-                <div class="p-col-obs">
-                    <span class="p-bloque-titulo">Evolución <span class="doble-clic-hint">Doble clic</span></span>
-                    <div class="p-bloque p-obs" ondblclick="window.copiarBloqueIndividual(this)">${item.pendientes || 'N/A'}</div>
+                    <div class="p-bloque p-meds" ondblclick="window.copiarBloqueIndividual(this)">${item.indicaciones || 'S/N'}</div>
                 </div>
                 
                 <div class="p-col-acciones">
@@ -428,14 +421,11 @@
             </div>`;
         }).join('');
         
-        // Si el modal de notas está abierto, actualizarlo en vivo
-        if(window.pacienteModalActual) {
-            renderizarListaNotasModal(window.pacienteModalActual);
-        }
+        if(window.pacienteModalActual) renderizarListaNotasModal(window.pacienteModalActual);
     });
 
     // ==========================================
-    // LÓGICA DEL POP-UP DE NOTAS (HISTORIAL)
+    // LÓGICA DEL POP-UP DE NOTAS
     // ==========================================
     window.abrirModalNotas = function(idPaciente) {
         window.pacienteModalActual = idPaciente;
@@ -454,17 +444,13 @@
         const contenedor = document.getElementById('contenedor-lista-notas');
         
         if(!paciente || !paciente.historial || paciente.historial.length === 0) {
-            contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">No hay notas previas.</p>';
-            return;
+            contenedor.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 13px;">No hay evolución registrada.</p>'; return;
         }
 
-        // Mapeamos para no perder el índice original al actualizar a Firebase
         let notasMapeadas = paciente.historial.map((nota, idx) => ({...nota, originalIndex: idx}));
-        
-        // ORDENAMIENTO: No vistas arriba, Vistas abajo.
         notasMapeadas.sort((a, b) => {
-            if (a.visto === b.visto) return b.originalIndex - a.originalIndex; // Más recientes arriba
-            return a.visto ? 1 : -1; // Visto se va al fondo (+1)
+            if (a.visto === b.visto) return b.originalIndex - a.originalIndex; 
+            return a.visto ? 1 : -1; 
         });
 
         contenedor.innerHTML = notasMapeadas.map(n => {
@@ -500,13 +486,8 @@
         const color = document.getElementById('color-usuario').value || '#0d9488';
         const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 
-        document.getElementById('input-nueva-nota').value = ''; // Limpiar caja
-        try { 
-            await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { 
-                historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }),
-                origen: window.miSesionID 
-            }); 
-        } catch(e) { alert("Error guardando nota."); }
+        document.getElementById('input-nueva-nota').value = ''; 
+        try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID }); } catch(e) {}
     };
 
     // ==========================================
@@ -518,9 +499,15 @@
         if(!cama && !paciente && !ind && !obs && !imagenBase64) return;
         const btn = document.getElementById('btn-enviar'); btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
         
+        let hIni = []; 
+        // Convertimos el campo "pendientes" (Evolución Inicial) en la primera nota del Pop-up
+        if (obs.trim() !== '') {
+            hIni.push({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#0d9488', texto: obs.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), visto: false });
+        }
+
         try { 
             await addDoc(pacientesRef, { 
-                cama: cama, paciente: paciente, indicaciones: ind, pendientes: obs, historial: [], imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID 
+                cama: cama, paciente: paciente, indicaciones: ind, historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID 
             }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
         } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "Guardar Expediente";
@@ -539,7 +526,7 @@
         const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
         rec.onresult = e => { 
             let t = ""; for(let i=e.resultIndex; i<e.results.length; i++) t += e.results[i][0].transcript;
-            const dic = [{id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']}, {id:'indicaciones-texto', p:['indicación','indicaciones','medicamento','medicamentos']}, {id:'pendientes', p:['observación','observaciones','pendiente','nota']}];
+            const dic = [{id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']}, {id:'indicaciones-texto', p:['indicación','indicaciones','medicamento','medicamentos']}, {id:'pendientes', p:['observación','observaciones','pendiente','nota', 'evolución']}];
             let pos = []; dic.forEach(c => { let idx = -1; let l = 0; c.p.forEach(p => { let i = t.toLowerCase().indexOf(p); if(i!==-1&&(idx===-1||i<idx)) {idx=i; l=p.length;} }); if(idx!==-1) pos.push({id:c.id, idx, l}); }); pos.sort((a,b) => a.idx - b.idx);
             if(!pos.length) { document.getElementById('pendientes').value += (document.getElementById('pendientes').value ? "\n" : "") + t; window.guardarBorrador(); return; }
             for(let i=0; i<pos.length; i++){ let f = pos[i+1] ? pos[i+1].idx : t.length; let val = t.substring(pos[i].idx + pos[i].l, f).trim(); if(val) document.getElementById(pos[i].id).value += (document.getElementById(pos[i].id).value ? "\n" : "") + val.charAt(0).toUpperCase() + val.slice(1); } window.guardarBorrador();
@@ -563,7 +550,7 @@
         if(unsubscribeEntrega) unsubscribeEntrega();
         unsubscribeEntrega = onSnapshot(doc(db, "entregas", servicio), (docSnap) => {
             if (!editandoEntrega) {
-                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; document.getElementById('info-ultima-modificacion').innerText = `Última edición: ${docSnap.data().autor || 'N/A'}`; } else editor.innerHTML = '<p style="color:#94a3b8;">Pega tu tabla aquí.</p>';
+                if (docSnap.exists()) { editor.innerHTML = docSnap.data().html_content || ''; } else editor.innerHTML = '<p style="color:#94a3b8;">Pega tu tabla aquí.</p>';
             }
         });
     }
@@ -577,16 +564,9 @@
     window.guardarCeldaModal = () => { if(celdaSeleccionada) { celdaSeleccionada.innerHTML = document.getElementById('texto-celda-visual').innerHTML; celdaSeleccionada.classList.add('celda-modificada'); celdaSeleccionada.setAttribute('data-autor', document.getElementById('nombre-usuario').value || 'Anónimo'); window.guardarEntrega(); } cerrarModalCelda(); };
     window.aceptarCambioCelda = () => { if(celdaSeleccionada) { celdaSeleccionada.classList.remove('celda-modificada'); celdaSeleccionada.removeAttribute('data-autor'); window.guardarEntrega(); } cerrarModalCelda(); };
 
-    window.guardarEntrega = async function() { const btn = document.getElementById('btn-guardar-entrega'); btn.innerHTML = "⏳..."; btn.disabled = true; try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, autor: document.getElementById('nombre-usuario').value || 'Anónimo', fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; btn.innerHTML = "✅ Nube"; setTimeout(() => { btn.innerHTML = "💾 Guardar Nube"; btn.disabled = false; }, 2000); window.mostrarToast("Guardia actualizada.");} catch(e) { btn.disabled = false; } };
-    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual? Limpiará celdas amarillas.")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
+    window.guardarEntrega = async function() { try { await setDoc(doc(db, "entregas", servicioActual), { html_content: editor.innerHTML, timestamp: serverTimestamp() }, { merge: true }); editandoEntrega = false; window.mostrarToast("Guardia guardada.");} catch(e) { } };
+    window.limpiarMarcasGuardia = function() { if(!confirm("¿Recibir turno actual?")) return; editor.querySelectorAll('.celda-modificada').forEach(c => { c.classList.remove('celda-modificada'); c.removeAttribute('data-autor'); }); window.guardarEntrega(); };
 
-    window.reiniciarTodasLasEntregas = async function() {
-        if(!confirm("⚠️ ¿BORRAR POR COMPLETO las tablas de los 4 servicios?")) return;
-        if(!confirm("¿Confirmas al 100% que quieres vaciar todo?")) return;
-        const servicios = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
-        for (const serv of servicios) { try { await setDoc(doc(db, "entregas", serv), { html_content: '<p style="color:#64748b;">Hoja en blanco. Pega la tabla oficial aquí.</p>', autor: 'Sistema (Reinicio)', fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }), timestamp: serverTimestamp() }); } catch(e) { } }
-        alert("Todas las entregas de guardia han sido reiniciadas.");
-    };
 </script>
 </body>
 </html>

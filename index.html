@@ -3,27 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expediente Clínico Seguro</title>
+    <title>Expediente Clínico y Guardia</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 15px; display: flex; justify-content: center; color: #2c3e50;}
-        .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; transition: max-width 0.3s ease; }
-        h2 { color: #0056b3; text-align: center; margin-top: 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        h3 { color: #34495e; text-align: center; font-size: 18px; margin-top: 0;}
-        .main-layout { display: flex; flex-direction: column; gap: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; color: #2c3e50; min-height: 100vh;}
+        
+        /* NAVEGACIÓN (PESTAÑAS) */
+        .nav-tabs { width: 100%; background: #0056b3; display: flex; justify-content: center; padding: 10px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;}
+        .tab-btn { background: transparent; color: rgba(255,255,255,0.7); border: none; padding: 12px 25px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 8px; margin: 0 5px; transition: all 0.3s;}
+        .tab-btn:hover { color: #ffffff; background: rgba(255,255,255,0.1); }
+        .tab-btn.active { color: #0056b3; background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.2);}
+
+        .container { background-color: transparent; padding: 20px; width: 100%; max-width: 1300px; box-sizing: border-box; }
+        
+        /* VISTAS */
+        .vista { display: none; width: 100%; animation: fadeIn 0.4s ease; }
+        .vista.activa { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===================================================
+           ESTILOS VISTA 1: EXPEDIENTE (Lo que ya teníamos)
+           =================================================== */
+        .main-layout { display: flex; flex-direction: column; gap: 0; background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.06);}
         .form-section { width: 100%; }
         .historial-seccion { margin-top: 35px; border-top: 2px solid #ecf0f1; padding-top: 25px; width: 100%; }
         .form-group { margin-bottom: 12px; }
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-width { grid-column: span 2; }
-        label { font-weight: 600; color: #5c6a79; font-size: 13px; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.5px;}
+        label { font-weight: 600; color: #5c6a79; font-size: 13px; margin-bottom: 5px; display: block; text-transform: uppercase;}
         input[type="text"], textarea, select, input[type="color"] { width: 100%; padding: 12px; border: 1.5px solid #dce4ec; border-radius: 10px; box-sizing: border-box; font-size: 15px; background-color: #fbfcff; }
         input[type="color"] { padding: 5px; cursor: pointer; height: 45px; }
         input[type="text"]:focus, textarea:focus, select:focus { border-color: #0056b3; outline: none; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
         textarea { resize: vertical; min-height: 70px; }
         
-        .caja-perfil { background-color: #f4f6f7; border: 1.5px solid #bdc3c7; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-        .caja-medicamentos { background-color: #f8fafd; border: 1.5px dashed #b8daff; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .caja-perfil, .caja-medicamentos { padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .caja-perfil { background-color: #f4f6f7; border: 1.5px solid #bdc3c7; }
+        .caja-medicamentos { background-color: #f8fafd; border: 1.5px dashed #b8daff; }
         .titulo-caja { font-size: 14px; font-weight: bold; color: #2c3e50; margin-bottom: 10px; margin-top: 0;}
         
         .btn-add-med { background-color: #e8f4fd; color: #0056b3; border: 1px solid #b8daff; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; }
@@ -35,34 +51,53 @@
         
         .tarjeta-pendiente { background-color: #ffffff; border: 1px solid #e1e8ed; border-left: 5px solid #e67e22; padding: 16px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .t-cama { font-size: 20px; font-weight: 800; color: #0056b3; }
-        .t-paciente { font-size: 15px; color: #34495e; font-weight: 600; }
+        .t-paciente { font-size: 15px; color: #34495e; font-weight: 600; float: right; }
         .t-horarios { font-size: 14px; padding: 12px; border-radius: 8px; margin-top: 10px; white-space: pre-line; background: #f8f9fa; font-family: monospace; border-left: 3px solid #3498db; }
         
-        /* ESTILOS DEL HISTORIAL TIPO CHAT */
         .t-historial-box { margin-top: 15px; background: #fffcf5; padding: 10px; border-radius: 8px; border: 1px solid #f1e4c3;}
         .historial-titulo { font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; margin-bottom: 8px; display: block;}
-        .nota-chat { background: #ffffff; border: 1px solid #ecf0f1; padding: 8px 10px; border-radius: 6px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.02);}
+        .nota-chat { background: #ffffff; border: 1px solid #ecf0f1; padding: 8px 10px; border-radius: 6px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.4;}
         .nota-autor { display: block; font-weight: bold; font-size: 11px; margin-bottom: 3px;}
         .nota-fecha { color: #95a5a6; font-size: 9px; font-weight: normal; float: right; }
 
         .acciones-tarjeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
-        .btn-nota { flex: 1; min-width: 100%; background: #fff3cd; color: #856404; border: 1.5px solid #ffeeba; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
-        .btn-nota:hover { background: #ffe8a1; }
+        .btn-nota { flex: 1; min-width: 100%; background: #fff3cd; color: #856404; border: 1.5px solid #ffeeba; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;}
         .btn-resolver { flex: 1; min-width: 45%; background: white; color: #27ae60; border: 1.5px solid #2ecc71; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-copiar { flex: 1; min-width: 45%; background: #f8f9fa; color: #34495e; border: 1.5px solid #bdc3c7; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        
         #foto-input { display: none; }
         .indicador-vivo { font-size: 12px; color: #27ae60; text-align: center; margin-bottom: 15px; font-weight: bold;}
+
+        /* ===================================================
+           ESTILOS VISTA 2: ENTREGA DE GUARDIA (NUEVA)
+           =================================================== */
+        .entrega-container { background: #fff; border-radius: 16px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; box-sizing: border-box;}
+        .entrega-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;}
+        .entrega-titulo { font-size: 24px; color: #0056b3; margin: 0; font-weight: 800;}
+        .entrega-meta { font-size: 13px; color: #7f8c8d; }
         
+        .entrega-toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; background: #f8fafd; padding: 10px; border-radius: 8px; border: 1px solid #dce4ec;}
+        .btn-tool { background: #fff; border: 1px solid #bdc3c7; padding: 8px 15px; border-radius: 6px; font-weight: bold; color: #2c3e50; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.2s;}
+        .btn-tool:hover { background: #ecf0f1; }
+        .btn-tool.primario { background: #27ae60; color: white; border-color: #2ecc71; }
+        .btn-tool.primario:hover { background: #219653; }
+        .btn-tool.limpiar { background: #e74c3c; color: white; border-color: #c0392b; }
+        
+        /* El Editor donde pegarán la tabla de Word */
+        #editor-entrega { width: 100%; min-height: 60vh; border: 2px solid #ecf0f1; border-radius: 8px; padding: 20px; box-sizing: border-box; overflow-y: auto; background: #fff; font-size: 14px; outline: none; transition: border-color 0.3s;}
+        #editor-entrega:focus { border-color: #0056b3; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
+        
+        /* Estilos base para las tablas que peguen de Word */
+        #editor-entrega table { border-collapse: collapse; width: 100%; margin-bottom: 15px; }
+        #editor-entrega th, #editor-entrega td { border: 1px solid #bdc3c7; padding: 8px; vertical-align: top; }
+        #editor-entrega th { background-color: #f4f6f7; font-weight: bold; }
+        
+        /* MAGIA: Clase automática cuando modifican una celda */
+        .celda-modificada { background-color: #fff3cd !important; border: 2px solid #f39c12 !important; transition: all 0.3s;}
+
         @media (min-width: 900px) {
-            body { padding: 20px; }
-            .container { max-width: 1300px; padding: 30px; }
-            /* Magia: Formulario a la izquierda, lista a la derecha */
-            .main-layout { flex-direction: row; gap: 40px; align-items: flex-start; }
-            .form-section { flex: 0 0 380px; position: sticky; top: 30px; background: #ffffff; padding: 0; }
-            .historial-seccion { flex: 1; margin-top: 0; background: #f8fafd; padding: 20px; border-radius: 12px; border: 1px solid #e1e8ed; }
-            h3 { text-align: left; font-size: 24px; color: #0056b3; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px;}
-            .indicador-vivo { text-align: left; margin-top: -15px; margin-bottom: 20px;}
+            .main-layout { flex-direction: row-reverse; gap: 40px; align-items: flex-start; padding: 30px;}
+            .form-section { flex: 0 0 380px; position: sticky; top: 80px; background: #f8fafd; padding: 20px; border-radius: 12px; border: 1px solid #e1e8ed;}
+            .historial-seccion { flex: 1; margin-top: 0; border-top: none; padding-top: 0; }
             #lista-pendientes { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 15px; }
             .acciones-tarjeta { flex-wrap: nowrap; }
             .btn-nota { min-width: auto; }
@@ -71,108 +106,106 @@
 </head>
 <body>
 
+<div class="nav-tabs">
+    <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 Expediente Diario</button>
+    <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 Entrega de Guardia</button>
+</div>
+
 <datalist id="diccionario-meds">
     <option value="AC. FOLINICO"><option value="AC. VALPROICO"><option value="ACICLOVIR"><option value="ALBUMINA"><option value="AMIKACINA"><option value="AMPICILINA"><option value="ANFOTERICINA B CONV"><option value="ANFOTERICINA B LIP"><option value="BENCILPENICILINA"><option value="BUMETANIDA"><option value="BUPRENORFINA"><option value="BUTILHIOSCINA"><option value="CAFEINA CITRATO"><option value="CASPOFUNGINA"><option value="CEFALOTINA"><option value="CEFEPIMA"><option value="CEFOTAXIMA"><option value="CEFTAZIDIMA"><option value="CEFTRIAXONA"><option value="CEFUROXIMA"><option value="CIPROFLOXACINO"><option value="CLARITROMICINA"><option value="CLINDAMICINA"><option value="CLOROPIRAMINA"><option value="COLISTIMETATO"><option value="DEXAMETASONA"><option value="DEXAMETASONA DEPOT"><option value="DEXMEDETOMIDINA"><option value="DICLOFENACO"><option value="DIFENHIDRAMINA"><option value="DIFENIDOL"><option value="ENOXAPARINA"><option value="ERITROPOYETINA"><option value="ETAMSILATO"><option value="FENITOINA"><option value="FILGRASTIM"><option value="FITOMENADIONA"><option value="FLUCONAZOL"><option value="FOSAPREPITANT"><option value="FOSFOMICINA"><option value="FUROSEMIDA"><option value="GANCICLOVIR"><option value="GENTAMICINA"><option value="HEPARINA"><option value="HIDRALAZINA"><option value="HIDROCORTISONA"><option value="KETOROLACO"><option value="IBUPROFENO"><option value="LEVETIRACETAM"><option value="LEVOFLOXACINO"><option value="LINEZOLID"><option value="MEROPENEM"><option value="METAMIZOL"><option value="METILPREDNISOLONA"><option value="METOCLOPRAMIDA"><option value="METRONIDAZOL"><option value="OCTREOTIDA"><option value="OMEPRAZOL"><option value="ONDANSETRON"><option value="PARACETAMOL"><option value="PIPERACILINA"><option value="SOMATROPINA"><option value="TEICOPLANINA"><option value="TIAMINA"><option value="TIGECICLINA"><option value="TRAMADOL"><option value="TRIMETOPRIM"><option value="VANCOMICINA"><option value="VORICONAZOL">
 </datalist>
-
 <datalist id="diccionario-horarios">
     <option value="10-18-02"><option value="06-14-22"><option value="08-16-24"><option value="18-24-06-12"><option value="10-16-22-04"><option value="08-14-20-02"><option value="10-22"><option value="12-24"><option value="08-20"><option value="24 HRS"><option value="PRN"><option value="DOSIS ÚNICA">
 </datalist>
 
 <div class="container">
-    <div class="main-layout">
-        
-        <div class="form-section">
-            <h2 id="titulo-dinamico" class="titulo-pc" style="display:none;">🏥 Nuevo Ingreso</h2>
-            
-            <div class="caja-perfil">
-                <p class="titulo-caja" style="color:#2c3e50;">🧑‍⚕️ Tu Perfil (Identificación)</p>
-                <div class="grid-form">
-                    <div class="form-group">
-                        <label>Nombre / Turno</label>
-                        <input type="text" id="nombre-usuario" placeholder="Ej. Dr. Pérez" oninput="window.guardarPerfil()">
-                    </div>
-                    <div class="form-group">
-                        <label>Color de Firma</label>
-                        <input type="color" id="color-usuario" value="#3498db" onchange="window.guardarPerfil()">
+    
+    <div id="pestana-expediente" class="vista activa">
+        <div class="main-layout">
+            <div class="form-section">
+                <div class="caja-perfil">
+                    <p class="titulo-caja">🧑‍⚕️ Tu Perfil</p>
+                    <div class="grid-form">
+                        <div class="form-group">
+                            <input type="text" id="nombre-usuario" placeholder="Tu Nombre (Ej. Dra. Pérez)" oninput="window.guardarPerfil()">
+                        </div>
+                        <div class="form-group">
+                            <input type="color" id="color-usuario" value="#3498db" onchange="window.guardarPerfil()" title="Color de tu firma">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="botones-accion">
-                <button id="btn-dictar" class="btn-accion">🎙️ Dictar</button>
-                <button class="btn-accion" onclick="document.getElementById('foto-input').click()">📷 Escanear Foto</button>
-                <input type="file" id="foto-input" accept="image/*" capture="environment">
-            </div>
-
-            <div class="grid-form" style="margin-top: 15px;">
-                <div class="form-group">
-                    <label>Cama</label>
-                    <input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()">
+                <div class="botones-accion">
+                    <button id="btn-dictar" class="btn-accion">🎙️ Dictar Paciente</button>
+                    <button class="btn-accion" onclick="document.getElementById('foto-input').click()">📷 Escanear Foto</button>
+                    <input type="file" id="foto-input" accept="image/*" capture="environment">
                 </div>
-                <div class="form-group">
-                    <label>Paciente</label>
-                    <input type="text" id="paciente" placeholder="Nombre" oninput="window.guardarBorrador()">
+
+                <div class="grid-form" style="margin-top: 15px;">
+                    <div class="form-group"><label>Cama</label><input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()"></div>
+                    <div class="form-group"><label>Paciente</label><input type="text" id="paciente" placeholder="Nombre" oninput="window.guardarBorrador()"></div>
                 </div>
-            </div>
 
-            <div class="caja-medicamentos">
-                <p class="titulo-caja">💊 Indicaciones</p>
-                <div class="grid-form">
-                    <div class="form-group full-width">
-                        <label>Medicamento</label>
-                        <input type="text" id="medicamento" list="diccionario-meds" placeholder="Buscar o dictar todo junto..." oninput="window.guardarBorrador()" style="text-transform: uppercase;">
+                <div class="caja-medicamentos">
+                    <p class="titulo-caja">💊 Indicaciones</p>
+                    <div class="grid-form">
+                        <div class="form-group full-width"><label>Medicamento</label><input type="text" id="medicamento" list="diccionario-meds" placeholder="Buscar..." oninput="window.guardarBorrador()" style="text-transform: uppercase;"></div>
+                        <div class="form-group"><label>Dosis</label><input type="text" id="dosis" placeholder="Ej. 150 MG" oninput="window.guardarBorrador()" style="text-transform: uppercase;"></div>
+                        <div class="form-group"><label>Vía</label><select id="via" onchange="window.guardarBorrador()"><option value="IV">IV</option><option value="VO">VO</option><option value="IM">IM</option><option value="SC">SC</option><option value="SL">SL</option><option value="INHAL">INHAL</option></select></div>
+                        <div class="form-group full-width"><label>Horarios</label><input type="text" id="horarios" list="diccionario-horarios" placeholder="Opciones..." oninput="window.guardarBorrador()"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Dosis</label>
-                        <input type="text" id="dosis" placeholder="Ej. 150 MG" oninput="window.guardarBorrador()" style="text-transform: uppercase;">
-                    </div>
-                    <div class="form-group">
-                        <label>Vía</label>
-                        <select id="via" onchange="window.guardarBorrador()">
-                            <option value="IV">IV</option><option value="VO">VO</option><option value="IM">IM</option>
-                            <option value="SC">SC</option><option value="SL">SL</option><option value="INHAL">INHAL</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Horarios</label>
-                        <input type="text" id="horarios" list="diccionario-horarios" placeholder="Toca para opciones..." oninput="window.guardarBorrador()">
-                    </div>
+                    <button type="button" class="btn-add-med" onclick="window.agregarMedicamento()">➕ Añadir a la lista</button>
+                    <ul id="lista-med-temporal" class="lista-temporal"></ul>
                 </div>
-                <button type="button" class="btn-add-med" onclick="window.agregarMedicamento()">➕ Añadir a la lista</button>
-                <ul id="lista-med-temporal" class="lista-temporal"></ul>
+
+                <div class="form-group full-width">
+                    <label>Primer Nota / Evolución</label>
+                    <textarea id="pendientes" placeholder="Motivo de ingreso..." oninput="window.guardarBorrador()"></textarea>
+                </div>
+
+                <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">💾 Guardar Expediente</button>
+                <div id="aviso-guardado" style="font-size:11px; color:#27ae60; text-align:center; margin-top:5px; display:none;">Borrador guardado...</div>
             </div>
 
-            <div class="form-group full-width">
-                <label>Primer Nota / Evolución</label>
-                <textarea id="pendientes" placeholder="Motivo de ingreso o nota inicial..." oninput="window.guardarBorrador()"></textarea>
+            <div class="historial-seccion">
+                <h3>📋 Casos Activos en Sala</h3>
+                <div class="indicador-vivo">🟢 Sincronizado en Tiempo Real</div>
+                <div id="lista-pendientes"><p style="text-align:center; color:#7f8c8d;">Conectando...</p></div>
             </div>
-
-            <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">💾 Guardar Expediente</button>
-            <div id="aviso-guardado" style="font-size:11px; color:#27ae60; text-align:center; margin-top:5px; display:none;">Borrador guardado...</div>
-        </div>
-
-        <div class="historial-seccion">
-            <h2 class="titulo-movil">🏥 Expediente Seguro</h2>
-            <h3>📋 Casos Activos en Sala</h3>
-            <div class="indicador-vivo">🟢 Sincronizado en Tiempo Real</div>
-            <div id="lista-pendientes"><p style="text-align:center; color:#7f8c8d;">Conectando a la base de datos...</p></div>
         </div>
     </div>
-</div>
 
-<script>
-    if (window.innerWidth >= 900) {
-        document.querySelector('.titulo-pc').style.display = 'block';
-        document.querySelector('.titulo-movil').style.display = 'none';
-    }
-</script>
+    <div id="pestana-guardia" class="vista">
+        <div class="entrega-container">
+            <div class="entrega-header">
+                <div>
+                    <h2 class="entrega-titulo">🔄 Documento de Enlace (Guardia)</h2>
+                    <p class="entrega-meta" id="info-ultima-modificacion">Conectando con la nube...</p>
+                </div>
+                <div class="indicador-vivo">🟢 Documento Vivo</div>
+            </div>
+
+            <div class="entrega-toolbar">
+                <button class="btn-tool primario" id="btn-guardar-entrega" onclick="window.guardarEntrega()">💾 Guardar Cambios en Nube</button>
+                <button class="btn-tool" onclick="document.execCommand('bold', false, null)"><b>N</b> Negrita</button>
+                <button class="btn-tool" onclick="document.execCommand('hiliteColor', false, '#fff3cd')">🖍️ Resaltar</button>
+                <button class="btn-tool" onclick="document.execCommand('strikeThrough', false, null)"><s>Tachar</s></button>
+                <div style="flex-grow: 1;"></div>
+                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()" title="Limpia todos los amarillos. Úsalo cuando recibas el turno.">🧹 Recibir Guardia (Quitar Amarillos)</button>
+            </div>
+
+            <div id="editor-entrega" contenteditable="true" placeholder="Haz clic aquí y pega (Ctrl+V) tu tabla de Excel o Word..."></div>
+            <p style="font-size: 12px; color: #7f8c8d; margin-top: 10px;">💡 <b>Instrucciones:</b> Pega tu tabla aquí. Si alguien del siguiente turno borra o escribe dentro de una celda, ésta se marcará en amarillo automáticamente.</p>
+        </div>
+    </div>
+
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // LLAVES DE FIREBASE
+    // LLAVES FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
@@ -185,289 +218,238 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    
+    // Referencias a Colecciones
     const pacientesRef = collection(db, "pacientes");
+    const entregaRef = doc(db, "entregas", "guardia_actual");
 
+    // ==========================================
+    // LÓGICA DE PESTAÑAS (NAVEGACIÓN)
+    // ==========================================
+    window.cambiarPestana = function(idPestana, boton) {
+        document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(idPestana).classList.add('activa');
+        boton.classList.add('active');
+    };
+
+    // ==========================================
+    // LÓGICA: PESTAÑA 2 (ENTREGA DE GUARDIA)
+    // ==========================================
+    const editor = document.getElementById('editor-entrega');
+    let editandoEntrega = false;
+
+    // Escuchar la tabla de Guardia en Tiempo Real
+    onSnapshot(entregaRef, (docSnap) => {
+        if (!editandoEntrega) { // Solo actualizamos la pantalla si NO estamos escribiendo
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                editor.innerHTML = data.html_content || '';
+                document.getElementById('info-ultima-modificacion').innerText = `Última modificación: ${data.autor} (${data.fecha})`;
+            } else {
+                editor.innerHTML = '<p>No hay entrega activa. Pega tu tabla aquí.</p>';
+            }
+        }
+    });
+
+    // Pausar actualización automática cuando el usuario da clic para escribir
+    editor.addEventListener('focus', () => { editandoEntrega = true; });
+    
+    // MAGIA: Detector automático de cambios en celdas de tabla
+    editor.addEventListener('input', (e) => {
+        editandoEntrega = true; // Confirmar que editamos
+        
+        // Encontrar en qué celda de la tabla estamos escribiendo
+        let nodo = document.getSelection().anchorNode;
+        if(nodo && nodo.nodeType === 3) nodo = nodo.parentNode; // Si es texto, agarrar su contenedor
+        
+        if(nodo) {
+            let celda = nodo.closest('td') || nodo.closest('th');
+            if(celda) {
+                // Si tocamos la celda, le ponemos la clase mágica amarilla
+                celda.classList.add('celda-modificada');
+            }
+        }
+    });
+
+    // Guardar la Entrega en la Nube
+    window.guardarEntrega = async function() {
+        const btn = document.getElementById('btn-guardar-entrega');
+        const autor = document.getElementById('nombre-usuario').value || 'Usuario Anónimo';
+        const fechaHora = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        
+        btn.innerHTML = "⏳ Guardando..."; btn.disabled = true;
+        
+        try {
+            await setDoc(entregaRef, {
+                html_content: editor.innerHTML,
+                autor: autor,
+                fecha: fechaHora,
+                timestamp: serverTimestamp()
+            }, { merge: true }); // Merge true por si no existe lo crea
+            
+            editandoEntrega = false; // Soltamos el editor
+            btn.innerHTML = "✅ Guardado";
+            setTimeout(() => { btn.innerHTML = "💾 Guardar Cambios en Nube"; btn.disabled = false; }, 2000);
+        } catch(e) {
+            alert("Error al guardar entrega: " + e.message);
+            btn.innerHTML = "💾 Guardar Cambios en Nube"; btn.disabled = false;
+        }
+    };
+
+    // Botón Recibir Guardia (Quitar Amarillos)
+    window.limpiarMarcasGuardia = function() {
+        if(!confirm("¿Estás seguro de recibir la guardia? Esto quitará todos los colores amarillos de cambios recientes.")) return;
+        
+        // Buscamos todas las celdas marcadas y les quitamos la clase
+        const celdas = editor.querySelectorAll('.celda-modificada');
+        celdas.forEach(c => c.classList.remove('celda-modificada'));
+        
+        // Quitamos también si alguien usó el marcador manual
+        const marcas = editor.querySelectorAll('[style*="background-color"]');
+        marcas.forEach(m => m.style.backgroundColor = 'transparent');
+        
+        // Guardamos el cambio en la nube
+        window.guardarEntrega();
+    };
+
+
+    // ==========================================
+    // LÓGICA: PESTAÑA 1 (EXPEDIENTE, CHAT Y PACIENTES)
+    // ==========================================
+    
     // LECTURA EN TIEMPO REAL
     onSnapshot(query(pacientesRef), (snapshot) => {
         const contenedor = document.getElementById('lista-pendientes');
         let activos = [];
-        
-        snapshot.forEach(d => { 
-            if(d.data().estado === "Activo") activos.push({id: d.id, ...d.data()}); 
-        });
-        
+        snapshot.forEach(d => { if(d.data().estado === "Activo") activos.push({id: d.id, ...d.data()}); });
         activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
         
         if(!activos.length) { 
-            contenedor.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold; color:#27ae60; background:#e8f8f5; border-radius:8px;">✔️ SALA AL DÍA. NO HAY PENDIENTES.</p>'; 
-            return; 
+            contenedor.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold; color:#27ae60; background:#e8f8f5; border-radius:8px;">✔️ SALA AL DÍA.</p>'; return; 
         }
 
         contenedor.innerHTML = activos.map(item => {
-            // RENDERIZAR HISTORIAL DE CHAT
             let historialHTML = '';
             if (item.historial && item.historial.length > 0) {
                 historialHTML = '<div class="t-historial-box"><span class="historial-titulo">Historial Clínico</span>';
                 item.historial.forEach(nota => {
-                    historialHTML += `
-                        <div class="nota-chat" style="border-left: 4px solid ${nota.color};">
-                            <span class="nota-autor" style="color: ${nota.color};">
-                                ${nota.autor} <span class="nota-fecha">${nota.fecha}</span>
-                            </span>
-                            <span class="nota-texto">${nota.texto.replace(/\n/g, '<br>')}</span>
-                        </div>
-                    `;
+                    historialHTML += `<div class="nota-chat" style="border-left: 4px solid ${nota.color};"><span class="nota-autor" style="color: ${nota.color};">${nota.autor} <span class="nota-fecha">${nota.fecha}</span></span><span class="nota-texto">${nota.texto.replace(/\n/g, '<br>')}</span></div>`;
                 });
                 historialHTML += '</div>';
             }
-
             return `
             <div class="tarjeta-pendiente">
-                <div class="tarjeta-header">
-                    <span class="t-cama">🛏️ ${item.cama || 'S/N'}</span>
-                    <span class="t-paciente">👤 ${item.paciente || 'S/N'}</span>
-                </div>
+                <div class="tarjeta-header"><span class="t-cama">🛏️ ${item.cama || 'S/N'}</span><span class="t-paciente">👤 ${item.paciente || 'S/N'}</span></div>
                 ${item.columnaHorarios ? `<div class="t-horarios"><strong>HORARIOS:</strong><br>${item.columnaHorarios.replace(/\n/g, '<br>')}</div>` : ''}
-                
                 ${historialHTML}
-
                 <div class="acciones-tarjeta">
                     <button class="btn-nota" onclick="window.agregarNotaHistorial('${item.id}')">💬 Añadir Nota</button>
                     <button class="btn-resolver" onclick="window.marcarResuelto('${item.id}', this)">✓ Atendido</button>
-                    <button class="btn-copiar" onclick="window.copiarTabla(this, '${encodeURIComponent(JSON.stringify(item))}')">📋 Copiar a Excel</button>
+                    <button class="btn-copiar" onclick="window.copiarTablaExpediente(this, '${encodeURIComponent(JSON.stringify(item))}')">📋 Copiar a Excel</button>
                 </div>
-            </div>
-            `;
+            </div>`;
         }).join('');
     });
 
-    // AÑADIR NOTA AL HISTORIAL (NUEVA FUNCIÓN)
     window.agregarNotaHistorial = async function(id) {
         const textoNota = prompt("Escribe tu evolución o nota para este paciente:");
         if (!textoNota || !textoNota.trim()) return;
-
         const autor = document.getElementById('nombre-usuario').value || 'Anónimo';
         const color = document.getElementById('color-usuario').value || '#3498db';
         const fechaHora = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-
-        try {
-            const docRef = doc(db, "pacientes", id);
-            await updateDoc(docRef, {
-                historial: arrayUnion({ autor: autor, color: color, texto: textoNota.trim(), fecha: fechaHora })
-            });
-        } catch(e) {
-            alert("Error al guardar la nota: " + e.message);
-        }
+        try { await updateDoc(doc(db, "pacientes", id), { historial: arrayUnion({ autor, color, texto: textoNota.trim(), fecha: fechaHora }) }); } 
+        catch(e) { alert("Error: " + e.message); }
     };
 
-    // COPIAR A EXCEL (Ahora incluye el historial)
-    window.copiarTabla = function(boton, data) {
+    window.copiarTablaExpediente = function(boton, data) {
         const item = JSON.parse(decodeURIComponent(data));
-        const horariosExcel = item.columnaHorarios ? `"${item.columnaHorarios.replace(/"/g, '""')}"` : '""';
-        
-        // Juntamos el historial en un solo texto para Excel
-        let textoHistorial = "";
-        if (item.historial && item.historial.length > 0) {
-            textoHistorial = item.historial.map(n => `[${n.autor}]: ${n.texto}`).join(' / ');
-        }
-        const obsExcel = textoHistorial ? `"${textoHistorial.replace(/"/g, '""')}"` : '""';
-        
-        const texto = `${item.cama || ''}\t${item.paciente || ''}\t${horariosExcel}\t${obsExcel}`;
-        
-        navigator.clipboard.writeText(texto).then(() => {
-            const temp = boton.innerHTML;
-            boton.innerHTML = "✅ ¡Copiado!"; 
-            setTimeout(() => boton.innerHTML = temp, 2000);
-        }).catch(() => alert("Tu navegador bloqueó el portapapeles."));
+        const hEx = item.columnaHorarios ? `"${item.columnaHorarios.replace(/"/g, '""')}"` : '""';
+        let tHist = "";
+        if (item.historial && item.historial.length > 0) tHist = item.historial.map(n => `[${n.autor}]: ${n.texto}`).join(' / ');
+        const oEx = tHist ? `"${tHist.replace(/"/g, '""')}"` : '""';
+        navigator.clipboard.writeText(`${item.cama || ''}\t${item.paciente || ''}\t${hEx}\t${oEx}`).then(() => {
+            const temp = boton.innerHTML; boton.innerHTML = "✅ ¡Copiado!"; setTimeout(() => boton.innerHTML = temp, 2000);
+        });
     };
 
-    // GUARDAR NUEVO PACIENTE EN FIREBASE
     window.enviarReporte = async function() {
-        const cama = document.getElementById('cama').value;
-        const paciente = document.getElementById('paciente').value;
+        const cama = document.getElementById('cama').value; const paciente = document.getElementById('paciente').value;
         const notas = document.getElementById('pendientes').value;
-        
         window.agregarMedicamento();
         if(!cama && !paciente && !window.medicamentosArray.length && !notas) return;
         
-        const btn = document.getElementById('btn-enviar');
-        btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
-        
+        const btn = document.getElementById('btn-enviar'); btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
         const bloque = window.medicamentosArray.map(m => m.textoFinal).join('\n');
-
-        // Si escribió algo en "Primer Nota", lo metemos como la primera entrada del historial
-        let historialInicial = [];
+        
+        let hIni = [];
         if (notas.trim() !== '') {
-            const autor = document.getElementById('nombre-usuario').value || 'Anónimo';
-            const color = document.getElementById('color-usuario').value || '#3498db';
-            const fechaHora = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-            
-            historialInicial.push({ autor: autor, color: color, texto: notas.trim(), fecha: fechaHora });
+            hIni.push({ autor: document.getElementById('nombre-usuario').value || 'Anónimo', color: document.getElementById('color-usuario').value || '#3498db', texto: notas.trim(), fecha: new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) });
         }
 
         try {
-            await addDoc(pacientesRef, {
-                cama, paciente, columnaHorarios: bloque, historial: historialInicial, estado: "Activo", fecha: serverTimestamp()
-            });
-            document.querySelectorAll('input[type="text"]:not(#nombre-usuario), textarea').forEach(i => i.value = '');
-            document.getElementById('via').value = 'IV';
-            window.medicamentosArray = []; window.renderizarListaMeds();
-            localStorage.removeItem('borradorRondines');
+            await addDoc(pacientesRef, { cama, paciente, columnaHorarios: bloque, historial: hIni, estado: "Activo", fecha: serverTimestamp() });
+            document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = '');
+            document.getElementById('via').value = 'IV'; window.medicamentosArray = []; window.renderizarListaMeds(); localStorage.removeItem('borradorRondines');
         } catch (e) { alert(e.message); }
         btn.disabled = false; btn.innerHTML = "💾 Guardar Expediente";
     };
 
-    // MARCAR COMO RESUELTO
     window.marcarResuelto = async (id, b) => {
-        if(confirm("¿Confirmas que el paciente ha sido atendido y quieres sacarlo de la lista?")) {
-            b.disabled = true;
-            b.innerHTML = "⏳ Actualizando...";
-            await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp() });
+        if(confirm("¿Paciente atendido? Se sacará de la lista activa.")) {
+            b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp() });
         }
     };
 
-    // ==========================================
-    // PERFIL Y LÓGICA DE BORRADORES
-    // ==========================================
-    window.guardarPerfil = () => {
-        const perfil = { nombre: document.getElementById('nombre-usuario').value, color: document.getElementById('color-usuario').value };
-        localStorage.setItem('perfilUsuario', JSON.stringify(perfil));
-    };
-
+    // PERFIL Y MEDICAMENTOS
+    window.guardarPerfil = () => { localStorage.setItem('perfilUsuario', JSON.stringify({ nombre: document.getElementById('nombre-usuario').value, color: document.getElementById('color-usuario').value })); };
     const p = JSON.parse(localStorage.getItem('perfilUsuario'));
-    if(p) {
-        document.getElementById('nombre-usuario').value = p.nombre || '';
-        document.getElementById('color-usuario').value = p.color || '#3498db';
-    }
+    if(p) { document.getElementById('nombre-usuario').value = p.nombre || ''; document.getElementById('color-usuario').value = p.color || '#3498db'; }
 
     window.medicamentosArray = [];
     window.agregarMedicamento = () => {
-        const med = document.getElementById('medicamento').value.trim().toUpperCase();
-        const dos = document.getElementById('dosis').value.trim().toUpperCase();
-        const via = document.getElementById('via').value;
-        const hor = document.getElementById('horarios').value.trim().toUpperCase();
+        const med = document.getElementById('medicamento').value.trim().toUpperCase(); const dos = document.getElementById('dosis').value.trim().toUpperCase();
+        const via = document.getElementById('via').value; const hor = document.getElementById('horarios').value.trim().toUpperCase();
         if(!med && !dos && !hor) return;
-
-        let textoFinal = "";
-        if (dos === '' && hor === '') {
-            textoFinal = /\b(IV|VO|IM|SC|SL|INHAL|TOPICA)\b/.test(med) ? med : `${med} ${via}`;
-        } else {
-            textoFinal = `${med} ${dos} ${via} ${hor}`;
-        }
-        textoFinal = textoFinal.replace(/\s+/g, ' ').trim();
-
-        window.medicamentosArray.push({ textoFinal });
-        ['medicamento','dosis','horarios'].forEach(i => document.getElementById(i).value = '');
-        document.getElementById('via').value = 'IV';
+        let tFin = (dos === '' && hor === '') ? (/\b(IV|VO|IM|SC|SL|INHAL|TOPICA)\b/.test(med) ? med : `${med} ${via}`) : `${med} ${dos} ${via} ${hor}`;
+        window.medicamentosArray.push({ textoFinal: tFin.replace(/\s+/g, ' ').trim() });
+        ['medicamento','dosis','horarios'].forEach(i => document.getElementById(i).value = ''); document.getElementById('via').value = 'IV';
         window.renderizarListaMeds(); window.guardarBorrador();
     };
 
-    window.renderizarListaMeds = () => {
-        document.getElementById('lista-med-temporal').innerHTML = window.medicamentosArray.map((m,i) => `
-            <li class="item-med"><span>${m.textoFinal}</span>
-            <button class="btn-quitar" onclick="window.quitarMedicamento(${i})">×</button></li>
-        `).join('');
-    };
-
+    window.renderizarListaMeds = () => { document.getElementById('lista-med-temporal').innerHTML = window.medicamentosArray.map((m,i) => `<li class="item-med"><span>${m.textoFinal}</span><button class="btn-quitar" onclick="window.quitarMedicamento(${i})">×</button></li>`).join(''); };
     window.quitarMedicamento = (i) => { window.medicamentosArray.splice(i,1); window.renderizarListaMeds(); window.guardarBorrador(); };
-
     window.guardarBorrador = () => {
-        const data = {
-            cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value,
-            med: document.getElementById('medicamento').value, dos: document.getElementById('dosis').value,
-            via: document.getElementById('via').value, hor: document.getElementById('horarios').value,
-            obs: document.getElementById('pendientes').value, lista: window.medicamentosArray
-        };
-        localStorage.setItem('borradorRondines', JSON.stringify(data));
-        document.getElementById('aviso-guardado').style.display = 'block';
-        setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000);
+        localStorage.setItem('borradorRondines', JSON.stringify({ cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value, med: document.getElementById('medicamento').value, dos: document.getElementById('dosis').value, via: document.getElementById('via').value, hor: document.getElementById('horarios').value, obs: document.getElementById('pendientes').value, lista: window.medicamentosArray }));
+        document.getElementById('aviso-guardado').style.display = 'block'; setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000);
     };
 
     const b = JSON.parse(localStorage.getItem('borradorRondines'));
-    if(b) {
-        document.getElementById('cama').value = b.cama || ''; document.getElementById('paciente').value = b.paciente || '';
-        document.getElementById('medicamento').value = b.med || ''; document.getElementById('dosis').value = b.dos || '';
-        document.getElementById('via').value = b.via || 'IV'; document.getElementById('horarios').value = b.hor || '';
-        document.getElementById('pendientes').value = b.obs || ''; window.medicamentosArray = b.lista || [];
-        window.renderizarListaMeds();
-    }
+    if(b) { document.getElementById('cama').value = b.cama || ''; document.getElementById('paciente').value = b.paciente || ''; document.getElementById('medicamento').value = b.med || ''; document.getElementById('dosis').value = b.dos || ''; document.getElementById('via').value = b.via || 'IV'; document.getElementById('horarios').value = b.hor || ''; document.getElementById('pendientes').value = b.obs || ''; window.medicamentosArray = b.lista || []; window.renderizarListaMeds(); }
 
-    // ==========================================
-    // ESCANEO DE FOTOS Y DICTADO INTELIGENTE
-    // ==========================================
-    document.getElementById('foto-input').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        const btn = document.querySelector('button[onclick="document.getElementById(\'foto-input\').click()"]');
-        const temp = btn.innerHTML;
-        btn.innerHTML = "⏳ Extrayendo..."; btn.disabled = true;
-        Tesseract.recognize(file, 'spa').then(({ data: { text } }) => {
-            if (text.trim()) {
-                document.getElementById('pendientes').value += "\n📄 [ESCANEADO]:\n" + text.trim();
-                window.guardarBorrador();
-            } else alert("No se encontró texto.");
-            btn.innerHTML = temp; btn.disabled = false;
-        }).catch(() => { alert("Error al leer la imagen."); btn.innerHTML = temp; btn.disabled = false; });
-    });
-
-    function formatearDictadoMedico(texto) {
-        let t = texto.toLowerCase();
-        t = t.replace(/miligramos/g, 'MG').replace(/gramos/g, 'G').replace(/unidades/g, 'UI');
-        t = t.replace(/intravenos[oa]/g, 'IV').replace(/\bi v\b/g, 'IV');
-        t = t.replace(/por vía oral/g, 'VO').replace(/vía oral/g, 'VO').replace(/\boral\b/g, 'VO').replace(/\bv o\b/g, 'VO');
-        t = t.replace(/intramuscular/g, 'IM').replace(/subcutáne[oa]/g, 'SC');
-        t = t.replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b,c,d) => `${a.padStart(2,'0')}-${b.padStart(2,'0')}-${c.padStart(2,'0')}-${d.padStart(2,'0')}`);
-        t = t.replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b,c) => `${a.padStart(2,'0')}-${b.padStart(2,'0')}-${c.padStart(2,'0')}`);
-        t = t.replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b) => {
-            if(Number(a) <= 24 && Number(b) <= 24) return `${a.padStart(2,'0')}-${b.padStart(2,'0')}`; return m;
-        });
-        return t;
-    }
-
+    // DICTADO
     const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(sr) {
         const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
         rec.onresult = e => {
-            let rawText = ""; 
-            for(let i=e.resultIndex; i<e.results.length; i++) rawText += e.results[i][0].transcript;
-            distribuir(formatearDictadoMedico(rawText)); window.guardarBorrador();
-        };
-        document.getElementById('btn-dictar').onclick = () => {
-            if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictar"; }
-            else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 Parar"; }
-        };
-    }
-
-    function distribuir(t) {
-        const low = t.toLowerCase();
-        const dic = [
-            {id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']},
-            {id:'medicamento', p:['medicamento']}, {id:'dosis', p:['dosis']},
-            {id:'horarios', p:['horario', 'cada']}, {id:'pendientes', p:['observación','observaciones','pendiente','pendientes','nota','notas']}
-        ];
-        let pos = [];
-        dic.forEach(c => {
-            let idx = -1; let l = 0;
-            c.p.forEach(p => { let i = low.indexOf(p); if(i!==-1&&(idx===-1||i<idx)) {idx=i; l=p.length;} });
-            if(idx!==-1) pos.push({id:c.id, idx, l});
-        });
-        pos.sort((a,b) => a.idx - b.idx);
-        
-        if(!pos.length) { document.getElementById('pendientes').value += (document.getElementById('pendientes').value ? " " : "") + t; return; }
-        
-        ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => { document.getElementById(id).value = ''; });
-
-        for(let i=0; i<pos.length; i++){
-            let f = pos[i+1] ? pos[i+1].idx : t.length;
-            let val = t.substring(pos[i].idx + pos[i].l, f).trim();
-            if(val) {
-                if (pos[i].id === 'medicamento' || pos[i].id === 'dosis' || pos[i].id === 'horarios') {
-                    document.getElementById(pos[i].id).value = val.toUpperCase();
-                } else {
-                    document.getElementById(pos[i].id).value = val.charAt(0).toUpperCase() + val.slice(1);
-                }
+            let rT = ""; for(let i=e.resultIndex; i<e.results.length; i++) rT += e.results[i][0].transcript;
+            let t = rT.toLowerCase().replace(/miligramos/g, 'MG').replace(/gramos/g, 'G').replace(/unidades/g, 'UI').replace(/intravenos[oa]/g, 'IV').replace(/\bi v\b/g, 'IV').replace(/por vía oral/g, 'VO').replace(/vía oral/g, 'VO').replace(/\boral\b/g, 'VO').replace(/\bv o\b/g, 'VO').replace(/intramuscular/g, 'IM').replace(/subcutáne[oa]/g, 'SC').replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b,c,d) => `${a.padStart(2,'0')}-${b.padStart(2,'0')}-${c.padStart(2,'0')}-${d.padStart(2,'0')}`).replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b,c) => `${a.padStart(2,'0')}-${b.padStart(2,'0')}-${c.padStart(2,'0')}`).replace(/\b(\d{1,2})\s+(?:y\s+)?(\d{1,2})\b/g, (m,a,b) => { if(Number(a) <= 24 && Number(b) <= 24) return `${a.padStart(2,'0')}-${b.padStart(2,'0')}`; return m; });
+            
+            const low = t.toLowerCase();
+            const dic = [{id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']}, {id:'medicamento', p:['medicamento']}, {id:'dosis', p:['dosis']}, {id:'horarios', p:['horario', 'cada']}, {id:'pendientes', p:['observación','observaciones','pendiente','pendientes','nota','notas']}];
+            let pos = [];
+            dic.forEach(c => { let idx = -1; let l = 0; c.p.forEach(p => { let i = low.indexOf(p); if(i!==-1&&(idx===-1||i<idx)) {idx=i; l=p.length;} }); if(idx!==-1) pos.push({id:c.id, idx, l}); });
+            pos.sort((a,b) => a.idx - b.idx);
+            
+            if(!pos.length) { document.getElementById('pendientes').value += (document.getElementById('pendientes').value ? " " : "") + t; window.guardarBorrador(); return; }
+            ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => { document.getElementById(id).value = ''; });
+            for(let i=0; i<pos.length; i++){
+                let f = pos[i+1] ? pos[i+1].idx : t.length; let val = t.substring(pos[i].idx + pos[i].l, f).trim();
+                if(val) document.getElementById(pos[i].id).value = (pos[i].id === 'medicamento' || pos[i].id === 'dosis' || pos[i].id === 'horarios') ? val.toUpperCase() : val.charAt(0).toUpperCase() + val.slice(1);
             }
-        }
+            window.guardarBorrador();
+        };
+        document.getElementById('btn-dictar').onclick = () => { if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictar"; } else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 Parar"; } };
     }
 </script>
 </body>

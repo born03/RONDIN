@@ -3,135 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expediente Clínico Móvil Seguro</title>
+    <title>Expediente Clínico Seguro</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #eef2f5; margin: 0; padding: 15px; display: flex; justify-content: center; color: #2c3e50;}
         .container { background-color: #ffffff; padding: 25px 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); width: 100%; max-width: 500px; transition: max-width 0.3s ease; }
-        
         h2 { color: #0056b3; text-align: center; margin-top: 0; font-size: 22px; display: flex; align-items: center; justify-content: center; gap: 8px;}
         h3 { color: #34495e; text-align: center; font-size: 18px; margin-top: 0;}
-        
         .main-layout { display: flex; flex-direction: column; gap: 0; }
         .form-section { width: 100%; }
         .historial-seccion { margin-top: 35px; border-top: 2px solid #ecf0f1; padding-top: 25px; width: 100%; }
-
         .form-group { margin-bottom: 12px; }
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-width { grid-column: span 2; }
-        
         label { font-weight: 600; color: #5c6a79; font-size: 13px; margin-bottom: 5px; display: block; text-transform: uppercase; letter-spacing: 0.5px;}
-        input[type="text"], textarea { width: 100%; padding: 12px; border: 1.5px solid #dce4ec; border-radius: 10px; box-sizing: border-box; font-size: 15px; background-color: #fbfcff; transition: all 0.2s ease; }
-        input[type="text"]:focus, textarea:focus { border-color: #0056b3; background-color: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
+        input[type="text"], textarea, select { width: 100%; padding: 12px; border: 1.5px solid #dce4ec; border-radius: 10px; box-sizing: border-box; font-size: 15px; background-color: #fbfcff; }
+        input[type="text"]:focus, textarea:focus, select:focus { border-color: #0056b3; outline: none; box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); }
         textarea { resize: vertical; min-height: 90px; }
-        
         .caja-medicamentos { background-color: #f8fafd; border: 1.5px dashed #b8daff; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
         .titulo-caja { font-size: 14px; font-weight: bold; color: #0056b3; margin-bottom: 10px; margin-top: 0;}
-        .btn-add-med { background-color: #e8f4fd; color: #0056b3; border: 1px solid #b8daff; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
-        .btn-add-med:active { transform: scale(0.98); background-color: #d0e7fa;}
-        
-        .lista-temporal { list-style: none; padding: 0; margin: 10px 0 0 0; }
-        .item-med { background: #fff; border: 1px solid #dce4ec; padding: 8px 10px; border-radius: 6px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+        .btn-add-med { background-color: #e8f4fd; color: #0056b3; border: 1px solid #b8daff; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        .item-med { background: #fff; border: 1px solid #dce4ec; padding: 8px 10px; border-radius: 6px; font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-family: monospace; font-size: 14px;}
         .btn-quitar { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 16px; font-weight: bold; padding: 0 5px; }
-
         .botones-accion { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
-        .btn-accion { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 12px; width: 100%; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px; transition: all 0.2s;}
-        .btn-accion:active { transform: scale(0.98); }
-        .btn-accion.grabando { background-color: #ffebeb; color: #d63031; border-color: #ffcccc; animation: pulse 1.5s infinite; }
-        
-        .btn-enviar { background-color: #0056b3; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); transition: all 0.2s; }
-        .btn-enviar:active { transform: scale(0.98); box-shadow: 0 2px 5px rgba(0, 86, 179, 0.2); }
-        .btn-enviar:disabled { background-color: #95a5a6; box-shadow: none; cursor: not-allowed; }
-
+        .btn-accion { background-color: #e8f4fd; color: #0056b3; border: 1.5px solid #b8daff; padding: 12px; width: 100%; border-radius: 10px; font-size: 14px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px;}
+        .btn-enviar { background-color: #0056b3; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .tarjeta-pendiente { background-color: #ffffff; border: 1px solid #e1e8ed; border-left: 5px solid #e67e22; padding: 16px; margin-bottom: 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .tarjeta-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #ecf0f1; padding-bottom: 10px; margin-bottom: 10px; }
-        .t-cama { font-size: 20px; font-weight: 800; color: #0056b3; display: flex; align-items: center; gap: 5px;}
-        .t-paciente { font-size: 15px; color: #34495e; font-weight: 600; text-align: right;}
-        
-        .t-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .t-info { font-size: 13px; color: #5c6a79; background: #f8f9fa; padding: 8px; border-radius: 6px;}
-        .t-info strong { color: #2c3e50; display: block; font-size: 11px; text-transform: uppercase; margin-bottom: 2px;}
-        .t-notas { font-size: 14px; color: #1a252f; background: #fffcf5; padding: 12px; border-radius: 8px; border-left: 3px solid #f1c40f; margin-top: 5px; line-height: 1.4;}
-        
-        /* Contenedor de botones en cada tarjeta */
+        .t-cama { font-size: 20px; font-weight: 800; color: #0056b3; }
+        .t-paciente { font-size: 15px; color: #34495e; font-weight: 600; }
+        .t-notas, .t-horarios { font-size: 14px; padding: 12px; border-radius: 8px; margin-top: 10px; white-space: pre-line; border-left: 3px solid #ccc; }
+        .t-horarios { background: #f8f9fa; font-family: monospace; border-left-color: #3498db; }
+        .t-notas { background: #fffcf5; border-left-color: #f1c40f; }
         .acciones-tarjeta { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-resolver { flex: 2; background-color: #ffffff; color: #27ae60; border: 1.5px solid #2ecc71; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-resolver:hover { background-color: #2ecc71; color: #ffffff; }
-        .btn-copiar { flex: 1; background-color: #f8f9fa; color: #34495e; border: 1.5px solid #bdc3c7; padding: 10px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-copiar:hover { background-color: #ecf0f1; color: #2c3e50; }
-        
-        .info-dictado { font-size: 11px; color: #7f8c8d; text-align: center; margin-top: 5px; }
-        .aviso-guardado { font-size: 11px; color: #27ae60; text-align: center; margin-top: 8px; font-weight: bold; display: none;}
+        .btn-resolver { flex: 2; background: white; color: #27ae60; border: 1.5px solid #2ecc71; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-copiar { flex: 1; background: #f8f9fa; color: #34495e; border: 1.5px solid #bdc3c7; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         #foto-input { display: none; }
         .indicador-vivo { font-size: 12px; color: #27ae60; text-align: center; margin-bottom: 15px; font-weight: bold;}
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
-        /* ========================================================
-           COMPUTADORA: DISEÑO INVERTIDO Y FORMULARIO MENOS PROTAGÓNICO
-           ======================================================== */
+        
         @media (min-width: 900px) {
             body { padding: 20px; }
             .container { max-width: 1300px; padding: 30px; }
-            
-            /* Cambiamos el orden visual: Lista Izquierda, Formulario Derecha */
             .main-layout { flex-direction: row-reverse; gap: 40px; align-items: flex-start; }
-            
-            /* El formulario se vuelve una barra lateral estrecha (30% del espacio) */
-            .form-section { flex: 0 0 350px; position: sticky; top: 30px; background-color: #f8fafd; padding: 20px; border-radius: 12px; border: 1px solid #e1e8ed;}
-            .form-section h2 { font-size: 18px; margin-bottom: 20px; }
-            
-            /* La lista toma todo el protagonismo (70% del espacio) */
-            .historial-seccion { flex: 1; margin-top: 0; border-top: none; padding-top: 0; }
+            .form-section { flex: 0 0 380px; position: sticky; top: 30px; background: #f8fafd; padding: 20px; border-radius: 12px; border: 1px solid #e1e8ed;}
+            .historial-seccion { flex: 1; margin-top: 0; }
             h3 { text-align: left; font-size: 24px; color: #0056b3; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-bottom: 20px;}
             .indicador-vivo { text-align: left; margin-top: -15px; margin-bottom: 20px;}
-            
-            /* Hacemos que las tarjetas en la computadora se organicen en cuadrícula si hay muchas */
             #lista-pendientes { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 15px; }
-            .tarjeta-pendiente { margin-bottom: 0; }
         }
     </style>
 </head>
 <body>
 
+<datalist id="diccionario-meds">
+    <option value="AC. FOLINICO"><option value="AC. VALPROICO"><option value="ACICLOVIR">
+    <option value="ALBUMINA"><option value="AMIKACINA"><option value="AMPICILINA">
+    <option value="ANFOTERICINA B CONV"><option value="ANFOTERICINA B LIP"><option value="BENCILPENICILINA">
+    <option value="BUMETANIDA"><option value="BUPRENORFINA"><option value="BUTILHIOSCINA">
+    <option value="CAFEINA CITRATO"><option value="CASPOFUNGINA"><option value="CEFALOTINA">
+    <option value="CEFEPIMA"><option value="CEFOTAXIMA"><option value="CEFTAZIDIMA">
+    <option value="CEFTRIAXONA"><option value="CEFUROXIMA"><option value="CIPROFLOXACINO">
+    <option value="CLARITROMICINA"><option value="CLINDAMICINA"><option value="CLOROPIRAMINA">
+    <option value="COLISTIMETATO"><option value="DEXAMETASONA"><option value="DEXAMETASONA DEPOT">
+    <option value="DEXMEDETOMIDINA"><option value="DICLOFENACO"><option value="DIFENHIDRAMINA">
+    <option value="DIFENIDOL"><option value="ENOXAPARINA"><option value="ERITROPOYETINA">
+    <option value="ETAMSILATO"><option value="FENITOINA"><option value="FILGRASTIM">
+    <option value="FITOMENADIONA"><option value="FLUCONAZOL"><option value="FOSAPREPITANT">
+    <option value="FOSFOMICINA"><option value="FUROSEMIDA"><option value="GANCICLOVIR">
+    <option value="GENTAMICINA"><option value="HEPARINA"><option value="HIDRALAZINA">
+    <option value="HIDROCORTISONA"><option value="KETOROLACO"><option value="IBUPROFENO">
+    <option value="LEVETIRACETAM"><option value="LEVOFLOXACINO"><option value="LINEZOLID">
+    <option value="MEROPENEM"><option value="METAMIZOL"><option value="METILPREDNISOLONA">
+    <option value="METOCLOPRAMIDA"><option value="METRONIDAZOL"><option value="OCTREOTIDA">
+    <option value="OMEPRAZOL"><option value="ONDANSETRON"><option value="PARACETAMOL">
+    <option value="PIPERACILINA"><option value="SOMATROPINA"><option value="TEICOPLANINA">
+    <option value="TIAMINA"><option value="TIGECICLINA"><option value="TRAMADOL">
+    <option value="TRIMETOPRIM"><option value="VANCOMICINA"><option value="VORICONAZOL">
+</datalist>
+
 <div class="container">
-    
     <div class="main-layout">
-        
         <div class="form-section">
-            <h2 style="display: none;" class="titulo-pc">🏥 Nuevo Ingreso</h2>
+            <h2 id="titulo-dinamico" class="titulo-pc" style="display:none;">🏥 Nuevo Ingreso</h2>
             <div class="botones-accion">
                 <button id="btn-dictar" class="btn-accion">🎙️ Dictar</button>
                 <button class="btn-accion" onclick="document.getElementById('foto-input').click()">📷 Escanear Foto</button>
                 <input type="file" id="foto-input" accept="image/*" capture="environment">
             </div>
-            <div class="info-dictado">Usa voz o escanea texto impreso.</div>
 
             <div class="grid-form" style="margin-top: 15px;">
                 <div class="form-group">
-                    <label>Cama / Hab.</label>
+                    <label>Cama</label>
                     <input type="text" id="cama" placeholder="Ej. 302" oninput="window.guardarBorrador()">
                 </div>
                 <div class="form-group">
                     <label>Paciente</label>
-                    <input type="text" id="paciente" placeholder="Ej. J.P.M" oninput="window.guardarBorrador()">
+                    <input type="text" id="paciente" placeholder="Nombre" oninput="window.guardarBorrador()">
                 </div>
             </div>
 
             <div class="caja-medicamentos">
-                <p class="titulo-caja">💊 Indicaciones</p>
+                <p class="titulo-caja">💊 Indicaciones (Horarios)</p>
                 <div class="grid-form">
                     <div class="form-group full-width">
                         <label>Medicamento</label>
-                        <input type="text" id="medicamento" placeholder="Ej. Ketorolaco" oninput="window.guardarBorrador()">
+                        <input type="text" id="medicamento" list="diccionario-meds" placeholder="Buscar..." oninput="window.guardarBorrador()" style="text-transform: uppercase;">
                     </div>
                     <div class="form-group">
                         <label>Dosis</label>
-                        <input type="text" id="dosis" placeholder="Ej. 30mg" oninput="window.guardarBorrador()">
+                        <input type="text" id="dosis" placeholder="Ej. 150 MG" oninput="window.guardarBorrador()" style="text-transform: uppercase;">
                     </div>
                     <div class="form-group">
+                        <label>Vía</label>
+                        <select id="via" onchange="window.guardarBorrador()">
+                            <option value="IV">IV</option><option value="VO">VO</option><option value="IM">IM</option>
+                            <option value="SC">SC</option><option value="SL">SL</option><option value="INHAL">INHAL</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
                         <label>Horarios</label>
-                        <input type="text" id="horarios" placeholder="Ej. 8 hrs" oninput="window.guardarBorrador()">
+                        <input type="text" id="horarios" placeholder="Ej. 10-18-02" oninput="window.guardarBorrador()">
                     </div>
                 </div>
                 <button type="button" class="btn-add-med" onclick="window.agregarMedicamento()">➕ Añadir a la lista</button>
@@ -139,28 +129,24 @@
             </div>
 
             <div class="form-group full-width">
-                <label>Notas Clínicas / Pendientes</label>
-                <textarea id="pendientes" placeholder="Si dictas, aparecerá aquí..." oninput="window.guardarBorrador()"></textarea>
+                <label>Observaciones</label>
+                <textarea id="pendientes" placeholder="Dictado libre aquí..." oninput="window.guardarBorrador()"></textarea>
             </div>
 
             <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()">💾 Guardar en Nube</button>
-            <div id="aviso-guardado" class="aviso-guardado">Borrador local guardado...</div>
+            <div id="aviso-guardado" style="font-size:11px; color:#27ae60; text-align:center; margin-top:5px; display:none;">Borrador guardado...</div>
         </div>
 
         <div class="historial-seccion">
             <h2 class="titulo-movil">🏥 Expediente Seguro</h2>
             <h3>📋 Casos Activos en Sala</h3>
             <div class="indicador-vivo">🟢 Conectado en Tiempo Real</div>
-            <div id="lista-pendientes">
-                <p style="text-align:center; color:#7f8c8d; font-size: 14px;">Conectando a la bóveda...</p>
-            </div>
+            <div id="lista-pendientes"><p style="text-align:center; color:#7f8c8d;">Conectando...</p></div>
         </div>
-
     </div>
 </div>
 
 <script>
-    // Pequeño script para manejar los títulos según la pantalla
     if (window.innerWidth >= 900) {
         document.querySelector('.titulo-pc').style.display = 'block';
         document.querySelector('.titulo-movil').style.display = 'none';
@@ -171,7 +157,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // 🔴🔴🔴 PEGA TU FIREBASE CONFIG AQUÍ (Tus llaves) 🔴🔴🔴
+    // YA ESTÁN TUS LLAVES AQUÍ INTEGRADAS
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
@@ -186,287 +172,183 @@
     const db = getFirestore(app);
     const pacientesRef = collection(db, "pacientes");
 
-    // TIEMPO REAL CON RENDERIZADO
-    const q = query(pacientesRef); 
-    
-    onSnapshot(q, (snapshot) => {
+    // LECTURA EN TIEMPO REAL
+    onSnapshot(query(pacientesRef), (snapshot) => {
         const contenedor = document.getElementById('lista-pendientes');
-        let pacientesActivos = [];
+        let activos = [];
         
-        snapshot.forEach((documento) => {
-            const item = documento.data();
-            if(item.estado === "Activo") { pacientesActivos.push({ id: documento.id, ...item }); }
+        snapshot.forEach(d => { 
+            if(d.data().estado === "Activo") activos.push({id: d.id, ...d.data()}); 
         });
-
-        pacientesActivos.sort((a, b) => {
-            const tiempoA = a.fecha ? a.fecha.toMillis() : 0;
-            const tiempoB = b.fecha ? b.fecha.toMillis() : 0;
-            return tiempoB - tiempoA;
-        });
-
-        if (pacientesActivos.length === 0) {
-            contenedor.innerHTML = '<p style="text-align:center; color:#27ae60; font-weight:600; padding: 20px; background: #e8f8f5; border-radius: 8px;">✔️ Sala al día. No hay pendientes.</p>';
-            return;
+        
+        activos.sort((a,b) => (b.fecha?.toMillis() || 0) - (a.fecha?.toMillis() || 0));
+        
+        if(!activos.length) { 
+            contenedor.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold; color:#27ae60; background:#e8f8f5; border-radius:8px;">✔️ SALA AL DÍA</p>'; 
+            return; 
         }
 
-        let nuevoHTML = '';
-        pacientesActivos.forEach((item) => {
-            const formatText = (text) => text ? text.replace(/\n/g, '<br>') : '';
-            // Empaquetamos los datos limpios para el botón de copiar
-            const dataString = encodeURIComponent(JSON.stringify(item));
-            
-            nuevoHTML += `
-                <div class="tarjeta-pendiente">
-                    <div class="tarjeta-header">
-                        <span class="t-cama">🛏️ ${item.cama}</span>
-                        <span class="t-paciente">👤 ${item.paciente}</span>
-                    </div>
-                    <div class="t-grid">
-                        ${item.medicamento ? `<div class="t-info"><strong>Medicamento(s)</strong>${formatText(item.medicamento)}</div>` : ''}
-                        ${item.dosis ? `<div class="t-info"><strong>Dosis</strong>${formatText(item.dosis)}</div>` : ''}
-                        ${item.horarios ? `<div class="t-info" style="grid-column: span 2;"><strong>Horarios</strong>${formatText(item.horarios)}</div>` : ''}
-                    </div>
-                    ${item.pendientes ? `<div class="t-notas"><strong>Pendientes:</strong><br>${formatText(item.pendientes)}</div>` : ''}
-                    
-                    <div class="acciones-tarjeta">
-                        <button class="btn-resolver" onclick="window.marcarResuelto('${item.id}', this)">✓ Atendido</button>
-                        <button class="btn-copiar" onclick="window.copiarTabla(this, '${dataString}')">📋 Copiar para Tabla</button>
-                    </div>
+        contenedor.innerHTML = activos.map(item => `
+            <div class="tarjeta-pendiente">
+                <div class="tarjeta-header">
+                    <span class="t-cama">🛏️ ${item.cama || 'S/N'}</span>
+                    <span class="t-paciente">👤 ${item.paciente || 'S/N'}</span>
                 </div>
-            `;
-        });
-        contenedor.innerHTML = nuevoHTML;
-    }, (error) => {
-        console.error("Error al conectar:", error);
-        document.getElementById('lista-pendientes').innerHTML = `<p style="text-align:center; color:#e74c3c; font-weight:bold;">❌ Error de Firebase: ${error.message}</p>`;
+                ${item.columnaHorarios ? `<div class="t-horarios"><strong>HORARIOS:</strong><br>${item.columnaHorarios.replace(/\n/g, '<br>')}</div>` : ''}
+                ${item.pendientes ? `<div class="t-notas"><strong>OBSERVACIONES:</strong><br>${item.pendientes.replace(/\n/g, '<br>')}</div>` : ''}
+                <div class="acciones-tarjeta">
+                    <button class="btn-resolver" onclick="window.marcarResuelto('${item.id}', this)">✓ Atendido</button>
+                    <button class="btn-copiar" onclick="window.copiarTabla(this, '${encodeURIComponent(JSON.stringify(item))}')">📋 Copiar a Excel</button>
+                </div>
+            </div>
+        `).join('');
     });
 
-    // --- NUEVA FUNCIÓN: COPIAR PARA TABLAS DE EXCEL/WORD ---
-    window.copiarTabla = function(boton, dataStringEncoded) {
-        // Desempaquetamos los datos del paciente
-        const item = JSON.parse(decodeURIComponent(dataStringEncoded));
+    // COPIAR A EXCEL (CELDA ÚNICA PARA HORARIOS Y OBSERVACIONES)
+    window.copiarTabla = function(boton, data) {
+        const item = JSON.parse(decodeURIComponent(data));
+        const horariosExcel = item.columnaHorarios ? `"${item.columnaHorarios.replace(/"/g, '""')}"` : '""';
+        const obsExcel = item.pendientes ? `"${item.pendientes.replace(/"/g, '""')}"` : '""';
         
-        // Limpiamos los saltos de línea y viñetas para que no arruinen las celdas de Excel
-        const medLimpio = (item.medicamento || 'Ninguno').replace(/\n/g, ' / ').replace(/• /g, '');
-        const pendLimpio = (item.pendientes || 'Ninguno').replace(/\n/g, ' / ');
-        const camaLimpio = item.cama || 'N/A';
-        const pacLimpio = item.paciente || 'N/A';
-
-        // MAGIA: El \t (tabulación) hace que Excel salte a la siguiente columna al pegarlo
-        const textoTabulado = `${camaLimpio}\t${pacLimpio}\t${medLimpio}\t${pendLimpio}`;
-
-        navigator.clipboard.writeText(textoTabulado).then(() => {
-            const textoOriginal = boton.innerHTML;
-            boton.innerHTML = "✅ ¡Copiado!";
-            boton.style.backgroundColor = "#d4edda";
-            setTimeout(() => {
-                boton.innerHTML = textoOriginal;
-                boton.style.backgroundColor = "#f8f9fa";
-            }, 2000);
-        }).catch(err => {
-            alert("Tu navegador no permite copiar al portapapeles automáticamente.");
-        });
+        const texto = `${item.cama || ''}\t${item.paciente || ''}\t${horariosExcel}\t${obsExcel}`;
+        
+        navigator.clipboard.writeText(texto).then(() => {
+            const temp = boton.innerHTML;
+            boton.innerHTML = "✅ ¡Copiado!"; 
+            setTimeout(() => boton.innerHTML = temp, 2000);
+        }).catch(() => alert("Tu navegador bloqueó el portapapeles."));
     };
 
-    // --- ENVIAR REPORTE ---
+    // GUARDAR EN FIREBASE
     window.enviarReporte = async function() {
         const cama = document.getElementById('cama').value;
         const paciente = document.getElementById('paciente').value;
-        const btnEnviar = document.getElementById('btn-enviar');
         const notas = document.getElementById('pendientes').value;
         
-        window.agregarMedicamento(); 
-
-        if(!cama && !paciente && window.medicamentosArray.length === 0 && !notas) { 
-            alert("El expediente está vacío."); return; 
-        }
-
-        btnEnviar.innerHTML = "⏳ Guardando..."; btnEnviar.disabled = true;
-
-        let medFinal = "", dosFinal = "", horFinal = "";
-        window.medicamentosArray.forEach(item => {
-            medFinal += (item.med ? "• " + item.med : "• -") + "\n";
-            dosFinal += (item.dos ? "• " + item.dos : "• -") + "\n";
-            horFinal += (item.hor ? "• " + item.hor : "• -") + "\n";
-        });
+        window.agregarMedicamento();
+        if(!cama && !paciente && !window.medicamentosArray.length && !notas) return;
+        
+        const btn = document.getElementById('btn-enviar');
+        btn.disabled = true; btn.innerHTML = "⏳ Guardando...";
+        
+        const bloque = window.medicamentosArray.map(m => `${m.med} ${m.dos} ${m.via} ${m.hor}`).join('\n');
 
         try {
             await addDoc(pacientesRef, {
-                cama: cama,
-                paciente: paciente,
-                medicamento: medFinal.trim(),
-                dosis: dosFinal.trim(),
-                horarios: horFinal.trim(),
-                pendientes: notas,
-                estado: "Activo",
-                fecha: serverTimestamp() 
+                cama, paciente, columnaHorarios: bloque, pendientes: notas, estado: "Activo", fecha: serverTimestamp()
             });
+            document.querySelectorAll('input[type="text"], textarea').forEach(i => i.value = '');
+            document.getElementById('via').value = 'IV';
+            window.medicamentosArray = []; window.renderizarListaMeds();
+            localStorage.removeItem('borradorRondines');
+        } catch (e) { alert(e.message); }
+        btn.disabled = false; btn.innerHTML = "💾 Guardar en Nube";
+    };
 
-            document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
-            window.medicamentosArray = [];
-            window.renderizarListaMeds();
-            localStorage.removeItem('borradorRondines'); 
-            window.textoAcumulado = ""; 
-
-            btnEnviar.innerHTML = "💾 Guardar en Nube"; btnEnviar.disabled = false;
-        } catch (error) {
-            console.error("Error al guardar: ", error);
-            alert("Error: " + error.message);
-            btnEnviar.innerHTML = "💾 Guardar en Nube"; btnEnviar.disabled = false;
+    // MARCAR COMO RESUELTO
+    window.marcarResuelto = async (id, b) => {
+        if(confirm("¿Confirmas que el paciente ha sido atendido?")) {
+            b.disabled = true;
+            b.innerHTML = "⏳ Actualizando...";
+            await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp() });
         }
     };
 
-    // --- MARCAR RESUELTO ---
-    window.marcarResuelto = async function(idFirebase, boton) {
-        if(!confirm("¿Confirmas que el paciente ha sido atendido?")) return;
-        
-        boton.innerHTML = "⏳ Actualizando bóveda...";
-        boton.disabled = true;
-        boton.parentElement.parentElement.style.opacity = '0.5';
-
-        try {
-            const pacienteRef = doc(db, "pacientes", idFirebase);
-            await updateDoc(pacienteRef, {
-                estado: "Resuelto",
-                fechaResolucion: serverTimestamp()
-            });
-        } catch (error) {
-            console.error("Error al actualizar: ", error);
-            alert("Error: " + error.message);
-            boton.disabled = false; boton.parentElement.parentElement.style.opacity = '1';
-        }
+    // LÓGICA DE DICCIONARIO Y MEDICAMENTOS
+    window.medicamentosArray = [];
+    window.agregarMedicamento = () => {
+        const med = document.getElementById('medicamento').value.trim().toUpperCase();
+        const dos = document.getElementById('dosis').value.trim().toUpperCase();
+        const via = document.getElementById('via').value;
+        const hor = document.getElementById('horarios').value.trim();
+        if(!med && !dos && !hor) return;
+        window.medicamentosArray.push({med, dos, via, hor});
+        ['medicamento','dosis','horarios'].forEach(i => document.getElementById(i).value = '');
+        window.renderizarListaMeds(); window.guardarBorrador();
     };
 
-    // --- ESCANEO IMAGEN ---
-    const fotoInput = document.getElementById('foto-input');
-    const txtPendientes = document.getElementById('pendientes');
-    fotoInput.addEventListener('change', (e) => {
+    window.renderizarListaMeds = () => {
+        document.getElementById('lista-med-temporal').innerHTML = window.medicamentosArray.map((m,i) => `
+            <li class="item-med"><span>${m.med} ${m.dos} ${m.via} ${m.hor}</span>
+            <button class="btn-quitar" onclick="window.quitarMedicamento(${i})">×</button></li>
+        `).join('');
+    };
+
+    window.quitarMedicamento = (i) => { window.medicamentosArray.splice(i,1); window.renderizarListaMeds(); window.guardarBorrador(); };
+
+    window.guardarBorrador = () => {
+        const data = {
+            cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value,
+            med: document.getElementById('medicamento').value, dos: document.getElementById('dosis').value,
+            via: document.getElementById('via').value, hor: document.getElementById('horarios').value,
+            obs: document.getElementById('pendientes').value, lista: window.medicamentosArray
+        };
+        localStorage.setItem('borradorRondines', JSON.stringify(data));
+        document.getElementById('aviso-guardado').style.display = 'block';
+        setTimeout(() => document.getElementById('aviso-guardado').style.display = 'none', 2000);
+    };
+
+    // RECUPERAR BORRADOR
+    const b = JSON.parse(localStorage.getItem('borradorRondines'));
+    if(b) {
+        document.getElementById('cama').value = b.cama || ''; document.getElementById('paciente').value = b.paciente || '';
+        document.getElementById('medicamento').value = b.med || ''; document.getElementById('dosis').value = b.dos || '';
+        document.getElementById('via').value = b.via || 'IV'; document.getElementById('horarios').value = b.hor || '';
+        document.getElementById('pendientes').value = b.obs || ''; window.medicamentosArray = b.lista || [];
+        window.renderizarListaMeds();
+    }
+
+    // TESSERACT (FOTOS)
+    document.getElementById('foto-input').addEventListener('change', (e) => {
         const file = e.target.files[0];
         if(!file) return;
-        const btnScanner = document.querySelector('button[onclick="document.getElementById(\'foto-input\').click()"]');
-        const textoOriginalBoton = btnScanner.innerHTML;
-        btnScanner.innerHTML = "⏳ Extrayendo texto..."; btnScanner.disabled = true;
-
+        const btn = document.querySelector('button[onclick="document.getElementById(\'foto-input\').click()"]');
+        const temp = btn.innerHTML;
+        btn.innerHTML = "⏳ Extrayendo..."; btn.disabled = true;
         Tesseract.recognize(file, 'spa').then(({ data: { text } }) => {
-            const textoLimpio = text.trim();
-            if (textoLimpio) {
-                txtPendientes.value += (txtPendientes.value ? "\n\n" : "") + "📄 [TEXTO ESCANEADO]:\n" + textoLimpio;
+            if (text.trim()) {
+                document.getElementById('pendientes').value += "\n📄 [ESCANEADO]:\n" + text.trim();
                 window.guardarBorrador();
-            } else { alert("No se encontró texto claro."); }
-            btnScanner.innerHTML = textoOriginalBoton; btnScanner.disabled = false;
-        }).catch(err => {
-            alert("Error al leer la imagen."); btnScanner.innerHTML = textoOriginalBoton; btnScanner.disabled = false;
-        });
+            } else alert("No se encontró texto.");
+            btn.innerHTML = temp; btn.disabled = false;
+        }).catch(() => { alert("Error al leer la imagen."); btn.innerHTML = temp; btn.disabled = false; });
     });
 
-    // --- BORRADOR Y MEDICAMENTOS ---
-    window.medicamentosArray = [];
-    window.onload = () => {
-        const borrador = JSON.parse(localStorage.getItem('borradorRondines'));
-        if (borrador) {
-            document.getElementById('cama').value = borrador.cama || '';
-            document.getElementById('paciente').value = borrador.paciente || '';
-            document.getElementById('medicamento').value = borrador.med_temp || '';
-            document.getElementById('dosis').value = borrador.dos_temp || '';
-            document.getElementById('horarios').value = borrador.hor_temp || '';
-            document.getElementById('pendientes').value = borrador.pendientes || '';
-            window.medicamentosArray = borrador.listaMeds || [];
-            window.renderizarListaMeds();
-        }
-    };
-
-    window.guardarBorrador = function() {
-        const borrador = {
-            cama: document.getElementById('cama').value, paciente: document.getElementById('paciente').value,
-            med_temp: document.getElementById('medicamento').value, dos_temp: document.getElementById('dosis').value,
-            hor_temp: document.getElementById('horarios').value, pendientes: document.getElementById('pendientes').value,
-            listaMeds: window.medicamentosArray
+    // DICTADO POR VOZ INTELIGENTE
+    const sr = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(sr) {
+        const rec = new sr(); rec.lang = 'es-MX'; rec.continuous = true;
+        rec.onresult = e => {
+            let t = ""; for(let i=e.resultIndex; i<e.results.length; i++) t += e.results[i][0].transcript;
+            distribuir(t); window.guardarBorrador();
         };
-        localStorage.setItem('borradorRondines', JSON.stringify(borrador));
-        const aviso = document.getElementById('aviso-guardado');
-        aviso.style.display = 'block'; setTimeout(() => aviso.style.display = 'none', 2000);
-    };
-
-    window.agregarMedicamento = function() {
-        const med = document.getElementById('medicamento').value.trim();
-        const dos = document.getElementById('dosis').value.trim();
-        const hor = document.getElementById('horarios').value.trim();
-        if (!med && !dos && !hor) return;
-
-        window.medicamentosArray.push({ med, dos, hor });
-        document.getElementById('medicamento').value = ''; document.getElementById('dosis').value = ''; document.getElementById('horarios').value = '';
-        window.renderizarListaMeds(); window.guardarBorrador();
-    };
-
-    window.quitarMedicamento = function(index) {
-        window.medicamentosArray.splice(index, 1);
-        window.renderizarListaMeds(); window.guardarBorrador();
-    };
-
-    window.renderizarListaMeds = function() {
-        const lista = document.getElementById('lista-med-temporal'); lista.innerHTML = '';
-        window.medicamentosArray.forEach((item, index) => {
-            let texto = `<b>${item.med || 'Sin nombre'}</b>`;
-            if(item.dos) texto += ` - ${item.dos}`; if(item.hor) texto += ` (${item.hor})`;
-            lista.innerHTML += `<li class="item-med"><span>${texto}</span><button class="btn-quitar" onclick="window.quitarMedicamento(${index})">×</button></li>`;
-        });
-    };
-
-    // --- DICTADO INTELIGENTE ---
-    const btnDictar = document.getElementById('btn-dictar');
-    let dictando = false; window.textoAcumulado = ""; 
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true; recognition.interimResults = false; recognition.lang = 'es-MX'; 
-        recognition.onstart = function() { window.textoAcumulado = ""; };
-        recognition.onresult = event => {
-            let fraseNueva = '';
-            for (let i = event.resultIndex; i < event.results.length; i++) { fraseNueva += event.results[i][0].transcript; }
-            window.textoAcumulado += fraseNueva + " ";
-            distribuirTextoInteligente(window.textoAcumulado);
-            window.guardarBorrador(); 
+        document.getElementById('btn-dictar').onclick = () => {
+            if(window.dictando) { rec.stop(); window.dictando=false; document.getElementById('btn-dictar').innerHTML="🎙️ Dictar"; }
+            else { rec.start(); window.dictando=true; document.getElementById('btn-dictar').innerHTML="🛑 Parar"; }
         };
-        recognition.onerror = () => { btnDictar.innerHTML = "🎙️ Dictar"; btnDictar.classList.remove('grabando'); dictando = false; };
-        btnDictar.addEventListener('click', () => {
-            if (!dictando) { recognition.start(); btnDictar.innerHTML = "⏹️ Detener"; btnDictar.classList.add('grabando'); dictando = true; 
-            } else { recognition.stop(); btnDictar.innerHTML = "🎙️ Dictar"; btnDictar.classList.remove('grabando'); dictando = false; }
-        });
-    } else { btnDictar.style.display = 'none'; }
+    }
 
-    function distribuirTextoInteligente(textoTotal) {
-        const txt = textoTotal.toLowerCase();
-        const diccionario = [
-            { id: 'cama', palabras: ['cama ', 'habitación ', 'habitacion '] }, { id: 'paciente', palabras: ['paciente '] },
-            { id: 'medicamento', palabras: ['medicamento ', 'medicamentos '] }, { id: 'dosis', palabras: ['dosis '] },
-            { id: 'horarios', palabras: ['horario ', 'horarios '] }, { id: 'pendientes', palabras: ['pendiente ', 'pendientes ', 'nota ', 'notas '] }
+    function distribuir(t) {
+        const low = t.toLowerCase();
+        const dic = [
+            {id:'cama', p:['cama','habitación']}, {id:'paciente', p:['paciente']},
+            {id:'medicamento', p:['medicamento']}, {id:'dosis', p:['dosis']},
+            {id:'horarios', p:['horario']}, {id:'pendientes', p:['observación','pendiente','nota']}
         ];
-        let posiciones = [];
-        diccionario.forEach(categoria => {
-            let mejorIndice = -1; let longitud = 0;
-            categoria.palabras.forEach(palabra => {
-                let idx = txt.indexOf(palabra);
-                if (idx !== -1 && (mejorIndice === -1 || idx < mejorIndice)) { mejorIndice = idx; longitud = palabra.length; }
-            });
-            if (mejorIndice !== -1) posiciones.push({ id: categoria.id, index: mejorIndice, length: longitud });
+        let pos = [];
+        dic.forEach(c => {
+            let idx = -1; let l = 0;
+            c.p.forEach(p => { let i = low.indexOf(p); if(i!==-1&&(idx===-1||i<idx)) {idx=i; l=p.length;} });
+            if(idx!==-1) pos.push({id:c.id, idx, l});
         });
-        posiciones.sort((a, b) => a.index - b.index);
-
-        if (posiciones.length === 0) { document.getElementById('pendientes').value = textoTotal; return; }
-        ['cama', 'paciente', 'medicamento', 'dosis', 'horarios', 'pendientes'].forEach(id => { document.getElementById(id).value = ''; });
-
-        for (let i = 0; i < posiciones.length; i++) {
-            let actual = posiciones[i]; let siguiente = posiciones[i + 1];
-            let inicio = actual.index + actual.length; let fin = siguiente ? siguiente.index : txt.length;
-            let textoExtraido = textoTotal.substring(inicio, fin).trim();
-            if (textoExtraido) {
-                textoExtraido = textoExtraido.charAt(0).toUpperCase() + textoExtraido.slice(1);
-                document.getElementById(actual.id).value = textoExtraido;
-            }
+        pos.sort((a,b) => a.idx - b.idx);
+        if(!pos.length) { document.getElementById('pendientes').value = t; return; }
+        for(let i=0; i<pos.length; i++){
+            let f = pos[i+1] ? pos[i+1].idx : t.length;
+            let val = t.substring(pos[i].idx + pos[i].l, f).trim();
+            if(val) document.getElementById(pos[i].id).value = (pos[i].id==='medicamento'||pos[i].id==='dosis') ? val.toUpperCase() : val;
         }
     }
 </script>
-
 </body>
 </html>

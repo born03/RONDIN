@@ -23,7 +23,7 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
-           MAYÚSCULAS GLOBALES
+           MAYÚSCULAS GLOBALES VISUALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
             text-transform: uppercase;
@@ -51,7 +51,7 @@
            =================================================== */
         .main-layout { display: flex; flex-direction: column; gap: 15px; }
         .form-section { background: var(--bg-body); border-radius: 10px; padding: 15px; border: 1px solid var(--border); }
-        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; text-transform: uppercase;}
+        .section-title { font-size: 16px; font-weight: 700; margin-top: 0; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px;}
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;}
         .full-width { grid-column: span 2; }
@@ -117,7 +117,7 @@
         .btn-ver-nota { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary); border-radius: 4px; cursor: pointer; padding: 2px 8px; font-size: 10px; font-weight: bold;}
 
         /* ===================================================
-           VISTA 2: ENTREGA DE GUARDIA (CON SUBRAYADO)
+           VISTA 2: ENTREGA DE GUARDIA
            =================================================== */
         .entrega-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .nav-servicios { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border); scrollbar-width: none;}
@@ -150,7 +150,7 @@
         .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
 
         /* ===================================================
-           VISTA 3: PENDIENTES (TO-DO LIST)
+           VISTA 3: PENDIENTES
            =================================================== */
         .pendientes-container { background: var(--surface); border-radius: 10px; padding: 15px; border: 1px solid var(--border); width: 100%; box-sizing: border-box;}
         .todo-input-group { display: flex; gap: 8px; margin-bottom: 15px; }
@@ -178,16 +178,15 @@
         #texto-celda-visual { height: 150px; overflow-y: auto; margin-bottom: 10px; }
         #input-nueva-nota { min-height: 60px; resize: vertical; }
 
-        /* 🔥 TOASTS AJUSTADOS (Cursor pointer) */
+        /* TOASTS */
         #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999;}
-        .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer; text-transform: uppercase;}
+        .toast { background: var(--text-main); color: white; padding: 12px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; transform: translateX(120%); transition: transform 0.4s; border-left: 4px solid var(--primary); cursor: pointer; text-transform: uppercase; box-shadow: 0 10px 25px rgba(0,0,0,0.4);}
         .toast.show { transform: translateX(0); }
 
         #modal-visor-img { flex-direction: column; cursor: zoom-out; }
         .visor-content { position: relative; max-width: 95vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;}
         .visor-content img { max-width: 100%; max-height: 90vh; border-radius: 8px; object-fit: contain; background: #000;}
 
-        /* BARRA DE HERRAMIENTAS MINI PARA MODAL CELULAR */
         .mini-toolbar { display: flex; gap: 5px; margin-bottom: 8px; background: #f1f5f9; padding: 6px; border-radius: 6px; border: 1px solid var(--border); align-items: center;}
         .mini-toolbar button { padding: 4px 10px; cursor: pointer; font-weight: bold; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; font-size: 12px; color: var(--text-main);}
 
@@ -223,13 +222,11 @@
 <div id="modal-celda" class="modal-overlay">
     <div class="modal-content">
         <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
-        
         <div class="mini-toolbar">
             <button onclick="document.execCommand('underline', false, null)" style="text-decoration:underline;">U</button>
             <button onclick="document.execCommand('bold', false, null)">B</button>
             <span style="font-size: 10px; color: var(--text-muted); margin-left: 5px;">SELECCIONA EL TEXTO NUEVO Y SUBRÁYALO</span>
         </div>
-
         <div id="texto-celda-visual" contenteditable="true"></div>
         <div class="modal-actions">
             <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
@@ -391,7 +388,7 @@
     window.pacienteModalActual = null; 
 
     // ==========================================
-    // TOASTS Y NAVEGACIÓN A PACIENTE
+    // TOASTS Y NAVEGACIÓN A PACIENTE (CON NOMBRES CLAROS)
     // ==========================================
     window.mostrarToast = function(mensaje, targetId = null) {
         const container = document.getElementById('toast-container');
@@ -401,43 +398,27 @@
         
         toast.innerHTML = `<div style="display:flex; flex-direction:column;"><span>${mensaje.toUpperCase()}</span>${hint}</div> <span class="cerrar-toast" style="font-size:18px; opacity:0.7; cursor:pointer; padding-left:10px;">&times;</span>`;
         
-        toast.onclick = (e) => { e.stopPropagation(); }; // Evitar que clic simple lo cierre y deje hacer doble clic
-        
-        toast.querySelector('.cerrar-toast').onclick = (e) => { 
-            e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); 
-        };
+        toast.onclick = (e) => { e.stopPropagation(); }; 
+        toast.querySelector('.cerrar-toast').onclick = (e) => { e.stopPropagation(); toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); };
 
         if (targetId) {
             toast.ondblclick = (e) => {
                 e.stopPropagation();
                 cambiarPestana('pestana-expediente', document.querySelector('.tab-btn[onclick*="pestana-expediente"]'));
-                
                 setTimeout(() => {
                     const targetEl = document.getElementById(`paciente-${targetId}`);
                     if (targetEl) {
                         targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        const bg = targetEl.style.backgroundColor;
-                        targetEl.style.backgroundColor = '#ccfbf1';
-                        targetEl.style.transition = 'background 0.8s';
-                        setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
+                        const bg = targetEl.style.backgroundColor; targetEl.style.backgroundColor = '#ccfbf1';
+                        targetEl.style.transition = 'background 0.8s'; setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
                     }
                 }, 100);
-
                 toast.classList.remove('show'); setTimeout(() => toast.remove(), 400);
             };
         }
 
         container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 100);
-        
-        setTimeout(() => { 
-            const rem = (e) => { 
-                if (!e.target.closest('.toast')) {
-                    toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); 
-                    document.removeEventListener('click', rem); document.removeEventListener('touchstart', rem);
-                }
-            }; 
-            document.addEventListener('click', rem); document.addEventListener('touchstart', rem); 
-        }, 1000);
+        setTimeout(() => { const rem = (e) => { if (!e.target.closest('.toast')) { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); document.removeEventListener('click', rem); document.removeEventListener('touchstart', rem); } }; document.addEventListener('click', rem); document.addEventListener('touchstart', rem); }, 1000);
     };
 
     window.cambiarPestana = function(id, btn) {
@@ -466,9 +447,7 @@
         div.innerHTML = htmlString;
         const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT, null, false);
         let node;
-        while ((node = walker.nextNode())) {
-            node.nodeValue = node.nodeValue.toUpperCase();
-        }
+        while ((node = walker.nextNode())) { node.nodeValue = node.nodeValue.toUpperCase(); }
         return div.innerHTML;
     }
 
@@ -493,7 +472,7 @@
     document.getElementById('btn-quitar-foto').addEventListener('click', (e) => { e.stopPropagation(); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; });
 
     // ==========================================
-    // EXPEDIENTE MODO CENSO
+    // EXPEDIENTE MODO CENSO (CON NOMBRES DE ALERTAS AJUSTADOS)
     // ==========================================
     let isFirstLoad = true;
 
@@ -511,9 +490,19 @@
                 const data = change.doc.data();
                 if (data.origen === window.miSesionID) return;
                 
-                // Agregamos el ID del documento para que el Toast sepa a dónde ir
-                if (change.type === "added") { window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`, change.doc.id); audioAlerta.play().catch(e=>{}); }
-                if (change.type === "modified" && data.estado === "Activo") { window.mostrarToast(`🔄 ACTUALIZACIÓN: CAMA ${data.cama}`, change.doc.id); audioAlerta.play().catch(e=>{}); }
+                if (change.type === "added") { 
+                    window.mostrarToast(`🛏️ NUEVO INGRESO: CAMA ${data.cama}`, change.doc.id); 
+                    audioAlerta.play().catch(e=>{}); 
+                }
+                if (change.type === "modified" && data.estado === "Activo") { 
+                    // 🔥 SELECCIONAMOS EL MENSAJE CORRECTO SEGÚN LA ACCIÓN
+                    let msg = `🔄 ACTUALIZACIÓN: CAMA ${data.cama}`;
+                    if (data.ultimaAccion === 'VISTO') msg = `👀 VISTO CAMA: ${data.cama}`;
+                    else if (data.ultimaAccion === 'NOTA') msg = `📝 NOTA CAMA: ${data.cama}`;
+                    
+                    window.mostrarToast(msg, change.doc.id); 
+                    audioAlerta.play().catch(e=>{}); 
+                }
             }
         });
         isFirstLoad = false;
@@ -548,7 +537,6 @@
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
 
-            // AGREGAMOS EL ID AL DIV PRINCIPAL PARA QUE EL TOAST PUEDA NAVEGAR HACIA ÉL
             return `
             <div class="paciente-row" id="paciente-${item.id}">
                 <div class="p-col-info">
@@ -613,7 +601,8 @@
         const paciente = window.pacientesLocales.find(p => p.id === window.pacienteModalActual);
         if(paciente && paciente.historial) {
             paciente.historial[notaIndex].visto = true;
-            try { await updateDoc(doc(db, "pacientes", paciente.id), { historial: paciente.historial, origen: window.miSesionID }); } catch(e) {}
+            // 🔥 AGREGAMOS LA ETIQUETA "VISTO" A LA ACCIÓN
+            try { await updateDoc(doc(db, "pacientes", paciente.id), { historial: paciente.historial, origen: window.miSesionID, ultimaAccion: 'VISTO' }); } catch(e) {}
         }
     };
 
@@ -622,7 +611,8 @@
         const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(); const color = document.getElementById('color-usuario').value || '#0d9488';
         const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).toUpperCase();
         document.getElementById('input-nueva-nota').value = ''; 
-        try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID }); } catch(e) {}
+        // 🔥 AGREGAMOS LA ETIQUETA "NOTA" A LA ACCIÓN
+        try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID, ultimaAccion: 'NOTA' }); } catch(e) {}
     };
 
     // ==========================================
@@ -644,7 +634,7 @@
         }
 
         try { 
-            await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID }); 
+            await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID, ultimaAccion: 'INGRESO' }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
         } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "GUARDAR INGRESO";
     };
@@ -664,20 +654,34 @@
     const bor = JSON.parse(localStorage.getItem('borradorRondines')); if(bor) { document.getElementById('cama').value = bor.cama || ''; document.getElementById('paciente').value = bor.paciente || ''; document.getElementById('indicaciones-texto').value = bor.ind || ''; document.getElementById('pendientes').value = bor.obs || ''; }
 
     // ==========================================
-    // ENTREGA DE GUARDIA 
+    // ENTREGA DE GUARDIA (NOTIFICACIONES POR SERVICIO)
     // ==========================================
     const editor = document.getElementById('editor-entrega');
     let servicioActual = 'Oncologia'; let unsubscribeEntrega = null; let editandoEntrega = false; let celdaSeleccionada = null;
     let conteoGuardias = { Oncologia: 0, Cirugia_Gastro: 0, Traumatologia: 0, Infectologia: 0 };
+    let isFirstLoadGuardia = { Oncologia: true, Cirugia_Gastro: true, Traumatologia: true, Infectologia: true };
 
     const serviciosLista = ['Oncologia', 'Cirugia_Gastro', 'Traumatologia', 'Infectologia'];
     serviciosLista.forEach(serv => {
         onSnapshot(doc(db, "entregas", serv), (docSnap) => {
             if(docSnap.exists()){
-                const htmlStr = docSnap.data().html_content || '';
+                const data = docSnap.data();
+                
+                // 🔥 NOTIFICACIÓN DE MODIFICACIÓN DE GUARDIA
+                if (!isFirstLoadGuardia[serv] && !docSnap.metadata.hasPendingWrites && data.origen !== window.miSesionID) {
+                    const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
+                    window.mostrarToast(`🔄 MODIFICACIÓN GUARDIA ${nLindo}`);
+                    audioAlerta.play().catch(e=>{});
+                }
+                isFirstLoadGuardia[serv] = false;
+
+                const htmlStr = data.html_content || '';
                 const cambios = (htmlStr.match(/celda-modificada/g) || []).length;
                 conteoGuardias[serv] = cambios; actualizarBadgesGuardia();
-            } else { conteoGuardias[serv] = 0; actualizarBadgesGuardia(); }
+            } else { 
+                isFirstLoadGuardia[serv] = false;
+                conteoGuardias[serv] = 0; actualizarBadgesGuardia(); 
+            }
         });
     });
 
@@ -710,7 +714,6 @@
     }
     cargarServicioFirebase(servicioActual);
 
-    // LIMPIEZA DE SUBRAYADO Y ALERTAS AL ACEPTAR EL CAMBIO
     editor.addEventListener('dblclick', (e) => { 
         if(window.innerWidth >= 900) { 
             let celda = e.target.closest('td') || e.target.closest('th'); 
@@ -726,7 +729,6 @@
     });
 
     editor.addEventListener('input', (e) => { editandoEntrega = true; let nodo = document.getSelection().anchorNode; if(nodo && nodo.nodeType === 3) nodo = nodo.parentNode; if(nodo) { let celda = nodo.closest('td') || nodo.closest('th'); if(celda) { celda.classList.add('celda-modificada'); celda.setAttribute('data-autor', (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase()); } } });
-    
     editor.addEventListener('click', (e) => { if(window.innerWidth < 900) { let celda = e.target.closest('td') || e.target.closest('th'); if(celda) { e.preventDefault(); celdaSeleccionada = celda; document.getElementById('texto-celda-visual').innerHTML = celda.innerHTML; document.getElementById('btn-aceptar-celda').style.display = celda.classList.contains('celda-modificada') ? 'block' : 'none'; document.getElementById('modal-celda').style.display = 'flex'; } } });
 
     window.cerrarModalCelda = () => { document.getElementById('modal-celda').style.display = 'none'; celdaSeleccionada = null; };
@@ -755,7 +757,7 @@
     window.guardarEntrega = async function() { 
         try { 
             const finalHTML = getUppercasedHTML(editor.innerHTML);
-            await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp() }, { merge: true }); 
+            await setDoc(doc(db, "entregas", servicioActual), { html_content: finalHTML, autor: (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(), timestamp: serverTimestamp(), origen: window.miSesionID }, { merge: true }); 
             editandoEntrega = false; window.mostrarToast("GUARDIA GUARDADA.");
         } catch(e) { } 
     };
@@ -773,10 +775,24 @@
     window.vaciarTablaServicio = async function() { if(!confirm(`⚠️ ¿DESEAS DEJAR EN BLANCO LA TABLA DE ${servicioActual.toUpperCase()}?`)) return; editor.innerHTML = ''; window.guardarEntrega(); };
 
     // ==========================================
-    // PESTAÑA 3: PENDIENTES
+    // PESTAÑA 3: PENDIENTES (NOTIFICACIÓN AÑADIDA)
     // ==========================================
+    let isFirstLoadPendientes = true;
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
+        
+        // 🔥 NOTIFICACIÓN DE NUEVO PENDIENTE
+        snapshot.docChanges().forEach((change) => {
+            if (!isFirstLoadPendientes && !change.doc.metadata.hasPendingWrites) {
+                const data = change.doc.data();
+                if (data.origen !== window.miSesionID && change.type === "added") {
+                    window.mostrarToast(`📌 NUEVO PENDIENTE`);
+                    audioAlerta.play().catch(e=>{});
+                }
+            }
+        });
+        isFirstLoadPendientes = false;
+
         snapshot.forEach(doc => items.push({id: doc.id, ...doc.data()}));
         items.sort((a,b) => b.fecha?.toMillis() - a.fecha?.toMillis()); 
         window.listaPendientesToDos = items;
@@ -806,7 +822,7 @@
         if(!texto) return;
         const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
         try {
-            await addDoc(pendientesRef, { texto: texto, completado: false, resolucion: "", autor: autor, fecha: serverTimestamp() });
+            await addDoc(pendientesRef, { texto: texto, completado: false, resolucion: "", autor: autor, fecha: serverTimestamp(), origen: window.miSesionID });
             input.value = '';
         } catch(e) {}
     };
@@ -815,9 +831,9 @@
         if(isChecked) {
             const resolucion = prompt("📝 ESCRIBE LA RESOLUCIÓN DE ESTE PENDIENTE:");
             if(resolucion === null) { checkboxElement.checked = false; return; }
-            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: true, resolucion: resolucion.trim().toUpperCase() }); } catch(e) {}
+            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: true, resolucion: resolucion.trim().toUpperCase(), origen: window.miSesionID }); } catch(e) {}
         } else {
-            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: false, resolucion: "" }); } catch(e) {}
+            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: false, resolucion: "", origen: window.miSesionID }); } catch(e) {}
         }
     };
 

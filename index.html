@@ -23,6 +23,19 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
+           PANTALLA DE LOGIN (PUERTA DE SEGURIDAD)
+           =================================================== */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column;}
+        .login-card { background: var(--surface); padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--border);}
+        .login-icon { font-size: 50px; margin-bottom: 10px; display: block;}
+        .login-title { margin-top: 0; color: var(--text-main); font-size: 22px; text-transform: uppercase; margin-bottom: 5px;}
+        .login-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 25px;}
+        .login-input { width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; text-align: center; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; box-sizing: border-box; font-weight: bold;}
+        .login-input:focus { border-color: var(--primary); outline: none; }
+        .login-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 6px rgba(13,148,136,0.3);}
+        .login-btn:hover { background: var(--primary-hover); }
+
+        /* ===================================================
            MAYÚSCULAS GLOBALES VISUALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
@@ -38,6 +51,11 @@
 
         .tab-badge { background-color: var(--danger); color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; display: none; box-shadow: 0 2px 4px rgba(239,68,68,0.4);}
         .tab-badge.show { display: inline-block; animation: pop 0.3s ease;}
+
+        /* BOTÓN DE PERMISOS iOS (Discreto) */
+        .btn-permisos-ios { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s;}
+        .btn-permisos-ios:hover { background: var(--bg-body); }
+        .btn-permisos-ios.listo { color: var(--primary); border-color: var(--primary); background: var(--primary-light);}
 
         @keyframes pop { 0% { transform: scale(0.5); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
@@ -136,16 +154,7 @@
         #editor-entrega th, #editor-entrega td { border: 1px solid var(--border); padding: 6px; vertical-align: top; cursor: text; position: relative;}
         #editor-entrega th { background-color: #f8fafc; font-weight: 600; color: var(--text-muted);}
         
-        .celda-modificada { 
-            background-color: var(--warning-light) !important; 
-            border: 2px solid var(--warning) !important; 
-            color: #92400e !important; 
-            font-weight: bold !important;
-            text-decoration: underline !important;
-            text-underline-offset: 3px;
-            position: relative;
-            animation: pulse-border 2s infinite;
-        }
+        .celda-modificada { background-color: var(--warning-light) !important; border: 2px solid var(--warning) !important; color: #92400e !important; font-weight: bold !important; text-decoration: underline !important; text-underline-offset: 3px; position: relative; animation: pulse-border 2s infinite;}
         @keyframes pulse-border { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
         .celda-modificada::after { content: attr(data-autor); position: absolute; top: -10px; right: -5px; background: var(--danger); color: white; font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 10px; z-index: 10; animation: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); text-transform: uppercase; text-decoration: none;}
 
@@ -211,12 +220,24 @@
 </head>
 <body>
 
+<div id="login-overlay">
+    <div class="login-card">
+        <span class="login-icon">🏥</span>
+        <h2 class="login-title">ACCESO RESTRINGIDO</h2>
+        <p class="login-subtitle">Ingrese la clave de turno para continuar</p>
+        <input type="text" id="input-password" class="login-input" placeholder="CONTRASEÑA" onkeydown="if(event.key==='Enter'){window.verificarAcceso();}">
+        <button class="login-btn" onclick="window.verificarAcceso()">DESBLOQUEAR SISTEMA</button>
+    </div>
+</div>
+
 <div id="toast-container"></div>
 
-<div class="nav-tabs">
+<div class="nav-tabs" style="position: relative;">
     <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 INGRESO</button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
+    
+    <button class="btn-permisos-ios" id="btn-permisos-ios" onclick="window.solicitarPermisosIOS()" title="Desbloquear Sonido y Micrófono">🔓 MIC/VOL</button>
 </div>
 
 <div id="modal-celda" class="modal-overlay">
@@ -270,6 +291,7 @@
 
                 <div class="botones-accion">
                     <button id="btn-dictar" class="btn-accion" style="text-transform: uppercase;">🎙️ DICTADO AUTOMÁTICO</button>
+                    <button class="btn-accion" onclick="window.cerrarSesion()" style="color: var(--danger); border-color: #fca5a5;">🔒 CERRAR SESIÓN</button>
                 </div>
 
                 <div class="grid-form">
@@ -364,6 +386,35 @@
 <audio id="sonido-alerta" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
 
 <script type="module">
+    // ==========================================
+    // LÓGICA DE SEGURIDAD (LOGIN)
+    // ==========================================
+    const PASSWORD_ACCESO = "CALLATEPERRO"; // 🔴 ¡AQUÍ ESTÁ LA CONTRASEÑA ACTUALIZADA! 🔴
+
+    if(localStorage.getItem('acceso_app') === PASSWORD_ACCESO) {
+        document.getElementById('login-overlay').style.display = 'none';
+    }
+
+    window.verificarAcceso = function() {
+        const pass = document.getElementById('input-password').value.toUpperCase();
+        if(pass === PASSWORD_ACCESO) {
+            localStorage.setItem('acceso_app', pass);
+            document.getElementById('login-overlay').style.display = 'none';
+            // Al acceder, intentamos pedir permisos de una vez si el dispositivo lo requiere
+            window.solicitarPermisosIOS(); 
+        } else {
+            alert("CONTRASEÑA INCORRECTA. CONTACTE AL ADMINISTRADOR DEL TURNO.");
+        }
+    };
+
+    window.cerrarSesion = function() {
+        if(confirm("¿SEGURO QUE DESEAS CERRAR LA SESIÓN EN ESTE DISPOSITIVO?")) {
+            localStorage.removeItem('acceso_app');
+            location.reload(); 
+        }
+    };
+
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -388,6 +439,32 @@
     window.listaPendientesToDos = [];
     window.miSesionID = Math.random().toString(36).substring(2, 15);
     window.pacienteModalActual = null; 
+
+    // ==========================================
+    // PERMISOS IOS (AUDIO Y MIC)
+    // ==========================================
+    window.solicitarPermisosIOS = async function() {
+        const btn = document.getElementById('btn-permisos-ios');
+        try {
+            // Truco para desbloquear el audio en iOS
+            audioAlerta.play().then(() => {
+                audioAlerta.pause();
+                audioAlerta.currentTime = 0;
+            }).catch(e => console.log("Audio en espera de interacción."));
+
+            // Desbloquear Micrófono
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                await navigator.mediaDevices.getUserMedia({ audio: true });
+            }
+
+            btn.innerHTML = "✅ LISTO";
+            btn.classList.add('listo');
+            window.mostrarToast("PERMISOS DE AUDIO ACTIVADOS", null, null);
+        } catch (err) {
+            console.error("Error permisos:", err);
+            alert("PARA USAR EL DICTADO Y ALERTAS, PERMITE EL ACCESO AL MICRÓFONO EN TU NAVEGADOR.");
+        }
+    };
 
     // ==========================================
     // TOASTS Y NAVEGACIÓN
@@ -415,6 +492,7 @@
                             targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             const bg = targetEl.style.backgroundColor; targetEl.style.backgroundColor = '#ccfbf1';
                             targetEl.style.transition = 'background 0.8s'; setTimeout(() => { targetEl.style.backgroundColor = bg; }, 1500);
+                            
                             if(tipoTarget === 'nota_paciente') window.abrirModalNotas(targetId);
                         }
                     }, 100);
@@ -449,16 +527,13 @@
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
     window.copiarBloqueIndividual = function(elemento) {
-        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').replace(/ÚLTIMA EVOLUCIÓN\s*1 CLIC = HISTORIAL/i, '').trim();
+        let texto = elemento.innerText.replace(/INDICACIONES\s*DOBLE CLIC PARA COPIAR/i, '').replace(/ÚLTIMA EVOLUCIÓN\s*1 CLIC = HISTORIAL/i, '').trim();
         navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
             setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO", null, null);
         });
     };
 
-    // ==========================================
-    // ESCÁNER DE MAYÚSCULAS PARA HTML
-    // ==========================================
     function getUppercasedHTML(htmlString) {
         const div = document.createElement('div');
         div.innerHTML = htmlString;
@@ -589,14 +664,10 @@
         if(window.pacienteModalActual) renderizarListaNotasModal(window.pacienteModalActual);
     });
 
-    // ==========================================
-    // POP-UP NOTAS 
-    // ==========================================
     window.abrirModalNotas = function(idPaciente) {
         window.pacienteModalActual = idPaciente; 
         document.getElementById('input-nueva-nota').value = '';
         
-        // 🔥 AQUI AGREGAMOS LA CAMA AL TÍTULO DEL MODAL
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
         if (paciente) {
             document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`;
@@ -696,6 +767,7 @@
             if(docSnap.exists()){
                 const data = docSnap.data();
                 
+                // 🔥 NOTIFICACIÓN CON GPS A GUARDIA
                 if (!isFirstLoadGuardia[serv] && !docSnap.metadata.hasPendingWrites && data.origen !== window.miSesionID) {
                     if (!data.silencioso) {
                         const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
@@ -812,6 +884,7 @@
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
         
+        // 🔥 NOTIFICACIÓN CON GPS A PENDIENTES
         snapshot.docChanges().forEach((change) => {
             if (!isFirstLoadPendientes && !change.doc.metadata.hasPendingWrites) {
                 const data = change.doc.data();
@@ -862,17 +935,9 @@
             const resolucion = prompt("📝 ESCRIBE LA RESOLUCIÓN DE ESTE PENDIENTE:");
             if(resolucion === null) { checkboxElement.checked = false; return; }
             
-            // 🔥 CAPTURAMOS QUIÉN RESOLVIÓ EL PENDIENTE
             const autorRes = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase();
             
-            try { 
-                await updateDoc(doc(db, "pendientes_globales", id), { 
-                    completado: true, 
-                    resolucion: resolucion.trim().toUpperCase(), 
-                    autorResolucion: autorRes,
-                    origen: window.miSesionID 
-                }); 
-            } catch(e) {}
+            try { await updateDoc(doc(db, "pendientes_globales", id), { completado: true, resolucion: resolucion.trim().toUpperCase(), autorResolucion: autorRes, origen: window.miSesionID }); } catch(e) {}
         } else {
             try { await updateDoc(doc(db, "pendientes_globales", id), { completado: false, resolucion: "", autorResolucion: "", origen: window.miSesionID }); } catch(e) {}
         }

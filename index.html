@@ -52,11 +52,6 @@
         .tab-badge { background-color: var(--danger); color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; display: none; box-shadow: 0 2px 4px rgba(239,68,68,0.4);}
         .tab-badge.show { display: inline-block; animation: pop 0.3s ease;}
 
-        /* BOTÓN DE PERMISOS iOS (Discreto) */
-        .btn-permisos-ios { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s;}
-        .btn-permisos-ios:hover { background: var(--bg-body); }
-        .btn-permisos-ios.listo { color: var(--primary); border-color: var(--primary); background: var(--primary-light);}
-
         @keyframes pop { 0% { transform: scale(0.5); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 
         .container { padding: 15px; width: 100%; max-width: 1500px; margin: 0 auto; box-sizing: border-box; }
@@ -232,12 +227,10 @@
 
 <div id="toast-container"></div>
 
-<div class="nav-tabs" style="position: relative;">
+<div class="nav-tabs">
     <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 INGRESO</button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
-    
-    <button class="btn-permisos-ios" id="btn-permisos-ios" onclick="window.solicitarPermisosIOS()" title="Desbloquear Sonido y Micrófono">🔓 MIC/VOL</button>
 </div>
 
 <div id="modal-celda" class="modal-overlay">
@@ -386,22 +379,40 @@
 <audio id="sonido-alerta" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
 
 <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
     // ==========================================
-    // LÓGICA DE SEGURIDAD (LOGIN)
+    // LÓGICA DE SEGURIDAD Y PERMISOS IOS
     // ==========================================
-    const PASSWORD_ACCESO = "CALLATEPERRO"; // 🔴 ¡AQUÍ ESTÁ LA CONTRASEÑA ACTUALIZADA! 🔴
+    const PASSWORD_ACCESO = "CALLATEPERRO"; 
+    const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
 
     if(localStorage.getItem('acceso_app') === PASSWORD_ACCESO) {
         document.getElementById('login-overlay').style.display = 'none';
+        activarEscuchaGlobalAudio(); // Si ya tiene sesión, preparamos el audio en el primer toque de la pantalla
     }
 
-    window.verificarAcceso = function() {
+    window.verificarAcceso = async function() {
         const pass = document.getElementById('input-password').value.toUpperCase();
         if(pass === PASSWORD_ACCESO) {
             localStorage.setItem('acceso_app', pass);
             document.getElementById('login-overlay').style.display = 'none';
-            // Al acceder, intentamos pedir permisos de una vez si el dispositivo lo requiere
-            window.solicitarPermisosIOS(); 
+            
+            // TRUCO PIGGYBACKING: El usuario acaba de dar clic, aprovechamos para destrabar iOS
+            try {
+                audioAlerta.play().then(() => {
+                    audioAlerta.pause();
+                    audioAlerta.currentTime = 0;
+                }).catch(e => console.log("Audio en espera."));
+
+                // Pedir permiso de micrófono de una vez para que el dictado no falle luego
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    await navigator.mediaDevices.getUserMedia({ audio: true });
+                }
+            } catch(e) {
+                console.log("Permiso de micrófono denegado al inicio, se pedirá después.");
+            }
         } else {
             alert("CONTRASEÑA INCORRECTA. CONTACTE AL ADMINISTRADOR DEL TURNO.");
         }
@@ -414,10 +425,22 @@
         }
     };
 
+    function activarEscuchaGlobalAudio() {
+        const unlockAudio = () => {
+            audioAlerta.play().then(() => {
+                audioAlerta.pause();
+                audioAlerta.currentTime = 0;
+            }).catch(e => {});
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('click', unlockAudio);
+        };
+        document.addEventListener('touchstart', unlockAudio);
+        document.addEventListener('click', unlockAudio);
+    }
 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
+    // ==========================================
+    // CONFIGURACIÓN DE FIREBASE
+    // ==========================================
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
@@ -434,37 +457,10 @@
     const pacientesRef = collection(db, "pacientes");
     const pendientesRef = collection(db, "pendientes_globales");
 
-    const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
     window.pacientesLocales = [];
     window.listaPendientesToDos = [];
     window.miSesionID = Math.random().toString(36).substring(2, 15);
     window.pacienteModalActual = null; 
-
-    // ==========================================
-    // PERMISOS IOS (AUDIO Y MIC)
-    // ==========================================
-    window.solicitarPermisosIOS = async function() {
-        const btn = document.getElementById('btn-permisos-ios');
-        try {
-            // Truco para desbloquear el audio en iOS
-            audioAlerta.play().then(() => {
-                audioAlerta.pause();
-                audioAlerta.currentTime = 0;
-            }).catch(e => console.log("Audio en espera de interacción."));
-
-            // Desbloquear Micrófono
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                await navigator.mediaDevices.getUserMedia({ audio: true });
-            }
-
-            btn.innerHTML = "✅ LISTO";
-            btn.classList.add('listo');
-            window.mostrarToast("PERMISOS DE AUDIO ACTIVADOS", null, null);
-        } catch (err) {
-            console.error("Error permisos:", err);
-            alert("PARA USAR EL DICTADO Y ALERTAS, PERMITE EL ACCESO AL MICRÓFONO EN TU NAVEGADOR.");
-        }
-    };
 
     // ==========================================
     // TOASTS Y NAVEGACIÓN
@@ -527,7 +523,7 @@
     window.cerrarVisorImg = function() { document.getElementById('modal-visor-img').style.display = 'none'; document.getElementById('img-visor-full').src = ''; };
 
     window.copiarBloqueIndividual = function(elemento) {
-        let texto = elemento.innerText.replace(/INDICACIONES\s*DOBLE CLIC PARA COPIAR/i, '').replace(/ÚLTIMA EVOLUCIÓN\s*1 CLIC = HISTORIAL/i, '').trim();
+        let texto = elemento.innerText.replace(/INDICACIONES\s*Doble clic para copiar/i, '').replace(/ÚLTIMA EVOLUCIÓN\s*1 CLIC = HISTORIAL/i, '').trim();
         navigator.clipboard.writeText(texto.toUpperCase()).then(() => {
             const bg = elemento.style.backgroundColor; elemento.style.backgroundColor = '#ccfbf1'; 
             setTimeout(() => elemento.style.backgroundColor = bg, 500); window.mostrarToast("📋 COPIADO", null, null);
@@ -665,16 +661,10 @@
     });
 
     window.abrirModalNotas = function(idPaciente) {
-        window.pacienteModalActual = idPaciente; 
-        document.getElementById('input-nueva-nota').value = '';
-        
+        window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
-        if (paciente) {
-            document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`;
-        }
-        
-        renderizarListaNotasModal(idPaciente); 
-        document.getElementById('modal-notas').style.display = 'flex';
+        if (paciente) { document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`; }
+        renderizarListaNotasModal(idPaciente); document.getElementById('modal-notas').style.display = 'flex';
     };
     
     window.cerrarModalNotas = function() { document.getElementById('modal-notas').style.display = 'none'; window.pacienteModalActual = null; };
@@ -715,9 +705,6 @@
         try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID, ultimaAccion: 'NOTA' }); } catch(e) {}
     };
 
-    // ==========================================
-    // CREAR PACIENTE Y VACIAR SALA
-    // ==========================================
     window.enviarReporte = async function() {
         const cama = document.getElementById('cama').value.toUpperCase(); 
         const paciente = document.getElementById('paciente').value.toUpperCase(); 
@@ -767,7 +754,6 @@
             if(docSnap.exists()){
                 const data = docSnap.data();
                 
-                // 🔥 NOTIFICACIÓN CON GPS A GUARDIA
                 if (!isFirstLoadGuardia[serv] && !docSnap.metadata.hasPendingWrites && data.origen !== window.miSesionID) {
                     if (!data.silencioso) {
                         const nLindo = {'Oncologia': 'ONCOLOGÍA', 'Cirugia_Gastro': 'CIRUGÍA Y GASTRO', 'Traumatologia': 'TRAUMATOLOGÍA', 'Infectologia': 'INFECTOLOGÍA'}[serv];
@@ -884,7 +870,6 @@
     onSnapshot(query(pendientesRef), (snapshot) => {
         let items = [];
         
-        // 🔥 NOTIFICACIÓN CON GPS A PENDIENTES
         snapshot.docChanges().forEach((change) => {
             if (!isFirstLoadPendientes && !change.doc.metadata.hasPendingWrites) {
                 const data = change.doc.data();

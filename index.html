@@ -23,19 +23,6 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
-           PANTALLA DE LOGIN (PUERTA DE SEGURIDAD)
-           =================================================== */
-        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column;}
-        .login-card { background: var(--surface); padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--border);}
-        .login-icon { font-size: 50px; margin-bottom: 10px; display: block;}
-        .login-title { margin-top: 0; color: var(--text-main); font-size: 22px; text-transform: uppercase; margin-bottom: 5px;}
-        .login-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 25px;}
-        .login-input { width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; text-align: center; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; box-sizing: border-box; font-weight: bold;}
-        .login-input:focus { border-color: var(--primary); outline: none; }
-        .login-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 6px rgba(13,148,136,0.3);}
-        .login-btn:hover { background: var(--primary-hover); }
-
-        /* ===================================================
            MAYÚSCULAS GLOBALES VISUALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
@@ -89,7 +76,7 @@
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
-        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;}
+        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.3s;}
         
         .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px; align-items: flex-start;}
         .p-cama { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase;}
@@ -109,8 +96,11 @@
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
         .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; flex-direction: column; justify-content: flex-start;}
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%; text-transform: uppercase;}
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%; text-transform: uppercase; transition: all 0.2s;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
+        .btn-outline.success:hover { background: var(--primary-light); }
+        .btn-outline.danger { color: var(--danger); border-color: var(--danger); }
+        .btn-outline.danger:hover { background: #fef2f2; }
         .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
 
         .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px; text-transform: uppercase;}
@@ -202,7 +192,7 @@
             .form-section { position: sticky; top: 70px; margin: 0;}
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
-            .paciente-row { display: grid; grid-template-columns: 140px 1.4fr 1.2fr 110px; gap: 15px; padding: 12px; align-items: start; }
+            .paciente-row { display: grid; grid-template-columns: 140px 1.4fr 1.2fr 120px; gap: 15px; padding: 12px; align-items: start; }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
             .p-col-meds { display: flex; flex-direction: column; height: max-content; margin: 0;}
@@ -227,7 +217,7 @@
 
 <div id="toast-container"></div>
 
-<div class="nav-tabs">
+<div class="nav-tabs" style="position: relative;">
     <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 INGRESO</button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
     <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
@@ -318,7 +308,7 @@
                     <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
-                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 VISTO A TODOS</button>
+                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 ELIMINAR A TODOS</button>
                     </div>
                 </div>
                 <div id="lista-pendientes" class="lista-pacientes"></div>
@@ -379,18 +369,16 @@
 <audio id="sonido-alerta" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    // ==========================================
+    // LÓGICA DE SEGURIDAD (LOGIN)
+    // ==========================================
+    const PASSWORD_ACCESO = "CALLATEPERRO"; // 🔴 CONTRASEÑA ACTUALIZADA 🔴
 
-    // ==========================================
-    // LÓGICA DE SEGURIDAD Y PERMISOS IOS
-    // ==========================================
-    const PASSWORD_ACCESO = "CALLATEPERRO"; 
     const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
 
     if(localStorage.getItem('acceso_app') === PASSWORD_ACCESO) {
         document.getElementById('login-overlay').style.display = 'none';
-        activarEscuchaGlobalAudio(); // Si ya tiene sesión, preparamos el audio en el primer toque de la pantalla
+        activarEscuchaGlobalAudio(); 
     }
 
     window.verificarAcceso = async function() {
@@ -399,19 +387,17 @@
             localStorage.setItem('acceso_app', pass);
             document.getElementById('login-overlay').style.display = 'none';
             
-            // TRUCO PIGGYBACKING: El usuario acaba de dar clic, aprovechamos para destrabar iOS
             try {
                 audioAlerta.play().then(() => {
                     audioAlerta.pause();
                     audioAlerta.currentTime = 0;
                 }).catch(e => console.log("Audio en espera."));
 
-                // Pedir permiso de micrófono de una vez para que el dictado no falle luego
                 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     await navigator.mediaDevices.getUserMedia({ audio: true });
                 }
             } catch(e) {
-                console.log("Permiso de micrófono denegado al inicio, se pedirá después.");
+                console.log("Permiso de micrófono en espera.");
             }
         } else {
             alert("CONTRASEÑA INCORRECTA. CONTACTE AL ADMINISTRADOR DEL TURNO.");
@@ -438,9 +424,9 @@
         document.addEventListener('click', unlockAudio);
     }
 
-    // ==========================================
-    // CONFIGURACIÓN DE FIREBASE
-    // ==========================================
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, updateDoc, doc, setDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCc-UHGtHTHmjT0_EmPY7ozvw7uxI_tsVg",
       authDomain: "rondinhp-239a4.firebaseapp.com",
@@ -539,9 +525,6 @@
         return div.innerHTML;
     }
 
-    // ==========================================
-    // IMAGEN
-    // ==========================================
     let imagenBase64 = null;
     document.getElementById('foto-paciente-input').addEventListener('change', function(e) {
         const file = e.target.files[0]; if (!file) return; const reader = new FileReader();
@@ -583,11 +566,13 @@
                     audioAlerta.play().catch(e=>{}); 
                 }
                 if (change.type === "modified" && data.estado === "Activo") { 
+                    // 🔥 SI ES VISTO SILENCIOSO (BOTÓN OJO), NO AVISAR.
+                    if (data.ultimaAccion === 'VISTO_SILENCIOSO') return;
+
                     let msg = `🔄 ACTUALIZACIÓN: CAMA ${data.cama}`;
                     let tType = 'paciente';
                     
-                    if (data.ultimaAccion === 'VISTO') msg = `👀 VISTO CAMA: ${data.cama}`;
-                    else if (data.ultimaAccion === 'NOTA') { 
+                    if (data.ultimaAccion === 'NOTA') { 
                         msg = `📝 NOTA CAMA: ${data.cama}`; 
                         tType = 'nota_paciente'; 
                     }
@@ -629,8 +614,15 @@
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
 
+            // 🔥 LÓGICA VISUAL DEL "VISTO" (GRIS/OPACO)
+            let rowStyle = item.revisado ? "border-left-color: #cbd5e1; opacity: 0.85;" : "";
+            
+            let btnVistoHtml = item.revisado 
+                ? `<button class="btn-outline" style="color: #94a3b8; border-color: #cbd5e1; cursor: default;" disabled>✅ REVISADO</button>` 
+                : `<button class="btn-outline success" onclick="window.marcarPacienteVisto('${item.id}')">👀 VISTO</button>`;
+
             return `
-            <div class="paciente-row" id="paciente-${item.id}">
+            <div class="paciente-row" id="paciente-${item.id}" style="${rowStyle}">
                 <div class="p-col-info">
                     <div>
                         <div class="p-cama">🛏️ ${item.cama || ''}</div>
@@ -652,7 +644,8 @@
                 
                 <div class="p-col-acciones">
                     <button class="btn-outline ${btnNotasColor}" onclick="window.abrirModalNotas('${item.id}')">${btnNotasTexto}</button>
-                    <button class="btn-outline success" onclick="window.marcarResuelto('${item.id}', this)">✓ VISTO</button>
+                    ${btnVistoHtml}
+                    <button class="btn-outline danger" onclick="window.marcarResuelto('${item.id}', this)">🗑️ ELIMINAR</button>
                 </div>
             </div>`;
         }).join('');
@@ -660,11 +653,28 @@
         if(window.pacienteModalActual) renderizarListaNotasModal(window.pacienteModalActual);
     });
 
+    // 🔥 FUNCIÓN NUEVA: MARCAR COMO VISTO EN PANTALLA
+    window.marcarPacienteVisto = async function(id) {
+        try {
+            await updateDoc(doc(db, "pacientes", id), { 
+                revisado: true, 
+                origen: window.miSesionID, 
+                ultimaAccion: 'VISTO_SILENCIOSO' 
+            });
+        } catch(e) {}
+    };
+
     window.abrirModalNotas = function(idPaciente) {
-        window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
+        window.pacienteModalActual = idPaciente; 
+        document.getElementById('input-nueva-nota').value = '';
+        
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
-        if (paciente) { document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`; }
-        renderizarListaNotasModal(idPaciente); document.getElementById('modal-notas').style.display = 'flex';
+        if (paciente) {
+            document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`;
+        }
+        
+        renderizarListaNotasModal(idPaciente); 
+        document.getElementById('modal-notas').style.display = 'flex';
     };
     
     window.cerrarModalNotas = function() { document.getElementById('modal-notas').style.display = 'none'; window.pacienteModalActual = null; };
@@ -693,7 +703,7 @@
         const paciente = window.pacientesLocales.find(p => p.id === window.pacienteModalActual);
         if(paciente && paciente.historial) {
             paciente.historial[notaIndex].visto = true;
-            try { await updateDoc(doc(db, "pacientes", paciente.id), { historial: paciente.historial, origen: window.miSesionID, ultimaAccion: 'VISTO' }); } catch(e) {}
+            try { await updateDoc(doc(db, "pacientes", paciente.id), { historial: paciente.historial, origen: window.miSesionID, ultimaAccion: 'VISTO_SILENCIOSO' }); } catch(e) {}
         }
     };
 
@@ -702,7 +712,14 @@
         const autor = (document.getElementById('nombre-usuario').value || 'ANÓNIMO').toUpperCase(); const color = document.getElementById('color-usuario').value || '#0d9488';
         const fecha = new Date().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }).toUpperCase();
         document.getElementById('input-nueva-nota').value = ''; 
-        try { await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), origen: window.miSesionID, ultimaAccion: 'NOTA' }); } catch(e) {}
+        try { 
+            await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { 
+                historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), 
+                revisado: false, // 🔥 LA NOTA NUEVA QUITA EL "VISTO"
+                origen: window.miSesionID, 
+                ultimaAccion: 'NOTA' 
+            }); 
+        } catch(e) {}
     };
 
     window.enviarReporte = async function() {
@@ -721,15 +738,25 @@
         }
 
         try { 
-            await addDoc(pacientesRef, { cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", fecha: serverTimestamp(), origen: window.miSesionID, ultimaAccion: 'INGRESO' }); 
+            await addDoc(pacientesRef, { 
+                cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", 
+                revisado: false, // 🔥 INICIA SIN ESTAR VISTO
+                fecha: serverTimestamp(), origen: window.miSesionID, ultimaAccion: 'INGRESO' 
+            }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
         } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "GUARDAR INGRESO";
     };
 
-    window.marcarResuelto = async (id, b) => { if(confirm("¿MARCAR COMO VISTO? EL PACIENTE DESAPARECERÁ DE LA LISTA.")) { b.disabled = true; await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } };
+    // 🔥 ELIMINAR DEFINITIVAMENTE DE LA LISTA
+    window.marcarResuelto = async (id, b) => { 
+        if(confirm("¿SEGURO QUE DESEAS ELIMINAR A ESTE PACIENTE? DESAPARECERÁ DE LA LISTA.")) { 
+            b.disabled = true; 
+            await updateDoc(doc(db, "pacientes", id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); 
+        } 
+    };
 
     window.vaciarSalaExpediente = async function() {
-        if(!confirm("⚠️ ¿ESTÁS SEGURO DE QUERER MARCAR COMO VISTO A TODOS LOS PACIENTES ACTIVOS DE LA SALA? ESTA ACCIÓN LIMPIARÁ TODO EL CENSO.")) return;
+        if(!confirm("⚠️ ¿ESTÁS SEGURO DE QUERER ELIMINAR A TODOS LOS PACIENTES ACTIVOS DE LA SALA? ESTA ACCIÓN LIMPIARÁ TODO EL CENSO.")) return;
         if(!confirm("¿CONFIRMAS VACIAR LA SALA?")) return;
         for (let pac of window.pacientesLocales) { try { await updateDoc(doc(db, "pacientes", pac.id), { estado: "Resuelto", fechaResolucion: serverTimestamp(), origen: window.miSesionID }); } catch(e) {} }
         window.mostrarToast("SALA VACIADA EXITOSAMENTE.", null, null);

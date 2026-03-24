@@ -23,6 +23,19 @@
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--text-main); line-height: 1.4;}
         
         /* ===================================================
+           PANTALLA DE LOGIN (PUERTA DE SEGURIDAD BLINDADA)
+           =================================================== */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column;}
+        .login-card { background: var(--surface); padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--border);}
+        .login-icon { font-size: 50px; margin-bottom: 10px; display: block;}
+        .login-title { margin-top: 0; color: var(--text-main); font-size: 22px; text-transform: uppercase; margin-bottom: 5px;}
+        .login-subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 25px;}
+        .login-input { width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; text-align: center; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; box-sizing: border-box; font-weight: bold;}
+        .login-input:focus { border-color: var(--primary); outline: none; }
+        .login-btn { background: var(--primary); color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 4px 6px rgba(13,148,136,0.3);}
+        .login-btn:hover { background: var(--primary-hover); }
+
+        /* ===================================================
            MAYÚSCULAS GLOBALES VISUALES
            =================================================== */
         input[type="text"], textarea, #editor-entrega, #texto-celda-visual {
@@ -76,7 +89,7 @@
            =================================================== */
         .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
         
-        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; transition: all 0.3s;}
+        .paciente-row { background-color: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;}
         
         .p-col-info { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border); padding-bottom: 6px; align-items: flex-start;}
         .p-cama { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 2px; text-transform: uppercase;}
@@ -96,11 +109,8 @@
         .p-img-render { max-width: 60px; max-height: 50px; border-radius: 4px; border: 1px solid var(--border); object-fit: cover; cursor: zoom-in;}
 
         .p-col-acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; flex-direction: column; justify-content: flex-start;}
-        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%; text-transform: uppercase; transition: all 0.2s;}
+        .btn-outline { background: transparent; border: 1px solid var(--border); padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-main); text-align: center; width: 100%; text-transform: uppercase;}
         .btn-outline.success { color: var(--primary); border-color: var(--primary); }
-        .btn-outline.success:hover { background: var(--primary-light); }
-        .btn-outline.danger { color: var(--danger); border-color: var(--danger); }
-        .btn-outline.danger:hover { background: #fef2f2; }
         .btn-outline.danger-badge { border-color: var(--danger); color: var(--danger); background: #fef2f2;} 
 
         .indicador-vivo { font-size: 11px; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 6px; text-transform: uppercase;}
@@ -192,7 +202,7 @@
             .form-section { position: sticky; top: 70px; margin: 0;}
             
             .lista-pacientes { display: flex; flex-direction: column; gap: 10px; }
-            .paciente-row { display: grid; grid-template-columns: 140px 1.4fr 1.2fr 120px; gap: 15px; padding: 12px; align-items: start; }
+            .paciente-row { display: grid; grid-template-columns: 140px 1.4fr 1.2fr 110px; gap: 15px; padding: 12px; align-items: start; }
             
             .p-col-info { flex-direction: column; justify-content: flex-start; align-items: flex-start; border-bottom: none; border-right: 1px solid var(--border); padding-right: 10px; padding-bottom: 0;}
             .p-col-meds { display: flex; flex-direction: column; height: max-content; margin: 0;}
@@ -215,169 +225,173 @@
     </div>
 </div>
 
-<div id="toast-container"></div>
+<div id="app-wrapper" style="display: none;">
 
-<div class="nav-tabs" style="position: relative;">
-    <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 INGRESO</button>
-    <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
-    <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
-</div>
+    <div id="toast-container"></div>
 
-<div id="modal-celda" class="modal-overlay">
-    <div class="modal-content">
-        <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
-        
-        <div class="mini-toolbar">
-            <button onclick="document.execCommand('underline', false, null)" style="text-decoration:underline;">U</button>
-            <button onclick="document.execCommand('bold', false, null)">B</button>
-            <span style="font-size: 10px; color: var(--text-muted); margin-left: 5px;">SELECCIONA EL TEXTO NUEVO Y SUBRÁYALO</span>
-        </div>
-
-        <div id="texto-celda-visual" contenteditable="true"></div>
-        <div class="modal-actions">
-            <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
-            <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ APROBAR CAMBIO</button>
-            <button style="background:#0d9488; color:white;" onclick="guardarCeldaModal()">GUARDAR</button>
-        </div>
+    <div class="nav-tabs" style="position: relative;">
+        <button class="tab-btn activa" onclick="cambiarPestana('pestana-expediente', this)">📋 INGRESO</button>
+        <button class="tab-btn" onclick="cambiarPestana('pestana-guardia', this)">🔄 GUARDIA <span id="badge-guardia" class="tab-badge">0</span></button>
+        <button class="tab-btn" onclick="cambiarPestana('pestana-pendientes', this)">📌 PENDIENTES <span id="badge-pendientes" class="tab-badge">0</span></button>
     </div>
-</div>
 
-<div id="modal-notas" class="modal-overlay">
-    <div class="modal-content">
-        <h3 id="titulo-modal-notas" style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
-        <textarea id="input-nueva-nota" placeholder="ESCRIBE UNA NUEVA EVOLUCIÓN AQUÍ..."></textarea>
-        <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; text-transform: uppercase;">➕ AGREGAR A EVOLUCIÓN</button>
-        <div id="contenedor-lista-notas" class="notas-container"></div>
-        <div class="modal-actions" style="margin-top: 10px;">
-            <button style="background:#f1f5f9; color:#1e293b; width: 100%;" onclick="cerrarModalNotas()">CERRAR</button>
-        </div>
-    </div>
-</div>
-
-<div id="modal-visor-img" class="modal-overlay" onclick="cerrarVisorImg()">
-    <div class="visor-content" onclick="event.stopPropagation()">
-        <button class="btn-cerrar-visor" onclick="cerrarVisorImg()">×</button>
-        <img id="img-visor-full" src="">
-    </div>
-</div>
-
-<div class="container">
-    
-    <div id="pestana-expediente" class="vista activa">
-        <div class="main-layout">
+    <div id="modal-celda" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-top:0; font-size: 15px; text-transform: uppercase;">✏️ EDICIÓN VISUAL</h3>
             
-            <div class="form-section">
-                <div class="grid-form" style="margin:0 0 12px 0; background:#ffffff; padding:8px; border-radius:6px; border:1px solid var(--border);">
-                    <div><input type="text" id="nombre-usuario" placeholder="FIRMA (EJ. DR. PÉREZ)" oninput="window.guardarPerfil()"></div>
-                    <div><input type="color" id="color-usuario" value="#0d9488" onchange="window.guardarPerfil()"></div>
-                </div>
-
-                <div class="botones-accion">
-                    <button id="btn-dictar" class="btn-accion" style="text-transform: uppercase;">🎙️ DICTADO AUTOMÁTICO</button>
-                    <button class="btn-accion" onclick="window.cerrarSesion()" style="color: var(--danger); border-color: #fca5a5;">🔒 CERRAR SESIÓN</button>
-                </div>
-
-                <div class="grid-form">
-                    <div class="form-group"><label>CAMA</label><input type="text" id="cama" placeholder="EJ. 302" oninput="window.guardarBorrador()"></div>
-                    <div class="form-group"><label>PACIENTE</label><input type="text" id="paciente" placeholder="NOMBRE" oninput="window.guardarBorrador()"></div>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>💊 INDICACIONES</label>
-                    <textarea id="indicaciones-texto" class="caja-grande" placeholder="FÁRMACO, DOSIS, VÍA, HORARIO..." oninput="window.guardarBorrador()"></textarea>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>📝 EVOLUCIÓN INICIAL</label>
-                    <textarea id="pendientes" placeholder="DIAGNÓSTICO O NOTA DE INGRESO..." oninput="window.guardarBorrador()"></textarea>
-                </div>
-
-                <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()" style="text-transform: uppercase;">
-                    📷 <b>TOCAR PARA AÑADIR FOTO/ESTUDIO</b>
-                    <input type="file" id="foto-paciente-input" accept="image/*" capture="environment">
-                    <img id="preview-img" alt="Vista previa">
-                    <div id="btn-quitar-foto" style="display:none; color:var(--danger); font-weight:bold; margin-top:5px;">❌ QUITAR FOTO</div>
-                </div>
-
-                <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()" style="text-transform: uppercase;">GUARDAR INGRESO</button>
-                <div id="aviso-guardado" style="font-size:11px; color:var(--primary); text-align:center; margin-top:6px; display:none; text-transform: uppercase; font-weight: bold;">BORRADOR GUARDADO</div>
+            <div class="mini-toolbar">
+                <button onclick="document.execCommand('underline', false, null)" style="text-decoration:underline;">U</button>
+                <button onclick="document.execCommand('bold', false, null)">B</button>
+                <span style="font-size: 10px; color: var(--text-muted); margin-left: 5px;">SELECCIONA EL TEXTO NUEVO Y SUBRÁYALO</span>
             </div>
 
-            <div class="historial-seccion">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
-                        <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 ELIMINAR A TODOS</button>
+            <div id="texto-celda-visual" contenteditable="true"></div>
+            <div class="modal-actions">
+                <button style="background:#f1f5f9; color:#1e293b;" onclick="cerrarModalCelda()">CANCELAR</button>
+                <button id="btn-aceptar-celda" style="background:#f0fdfa; color:#0d9488; border:1px solid #0d9488; display:none;" onclick="aceptarCambioCelda()">✅ APROBAR CAMBIO</button>
+                <button style="background:#0d9488; color:white;" onclick="guardarCeldaModal()">GUARDAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-notas" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="titulo-modal-notas" style="margin-top:0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; text-transform: uppercase;">💬 HISTORIAL DE EVOLUCIÓN</h3>
+            <textarea id="input-nueva-nota" placeholder="ESCRIBE UNA NUEVA EVOLUCIÓN AQUÍ..."></textarea>
+            <button onclick="guardarNotaDesdeModal()" style="background: var(--primary); color: white; border: none; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 8px; text-transform: uppercase;">➕ AGREGAR A EVOLUCIÓN</button>
+            <div id="contenedor-lista-notas" class="notas-container"></div>
+            <div class="modal-actions" style="margin-top: 10px;">
+                <button style="background:#f1f5f9; color:#1e293b; width: 100%;" onclick="cerrarModalNotas()">CERRAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-visor-img" class="modal-overlay" onclick="cerrarVisorImg()">
+        <div class="visor-content" onclick="event.stopPropagation()">
+            <button class="btn-cerrar-visor" onclick="cerrarVisorImg()">×</button>
+            <img id="img-visor-full" src="">
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div id="pestana-expediente" class="vista activa">
+            <div class="main-layout">
+                
+                <div class="form-section">
+                    <div class="grid-form" style="margin:0 0 12px 0; background:#ffffff; padding:8px; border-radius:6px; border:1px solid var(--border);">
+                        <div><input type="text" id="nombre-usuario" placeholder="FIRMA (EJ. DR. PÉREZ)" oninput="window.guardarPerfil()"></div>
+                        <div><input type="color" id="color-usuario" value="#0d9488" onchange="window.guardarPerfil()"></div>
+                    </div>
+
+                    <div class="botones-accion">
+                        <button id="btn-dictar" class="btn-accion" style="text-transform: uppercase;">🎙️ DICTADO AUTOMÁTICO</button>
+                        <button class="btn-accion" onclick="window.cerrarSesion()" style="color: var(--danger); border-color: #fca5a5;">🔒 CERRAR SESIÓN</button>
+                    </div>
+
+                    <div class="grid-form">
+                        <div class="form-group"><label>CAMA</label><input type="text" id="cama" placeholder="EJ. 302" oninput="window.guardarBorrador()"></div>
+                        <div class="form-group"><label>PACIENTE</label><input type="text" id="paciente" placeholder="NOMBRE" oninput="window.guardarBorrador()"></div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>💊 INDICACIONES</label>
+                        <textarea id="indicaciones-texto" class="caja-grande" placeholder="FÁRMACO, DOSIS, VÍA, HORARIO..." oninput="window.guardarBorrador()"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>📝 EVOLUCIÓN INICIAL</label>
+                        <textarea id="pendientes" placeholder="DIAGNÓSTICO O NOTA DE INGRESO..." oninput="window.guardarBorrador()"></textarea>
+                    </div>
+
+                    <div class="caja-imagen" onclick="document.getElementById('foto-paciente-input').click()" style="text-transform: uppercase;">
+                        📷 <b>TOCAR PARA AÑADIR FOTO/ESTUDIO</b>
+                        <input type="file" id="foto-paciente-input" accept="image/*" capture="environment">
+                        <img id="preview-img" alt="Vista previa">
+                        <div id="btn-quitar-foto" style="display:none; color:var(--danger); font-weight:bold; margin-top:5px;">❌ QUITAR FOTO</div>
+                    </div>
+
+                    <button id="btn-enviar" class="btn-enviar" onclick="window.enviarReporte()" style="text-transform: uppercase;">GUARDAR INGRESO</button>
+                    <div id="aviso-guardado" style="font-size:11px; color:var(--primary); text-align:center; margin-top:6px; display:none; text-transform: uppercase; font-weight: bold;">BORRADOR GUARDADO</div>
+                </div>
+
+                <div class="historial-seccion">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h2 class="section-title" style="margin:0; text-transform: uppercase;">CENSO HOSPITALARIO</h2>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="indicador-vivo"><span class="dot"></span> EN VIVO</div>
+                            <button class="btn-tool" style="color:var(--danger); border-color:#fca5a5;" onclick="window.vaciarSalaExpediente()">🧹 VISTO A TODOS</button>
+                        </div>
+                    </div>
+                    <div id="lista-pendientes" class="lista-pacientes"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pestana-guardia" class="vista">
+            <div class="entrega-container">
+                <div class="nav-servicios">
+                    <button class="btn-servicio activo" onclick="cambiarServicio('Oncologia', this)">ONCOLOGÍA <span id="b-onco"></span></button>
+                    <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">CIRUGÍA/GASTRO <span id="b-ciru"></span></button>
+                    <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">TRAUMA <span id="b-trau"></span></button>
+                    <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">INFECTOLOGÍA <span id="b-infe"></span></button>
+                </div>
+
+                <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0; text-transform: uppercase;">ONCOLOGÍA</h2>
+                        <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px; text-transform: uppercase;">CONECTANDO...</p>
                     </div>
                 </div>
-                <div id="lista-pendientes" class="lista-pacientes"></div>
-            </div>
-        </div>
-    </div>
 
-    <div id="pestana-guardia" class="vista">
-        <div class="entrega-container">
-            <div class="nav-servicios">
-                <button class="btn-servicio activo" onclick="cambiarServicio('Oncologia', this)">ONCOLOGÍA <span id="b-onco"></span></button>
-                <button class="btn-servicio" onclick="cambiarServicio('Cirugia_Gastro', this)">CIRUGÍA/GASTRO <span id="b-ciru"></span></button>
-                <button class="btn-servicio" onclick="cambiarServicio('Traumatologia', this)">TRAUMA <span id="b-trau"></span></button>
-                <button class="btn-servicio" onclick="cambiarServicio('Infectologia', this)">INFECTOLOGÍA <span id="b-infe"></span></button>
-            </div>
+                <div class="entrega-toolbar">
+                    <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 GUARDAR NUBE</button>
+                    <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO (LIMPIAR ALERTAS)</button>
+                    <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ VACIAR TABLA</button>
+                </div>
 
-            <div class="entrega-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <div>
-                    <h2 class="entrega-titulo" id="titulo-servicio-actual" style="font-size: 18px; margin:0; text-transform: uppercase;">ONCOLOGÍA</h2>
-                    <p class="entrega-meta" id="info-ultima-modificacion" style="margin-top:2px; text-transform: uppercase;">CONECTANDO...</p>
+                <div class="editor-wrapper">
+                    <div id="editor-entrega" contenteditable="true" placeholder="PEGA TU TABLA OFICIAL AQUÍ..."></div>
                 </div>
             </div>
+        </div>
 
-            <div class="entrega-toolbar">
-                <button class="btn-tool primario" onclick="window.guardarEntrega()">💾 GUARDAR NUBE</button>
-                <button class="btn-tool limpiar" onclick="window.limpiarMarcasGuardia()">👁️ MARCAR VISTO (LIMPIAR ALERTAS)</button>
-                <button class="btn-tool peligro" onclick="window.vaciarTablaServicio()">🗑️ VACIAR TABLA</button>
-            </div>
+        <div id="pestana-pendientes" class="vista">
+            <div class="pendientes-container">
+                <h2 class="section-title" style="text-transform: uppercase;">📌 LISTA DE PENDIENTES DEL TURNO</h2>
+                
+                <div class="todo-input-group">
+                    <input type="text" id="input-nuevo-pendiente" placeholder="EJ. REVISAR LABORATORIOS CAMA 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
+                    <button onclick="window.agregarPendiente()">AGREGAR</button>
+                </div>
 
-            <div class="editor-wrapper">
-                <div id="editor-entrega" contenteditable="true" placeholder="PEGA TU TABLA OFICIAL AQUÍ..."></div>
+                <div class="entrega-toolbar" style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px; background: transparent; border:none; padding:0;">
+                    <button class="btn-tool" onclick="window.borrarPendientesCompletados()">🧹 BORRAR TERMINADOS</button>
+                    <button class="btn-tool peligro" onclick="window.borrarTodosPendientes()">🗑️ BORRAR TODOS</button>
+                </div>
+
+                <div id="lista-todo" style="display: flex; flex-direction: column;">
+                    <p style="text-align:center; color:var(--text-muted); font-size:13px; text-transform: uppercase;">CARGANDO PENDIENTES...</p>
+                </div>
             </div>
         </div>
+
     </div>
 
-    <div id="pestana-pendientes" class="vista">
-        <div class="pendientes-container">
-            <h2 class="section-title" style="text-transform: uppercase;">📌 LISTA DE PENDIENTES DEL TURNO</h2>
-            
-            <div class="todo-input-group">
-                <input type="text" id="input-nuevo-pendiente" placeholder="EJ. REVISAR LABORATORIOS CAMA 302..." onkeydown="if(event.key==='Enter'){event.preventDefault(); window.agregarPendiente();}">
-                <button onclick="window.agregarPendiente()">AGREGAR</button>
-            </div>
-
-            <div class="entrega-toolbar" style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px; background: transparent; border:none; padding:0;">
-                <button class="btn-tool" onclick="window.borrarPendientesCompletados()">🧹 BORRAR TERMINADOS</button>
-                <button class="btn-tool peligro" onclick="window.borrarTodosPendientes()">🗑️ BORRAR TODOS</button>
-            </div>
-
-            <div id="lista-todo" style="display: flex; flex-direction: column;">
-                <p style="text-align:center; color:var(--text-muted); font-size:13px; text-transform: uppercase;">CARGANDO PENDIENTES...</p>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<audio id="sonido-alerta" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
+</div> <audio id="sonido-alerta" src="data:audio/mp3;base64,//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq//NExAAAAANIAAAAAExBTUUzLjEwMKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq" preload="auto"></audio>
 
 <script type="module">
     // ==========================================
     // LÓGICA DE SEGURIDAD (LOGIN)
     // ==========================================
-    const PASSWORD_ACCESO = "CALLATEPERRO"; // 🔴 CONTRASEÑA ACTUALIZADA 🔴
+    const PASSWORD_ACCESO = "CALLATEPERRO"; 
 
     const audioAlerta = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
 
+    // SI YA ESTÁ LOGUEADO, QUITAR LOGIN Y MOSTRAR APP
     if(localStorage.getItem('acceso_app') === PASSWORD_ACCESO) {
         document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('app-wrapper').style.display = 'block';
         activarEscuchaGlobalAudio(); 
     }
 
@@ -385,7 +399,10 @@
         const pass = document.getElementById('input-password').value.toUpperCase();
         if(pass === PASSWORD_ACCESO) {
             localStorage.setItem('acceso_app', pass);
+            
+            // DESBLOQUEA LA VISTA AL INSTANTE
             document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('app-wrapper').style.display = 'block';
             
             try {
                 audioAlerta.play().then(() => {
@@ -566,7 +583,6 @@
                     audioAlerta.play().catch(e=>{}); 
                 }
                 if (change.type === "modified" && data.estado === "Activo") { 
-                    // 🔥 SI ES VISTO SILENCIOSO (BOTÓN OJO), NO AVISAR.
                     if (data.ultimaAccion === 'VISTO_SILENCIOSO') return;
 
                     let msg = `🔄 ACTUALIZACIÓN: CAMA ${data.cama}`;
@@ -614,7 +630,6 @@
             let fotoHTML = item.imagen ? `<img src="${item.imagen}" class="p-img-render" onclick="window.abrirVisorImg('${item.imagen}')">` : '';
             let horaIngreso = formatearFecha(item.fecha);
 
-            // 🔥 LÓGICA VISUAL DEL "VISTO" (GRIS/OPACO)
             let rowStyle = item.revisado ? "border-left-color: #cbd5e1; opacity: 0.85;" : "";
             
             let btnVistoHtml = item.revisado 
@@ -653,28 +668,17 @@
         if(window.pacienteModalActual) renderizarListaNotasModal(window.pacienteModalActual);
     });
 
-    // 🔥 FUNCIÓN NUEVA: MARCAR COMO VISTO EN PANTALLA
     window.marcarPacienteVisto = async function(id) {
         try {
-            await updateDoc(doc(db, "pacientes", id), { 
-                revisado: true, 
-                origen: window.miSesionID, 
-                ultimaAccion: 'VISTO_SILENCIOSO' 
-            });
+            await updateDoc(doc(db, "pacientes", id), { revisado: true, origen: window.miSesionID, ultimaAccion: 'VISTO_SILENCIOSO' });
         } catch(e) {}
     };
 
     window.abrirModalNotas = function(idPaciente) {
-        window.pacienteModalActual = idPaciente; 
-        document.getElementById('input-nueva-nota').value = '';
-        
+        window.pacienteModalActual = idPaciente; document.getElementById('input-nueva-nota').value = '';
         const paciente = window.pacientesLocales.find(p => p.id === idPaciente);
-        if (paciente) {
-            document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`;
-        }
-        
-        renderizarListaNotasModal(idPaciente); 
-        document.getElementById('modal-notas').style.display = 'flex';
+        if (paciente) { document.getElementById('titulo-modal-notas').innerText = `💬 HISTORIAL DE EVOLUCIÓN - CAMA: ${paciente.cama || 'S/N'}`; }
+        renderizarListaNotasModal(idPaciente); document.getElementById('modal-notas').style.display = 'flex';
     };
     
     window.cerrarModalNotas = function() { document.getElementById('modal-notas').style.display = 'none'; window.pacienteModalActual = null; };
@@ -715,7 +719,7 @@
         try { 
             await updateDoc(doc(db, "pacientes", window.pacienteModalActual), { 
                 historial: arrayUnion({ autor: autor, color: color, texto: texto, fecha: fecha, visto: false }), 
-                revisado: false, // 🔥 LA NOTA NUEVA QUITA EL "VISTO"
+                revisado: false, 
                 origen: window.miSesionID, 
                 ultimaAccion: 'NOTA' 
             }); 
@@ -740,14 +744,13 @@
         try { 
             await addDoc(pacientesRef, { 
                 cama: cama, paciente: paciente, indicaciones: ind, pendientes: '', historial: hIni, imagen: imagenBase64, estado: "Activo", 
-                revisado: false, // 🔥 INICIA SIN ESTAR VISTO
+                revisado: false, 
                 fecha: serverTimestamp(), origen: window.miSesionID, ultimaAccion: 'INGRESO' 
             }); 
             document.querySelectorAll('#pestana-expediente input[type="text"]:not(#nombre-usuario), #pestana-expediente textarea').forEach(i => i.value = ''); imagenBase64 = null; document.getElementById('foto-paciente-input').value = ""; document.getElementById('preview-img').style.display = 'none'; document.getElementById('btn-quitar-foto').style.display = 'none'; localStorage.removeItem('borradorRondines'); 
         } catch (e) { alert(e.message); } btn.disabled = false; btn.innerHTML = "GUARDAR INGRESO";
     };
 
-    // 🔥 ELIMINAR DEFINITIVAMENTE DE LA LISTA
     window.marcarResuelto = async (id, b) => { 
         if(confirm("¿SEGURO QUE DESEAS ELIMINAR A ESTE PACIENTE? DESAPARECERÁ DE LA LISTA.")) { 
             b.disabled = true; 
